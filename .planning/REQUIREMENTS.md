@@ -158,31 +158,93 @@ Explicitly excluded. Documented to prevent scope creep.
 
 ## Traceability
 
-Mapping of requirements to phases. Populated during roadmap creation.
+Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one phase.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FND-01 → FND-07 | Phase 1 | Pending |
-| PEN-01, PEN-02, PEN-06, PEN-07, PEN-08, PEN-09 | Phase 1 | Pending |
-| AUTH-01 → AUTH-12 | Phase 2 | Pending |
-| PEN-03 (registration identify) | Phase 2 | Pending |
-| SHELL-01 → SHELL-04 | Phase 3 | Pending |
-| DASH-01 → DASH-06 | Phase 3 | Pending |
-| LIST-01 → LIST-09 | Phase 4 | Pending |
-| SET-01 → SET-06 | Phase 4 | Pending |
-| REP-01 → REP-04 | Phase 4 | Pending |
-| PEN-04, PEN-05 (settings identify, sign-out reset) | Phase 4 | Pending |
-| TEAM-01 → TEAM-03 | Phase 5 | Pending |
-| HELP-01 → HELP-04 | Phase 5 | Pending |
-| DATA-01, UI-01, UI-02, UI-03, UI-04 | Phase 5 | Pending |
+| FND-01 | Phase 1 | Pending |
+| FND-02 | Phase 1 | Pending |
+| FND-03 | Phase 1 | Pending |
+| FND-04 | Phase 1 | Pending |
+| FND-05 | Phase 1 | Pending |
+| FND-06 | Phase 1 | Pending |
+| FND-07 | Phase 1 | Pending |
+| PEN-01 | Phase 1 | Pending |
+| PEN-02 | Phase 1 | Pending |
+| PEN-06 | Phase 1 | Pending |
+| PEN-07 | Phase 1 | Pending |
+| PEN-08 | Phase 1 | Pending |
+| PEN-09 | Phase 1 | Pending |
+| AUTH-01 | Phase 2 | Pending |
+| AUTH-02 | Phase 2 | Pending |
+| AUTH-03 | Phase 2 | Pending |
+| AUTH-04 | Phase 2 | Pending |
+| AUTH-05 | Phase 2 | Pending |
+| AUTH-06 | Phase 2 | Pending |
+| AUTH-07 | Phase 2 | Pending |
+| AUTH-08 | Phase 2 | Pending |
+| AUTH-09 | Phase 2 | Pending |
+| AUTH-10 | Phase 2 | Pending |
+| AUTH-11 | Phase 2 | Pending |
+| AUTH-12 | Phase 2 | Pending |
+| PEN-03 | Phase 2 | Pending |
+| SHELL-01 | Phase 3 | Pending |
+| SHELL-02 | Phase 3 | Pending |
+| SHELL-03 | Phase 3 | Pending |
+| SHELL-04 | Phase 3 | Pending |
+| DASH-01 | Phase 3 | Pending |
+| DASH-02 | Phase 3 | Pending |
+| DASH-03 | Phase 3 | Pending |
+| DASH-04 | Phase 3 | Pending |
+| DASH-05 | Phase 3 | Pending |
+| DASH-06 | Phase 3 | Pending |
+| LIST-01 | Phase 4 | Pending |
+| LIST-02 | Phase 4 | Pending |
+| LIST-03 | Phase 4 | Pending |
+| LIST-04 | Phase 4 | Pending |
+| LIST-05 | Phase 4 | Pending |
+| LIST-06 | Phase 4 | Pending |
+| LIST-07 | Phase 4 | Pending |
+| LIST-08 | Phase 4 | Pending |
+| LIST-09 | Phase 4 | Pending |
+| SET-01 | Phase 4 | Pending |
+| SET-02 | Phase 4 | Pending |
+| SET-03 | Phase 4 | Pending |
+| SET-04 | Phase 4 | Pending |
+| SET-05 | Phase 4 | Pending |
+| SET-06 | Phase 4 | Pending |
+| REP-01 | Phase 4 | Pending |
+| REP-02 | Phase 4 | Pending |
+| REP-03 | Phase 4 | Pending |
+| REP-04 | Phase 4 | Pending |
+| PEN-04 | Phase 4 | Pending |
+| PEN-05 | Phase 4 | Pending |
+| TEAM-01 | Phase 5 | Pending |
+| TEAM-02 | Phase 5 | Pending |
+| TEAM-03 | Phase 5 | Pending |
+| HELP-01 | Phase 5 | Pending |
+| HELP-02 | Phase 5 | Pending |
+| HELP-03 | Phase 5 | Pending |
+| HELP-04 | Phase 5 | Pending |
+| DATA-01 | Phase 5 | Pending |
+| UI-01 | Phase 5 | Pending |
+| UI-02 | Phase 5 | Pending |
+| UI-03 | Phase 5 | Pending |
+| UI-04 | Phase 5 | Pending |
 
 **Coverage:**
-- v1 requirements: 64 total
-- Mapped to phases: 64
+- v1 requirements: 69 total (FND 7 + PEN 9 + AUTH 12 + SHELL 4 + DASH 6 + LIST 9 + SET 6 + REP 4 + TEAM 3 + HELP 4 + DATA 1 + UI 4)
+- Mapped to phases: 69
 - Unmapped: 0 ✓
+- Duplicates: 0 ✓
 
-*(Traceability will be re-validated by the roadmapper. Some PEN-* and cross-cutting items may shift across phases when the roadmapper writes ROADMAP.md.)*
+**Per-phase totals:**
+- Phase 1 (Foundation & Cross-Cutting Contracts): 13 (FND-01..07, PEN-01, PEN-02, PEN-06, PEN-07, PEN-08, PEN-09)
+- Phase 2 (Registration, Sign-In & First Pendo Identify): 13 (AUTH-01..12, PEN-03)
+- Phase 3 (Authenticated Shell & Dashboard): 10 (SHELL-01..04, DASH-01..06)
+- Phase 4 (Core Pages — Lists, Settings, Reports): 21 (LIST-01..09, SET-01..06, REP-01..04, PEN-04, PEN-05)
+- Phase 5 (Team, Help & Polish): 12 (TEAM-01..03, HELP-01..04, DATA-01, UI-01..04)
 
 ---
 *Requirements defined: 2026-05-13*
-*Last updated: 2026-05-13 after initial definition*
+*Last updated: 2026-05-13 after roadmap creation*
