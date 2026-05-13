@@ -45,7 +45,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 - [x] 01-02-PLAN.md — Mantine 9 + Halo theme + ColorSchemeScript (FND-02)
-- [ ] 01-03-PLAN.md — Versioned localStorage envelope + Zod safe-read + migration runner + meta key (FND-04, FND-05)
+- [x] 01-03-PLAN.md — Versioned localStorage envelope + Zod safe-read + migration runner + meta key (FND-04, FND-05)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 - [ ] 01-04-PLAN.md — Provider stack (Storage → Auth → Workspace → PendoBridge-stub → Router slot) (FND-07)
