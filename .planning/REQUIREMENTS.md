@@ -169,9 +169,9 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 | FND-05 | Phase 1 | Pending |
 | FND-06 | Phase 1 | Pending |
 | FND-07 | Phase 1 | Pending |
-| PEN-01 | Phase 1 | Pending |
-| PEN-02 | Phase 1 | Pending |
-| PEN-06 | Phase 1 | Pending |
+| PEN-01 | Phase 6 | Pending |
+| PEN-02 | Phase 6 | Pending |
+| PEN-06 | Phase 6 | Pending |
 | PEN-07 | Phase 1 | Pending |
 | PEN-08 | Phase 1 | Pending |
 | PEN-09 | Phase 1 | Pending |
@@ -187,7 +187,7 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 | AUTH-10 | Phase 2 | Pending |
 | AUTH-11 | Phase 2 | Pending |
 | AUTH-12 | Phase 2 | Pending |
-| PEN-03 | Phase 2 | Pending |
+| PEN-03 | Phase 6 | Pending |
 | SHELL-01 | Phase 3 | Pending |
 | SHELL-02 | Phase 3 | Pending |
 | SHELL-03 | Phase 3 | Pending |
@@ -217,8 +217,8 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 | REP-02 | Phase 4 | Pending |
 | REP-03 | Phase 4 | Pending |
 | REP-04 | Phase 4 | Pending |
-| PEN-04 | Phase 4 | Pending |
-| PEN-05 | Phase 4 | Pending |
+| PEN-04 | Phase 6 | Pending |
+| PEN-05 | Phase 6 | Pending |
 | TEAM-01 | Phase 5 | Pending |
 | TEAM-02 | Phase 5 | Pending |
 | TEAM-03 | Phase 5 | Pending |
@@ -239,11 +239,12 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 - Duplicates: 0 ✓
 
 **Per-phase totals:**
-- Phase 1 (Foundation & Cross-Cutting Contracts): 13 (FND-01..07, PEN-01, PEN-02, PEN-06, PEN-07, PEN-08, PEN-09)
-- Phase 2 (Registration, Sign-In & First Pendo Identify): 13 (AUTH-01..12, PEN-03)
+- Phase 1 (Foundation & Cross-Cutting Contracts): 10 (FND-01..07, PEN-07, PEN-08, PEN-09)
+- Phase 2 (Registration & Sign-In): 12 (AUTH-01..12)
 - Phase 3 (Authenticated Shell & Dashboard): 10 (SHELL-01..04, DASH-01..06)
-- Phase 4 (Core Pages — Lists, Settings, Reports): 21 (LIST-01..09, SET-01..06, REP-01..04, PEN-04, PEN-05)
+- Phase 4 (Core Pages — Lists, Settings, Reports): 19 (LIST-01..09, SET-01..06, REP-01..04)
 - Phase 5 (Team, Help & Polish): 12 (TEAM-01..03, HELP-01..04, DATA-01, UI-01..04)
+- Phase 6 (Pendo Install & Wiring): 6 (PEN-01..06)
 
 ---
 *Requirements defined: 2026-05-13*

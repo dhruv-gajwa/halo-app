@@ -1,3 +1,19 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: executing
+stopped_at: Roadmap created — 5 phases written to ROADMAP.md, REQUIREMENTS.md traceability updated
+last_updated: "2026-05-13T20:28:09.278Z"
+last_activity: 2026-05-13 -- Phase 1 planning complete
+progress:
+  total_phases: 6
+  completed_phases: 0
+  total_plans: 6
+  completed_plans: 0
+  percent: 0
+---
+
 # Project State
 
 ## Project Reference
@@ -9,16 +25,17 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 
 ## Current Position
 
-Phase: 1 of 5 (Foundation & Cross-Cutting Contracts)
+Phase: 1 of 6 (Foundation & Cross-Cutting Contracts)
 Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-05-13 — Roadmap created (5 phases, 69 v1 requirements mapped)
+Status: Ready to execute
+Last activity: 2026-05-13 -- Phase 1 planning complete
 
 Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
 **Velocity:**
+
 - Total plans completed: 0
 - Average duration: —
 - Total execution time: —
@@ -30,6 +47,7 @@ Progress: [░░░░░░░░░░] 0%
 | — | — | — | — |
 
 **Recent Trend:**
+
 - Last 5 plans: —
 - Trend: —
 
@@ -42,9 +60,10 @@ Progress: [░░░░░░░░░░] 0%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- Init: React 18 + Vite + TypeScript + Mantine 7 + Recharts + Zustand + RHF/Zod stack settled (see research/STACK.md)
-- Init: Horizontal-layers project mode chosen — cross-cutting Pendo plumbing, selector registry, and versioned localStorage envelope land in Phase 1 before any page is built
-- Init: Multi-step registration ships as four distinct URLs (`/signup`, `/signup/details`, `/signup/company`, `/signup/preferences`) so Pendo can build a page-based funnel
+- Init: React 18 + Vite + TypeScript + Mantine 7 + Recharts + Zustand + RHF/Zod stack settled (see research/STACK.md). Phase-1 researcher updated to React 19 + Mantine 9 + Router 7 + Zod 4 + Zustand 5 + Vite 8 (CLAUDE.md explicitly allowed "or 19.x if stable"; Mantine 9 forces React 19).
+- Init: Horizontal-layers project mode chosen — selector registry and versioned localStorage envelope land in Phase 1 before any page is built
+- Init: Multi-step registration ships as four distinct URLs (`/signup`, `/signup/details`, `/signup/company`, `/signup/preferences`)
+- 2026-05-13: User decision — defer all Pendo *runtime* (PEN-01..06) to a new end-of-milestone Phase 6 ("Pendo Install & Wiring"). Phases 1–5 build a Pendo-*ready* app (selector registry, `data-pendo-id` markup contract, SVG-only charting convention, masked-input primitive with `.pendo-sr-ignore` class) without any live Pendo wiring. Provider stack reserves the `PendoBridge` slot as a no-op pass-through stub.
 
 ### Pending Todos
 
