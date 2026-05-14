@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 2 UI-SPEC approved
-last_updated: "2026-05-14T15:02:42.091Z"
+last_updated: "2026-05-14T15:11:35.492Z"
 last_activity: 2026-05-14
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 16
-  completed_plans: 7
-  percent: 44
+  completed_plans: 8
+  percent: 50
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 ## Current Position
 
 Phase: 02 (registration-sign-in) — EXECUTING
-Plan: 2 of 10
+Plan: 3 of 10
 Status: Ready to execute
 Last activity: 2026-05-14
 
-Progress: [████░░░░░░] 44%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Progress: [████░░░░░░] 44%
 | Phase 01 P06 | 8 | 2 tasks | 9 files |
 | Phase 01 P06 | 8 | 3 tasks | 9 files |
 | Phase 02 P01 | 2min | 2 tasks | 5 files |
+| Phase 02 P02 | 25min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,9 @@ Recent decisions affecting current work:
 - [Phase ?]: PasswordInput applies .pendo-sr-ignore CSS class (NOT data-pendo-mask attribute) per Pendo SDK 2.324.0 verified source
 - [Phase 02-01]: Kept multi-line type-alias shape on new primitives (mirrors Phase 1 TextInput.tsx canonical); Task 2 single-line AC regex documented as plan-internal inconsistency in 02-01-SUMMARY Deviations
 - [Phase 02-01]: signup.* PENDO_IDS organized by step number (step1..step4) not URL slug — registry mirrors wizard narrative regardless of URL choices
+- [Phase ?]: Phase 02-02: Zod 4 idiomatic z.iso.datetime + chained z.string().min(1, msg).email(msg) preferred over deprecated z.string().datetime() (only chained form attaches distinct empty-vs-malformed messages)
+- [Phase ?]: Phase 02-02: User = Visitor as structural type alias (not interface re-export); AuthProvider keeps its inline narrower User until Plan 02-05 rewrites it — types coexist safely
+- [Phase ?]: Phase 02-02: Form-step + signin schemas not re-exported through storage barrel; uniqueness + credential-mismatch errors are page-handler concerns, not Zod refinements
 
 ### Pending Todos
 
@@ -96,6 +100,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-05-14T14:59:48.629Z
+Last session: 2026-05-14T15:11:28.536Z
 Stopped at: Phase 2 UI-SPEC approved
 Resume file: None

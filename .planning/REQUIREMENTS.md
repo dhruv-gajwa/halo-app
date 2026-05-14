@@ -34,7 +34,7 @@
 - [x] **AUTH-03**: Step 2 captures personal details: job title, role, years of experience, location
 - [x] **AUTH-04**: Step 3 captures company info: company name, company size, industry, plan tier (free / pro / enterprise)
 - [x] **AUTH-05**: Step 4 captures onboarding preferences: primary use case, team size, top goals (multi-select)
-- [ ] **AUTH-06**: Each step is validated with React Hook Form + Zod; invalid input blocks advance and shows inline errors
+- [x] **AUTH-06**: Each step is validated with React Hook Form + Zod; invalid input blocks advance and shows inline errors
 - [ ] **AUTH-07**: Wizard state persists to `sessionStorage` so browser refresh / back / forward mid-flow doesn't lose progress; clears on completion or sign-out
 - [ ] **AUTH-08**: On wizard completion, a visitor + workspace record is written to `localStorage`, the password is hashed (SHA-256 via `crypto.subtle.digest`) before storage, and the user is signed in
 - [x] **AUTH-09**: User can sign in with email and password on a `/signin` page; password match is performed against the stored SHA-256 hash
@@ -180,7 +180,7 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 | AUTH-03 | Phase 2 | Complete |
 | AUTH-04 | Phase 2 | Complete |
 | AUTH-05 | Phase 2 | Complete |
-| AUTH-06 | Phase 2 | Pending |
+| AUTH-06 | Phase 2 | Complete |
 | AUTH-07 | Phase 2 | Pending |
 | AUTH-08 | Phase 2 | Pending |
 | AUTH-09 | Phase 2 | Complete |
