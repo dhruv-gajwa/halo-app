@@ -20,3 +20,12 @@ export type { PasswordInputProps } from './PasswordInput'
 
 export { Anchor } from './Anchor'
 export type { AnchorProps } from './Anchor'
+
+export { Select } from './Select'
+export type { SelectProps } from './Select'
+
+export { MultiSelect } from './MultiSelect'
+export type { MultiSelectProps } from './MultiSelect'
+
+export { NumberInput } from './NumberInput'
+export type { NumberInputProps } from './NumberInput'
