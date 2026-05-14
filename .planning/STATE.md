@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Completed 02-06-PLAN.md (route guards + signup shell + five placeholder pages + router wiring)
-last_updated: "2026-05-14T15:40:37.158Z"
+last_updated: "2026-05-14T15:49:15.184Z"
 last_activity: 2026-05-14
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 16
-  completed_plans: 12
-  percent: 75
+  completed_plans: 13
+  percent: 81
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 ## Current Position
 
 Phase: 02 (registration-sign-in) — EXECUTING
-Plan: 7 of 10
+Plan: 8 of 10
 Status: Ready to execute
 Last activity: 2026-05-14
 
-Progress: [████████░░] 75%
+Progress: [████████░░] 81%
 
 ## Performance Metrics
 
@@ -64,6 +64,7 @@ Progress: [████████░░] 75%
 | Phase 02 P04 | 4min | 1 tasks | 2 files |
 | Phase 02 P05 | 4min | 2 tasks | 3 files |
 | Phase Phase 02 PP06 | 7min | 2 tasks | 10 files |
+| Phase 02 P07 | 6min | 1 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -101,6 +102,10 @@ Recent decisions affecting current work:
 - [Phase ?]: Phase 02-06: SignupShell Stepper active index derived from useLocation().pathname not form state — refresh on /signup/company always shows step 3 highlighted
 - [Phase ?]: Phase 02-06: One PENDO_IDS.signup.step1.signinAnchor reused across all four signup steps — the registry intentionally defines exactly one signin-anchor
 - [Phase ?]: Phase 02-06: /app uses two-level RequireAuth → pathless AppLayout → AppPlaceholder route nesting so AppLayout contributes its Outlet without claiming a URL segment
+- [Phase ?]: Phase 02-07: @hookform/resolvers@^5.2.2 chosen over plan's literal ^3/^4 — resolvers@5 ships first-class Zod 4 typing via zod/v4/core; @3/@4 reference Zod 3 types only. Plan explicitly authorizes 'pin whatever works against Zod 4.4.3'.
+- [Phase ?]: Phase 02-07: src/ui/primitives/Button.tsx typed props extended with React.ButtonHTMLAttributes<HTMLButtonElement> so type='submit' type-checks. Mirrors Anchor wrapper's HTML-attrs pattern. Mantine Button polymorphic typing surfaces button attrs at runtime but not statically — needed for <form onSubmit> participation.
+- [Phase ?]: Phase 02-07: Duplicate-email error uses a string-compare against EMAIL_DUPLICATE_MESSAGE rather than a parallel form-state flag — keeps conditional inline <Anchor>Sign in instead?</Anchor> render branchable from form.formState alone; locked message text becomes load-bearing and is documented explicitly.
+- [Phase ?]: Phase 02-07: RHF useForm mode 'onSubmit' (not onBlur/onChange) — UI-SPEC explicitly locks 'validates on Next' rhythm. Per-keystroke validation rejected by the rhythm spec.
 
 ### Pending Todos
 
@@ -121,6 +126,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-05-14T15:40:37.154Z
+Last session: 2026-05-14T15:48:41.486Z
 Stopped at: Completed 02-06-PLAN.md (route guards + signup shell + five placeholder pages + router wiring)
 Resume file: None
