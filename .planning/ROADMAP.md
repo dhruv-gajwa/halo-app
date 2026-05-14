@@ -86,7 +86,7 @@ Plans:
 - [x] 03-02-PLAN.md — Task schemas + types + tasksRepo + labels + barrel (DASH-02)
 
 **Wave 2** *(blocked on Wave 1 completion)*
-- [ ] 03-03-PLAN.md — Faker seeder gated by meta.seededAt (FND-05 first writer) (DASH-05)
+- [x] 03-03-PLAN.md — Faker seeder gated by meta.seededAt (FND-05 first writer) (DASH-05)
 - [x] 03-04-PLAN.md — PENDO_IDS nav/topbar/dashboard/comingSoon namespaces + NavLink primitive + ComingSoonCard + 5 placeholder routes (SHELL-02, DASH-06)
 
 **Wave 3** *(blocked on Wave 2 completion)*
@@ -141,7 +141,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Foundation & Cross-Cutting Contracts | 3/6 | In Progress|  |
 | 2. Registration & Sign-In | 10/10 | Complete    | 2026-05-14 |
-| 3. Authenticated Shell & Dashboard | 3/6 | In Progress|  |
+| 3. Authenticated Shell & Dashboard | 4/6 | In Progress|  |
 | 4. Core Pages (Lists, Settings, Reports) | 0/TBD | Not started | - |
 | 5. Team, Help & Polish | 0/TBD | Not started | - |
 | 6. Pendo Install & Wiring | 0/TBD | Not started | - |

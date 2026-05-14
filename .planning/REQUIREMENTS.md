@@ -55,7 +55,7 @@
 - [x] **DASH-02**: Dashboard shows 4–6 KPI stat cards computed from seeded task data (e.g., active tasks, completed this week, overdue, completion rate)
 - [x] **DASH-03**: Dashboard shows at least one bar/area chart (tasks completed over time) and one pie/donut chart (tasks by status or by assignee), both rendered with Recharts (SVG)
 - [ ] **DASH-04**: Dashboard has a time-range selector (e.g., last 7 / 30 / 90 days) that re-filters all charts and stats
-- [ ] **DASH-05**: Dashboard shows a recent-activity feed (most-recent task changes from seeded data)
+- [x] **DASH-05**: Dashboard shows a recent-activity feed (most-recent task changes from seeded data)
 - [x] **DASH-06**: Dashboard renders a friendly empty state when there are no tasks (good guide-anchor surface)
 
 ### Lists (Tasks)
@@ -196,7 +196,7 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 | DASH-02 | Phase 3 | Complete |
 | DASH-03 | Phase 3 | Complete |
 | DASH-04 | Phase 3 | Pending |
-| DASH-05 | Phase 3 | Pending |
+| DASH-05 | Phase 3 | Complete |
 | DASH-06 | Phase 3 | Complete |
 | LIST-01 | Phase 4 | Pending |
 | LIST-02 | Phase 4 | Pending |
