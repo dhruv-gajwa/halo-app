@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-03-PLAN.md (auth repo + SHA-256 password hash)
-last_updated: "2026-05-14T15:25:36.011Z"
+stopped_at: Completed 02-05-PLAN.md (auth Zustand store + AuthProvider replacement)
+last_updated: "2026-05-14T15:33:12.140Z"
 last_activity: 2026-05-14
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 16
-  completed_plans: 10
-  percent: 63
+  completed_plans: 11
+  percent: 69
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 ## Current Position
 
 Phase: 02 (registration-sign-in) — EXECUTING
-Plan: 5 of 10
+Plan: 6 of 10
 Status: Ready to execute
 Last activity: 2026-05-14
 
-Progress: [██████░░░░] 63%
+Progress: [███████░░░] 69%
 
 ## Performance Metrics
 
@@ -62,6 +62,7 @@ Progress: [██████░░░░] 63%
 | Phase 02 P02 | 25min | 2 tasks | 6 files |
 | Phase Phase 02 PP03 | 4min | 2 tasks tasks | 5 files files |
 | Phase 02 P04 | 4min | 1 tasks | 2 files |
+| Phase 02 P05 | 4min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -88,6 +89,11 @@ Recent decisions affecting current work:
 - [Phase ?]: Phase 02-04: wizardSession.ts is the sole accessor of sessionStorage[K.signupDraft()] — mirrors localStorage codec's never-throw + safeParse-or-fallback contract for the sessionStorage backend
 - [Phase ?]: Phase 02-04: writeWizardDraftStep generic param named Step (not K) to avoid shadowing the imported K storage-key-builder — TypeScript silent-shadow trap caught at design time
 - [Phase ?]: Phase 02-04: hasStep is a pure predicate (no I/O) treating '' and [] as 'not provided' so a tabbed-through empty step doesn't trip the Wave 3 deep-link gate; callers pass in a pre-read draft
+- [Phase ?]: Phase 02-05: Zustand 5.0.13 chosen over 4.5.x; React 19 / Mantine 9 / Zustand 5 line consistent with Phase 1 stack update
+- [Phase ?]: Phase 02-05: Hand-rolled setSession/clearSession over zustand persist middleware to keep FND-04 codec uniformity (readWithSchema for hydration, writeJSON/removeKey for writes)
+- [Phase ?]: Phase 02-05: Module-init hydrateAuthFromStorage() call ensures route guards see isAuthenticated on first render (AUTH-10 ordering invariant); mirrors Plan 01-03's runMigrations() placement
+- [Phase ?]: Phase 02-05: Single 'invalid_credentials' failure variant in signInWithCredentials defends against username enumeration via API surface (T-02-21)
+- [Phase ?]: Phase 02-05: Orphan-session self-heal during hydration removes bad session keys pointing at missing visitors/workspaces (defensive against DevTools edits / stale demo state)
 
 ### Pending Todos
 
@@ -108,6 +114,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-05-14T15:25:20.985Z
-Stopped at: Completed 02-03-PLAN.md (auth repo + SHA-256 password hash)
+Last session: 2026-05-14T15:33:12.136Z
+Stopped at: Completed 02-05-PLAN.md (auth Zustand store + AuthProvider replacement)
 Resume file: None

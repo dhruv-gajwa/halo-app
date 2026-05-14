@@ -38,8 +38,8 @@
 - [x] **AUTH-07**: Wizard state persists to `sessionStorage` so browser refresh / back / forward mid-flow doesn't lose progress; clears on completion or sign-out
 - [x] **AUTH-08**: On wizard completion, a visitor + workspace record is written to `localStorage`, the password is hashed (SHA-256 via `crypto.subtle.digest`) before storage, and the user is signed in
 - [x] **AUTH-09**: User can sign in with email and password on a `/signin` page; password match is performed against the stored SHA-256 hash
-- [ ] **AUTH-10**: Authenticated session persists across browser refresh (auth state hydrated from localStorage on boot)
-- [ ] **AUTH-11**: User can sign out from the top-bar user menu; sign-out clears the in-memory session, resets Pendo, and returns the user to the public landing
+- [x] **AUTH-10**: Authenticated session persists across browser refresh (auth state hydrated from localStorage on boot)
+- [x] **AUTH-11**: User can sign out from the top-bar user menu; sign-out clears the in-memory session, resets Pendo, and returns the user to the public landing
 - [ ] **AUTH-12**: A `RequireAuth` route guard redirects unauthenticated users from `/app/*` to `/signin`; a `RequireAnon` guard redirects authenticated users away from signup/signin to `/app`
 
 ### App Shell & Navigation
@@ -184,8 +184,8 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 | AUTH-07 | Phase 2 | Complete |
 | AUTH-08 | Phase 2 | Complete |
 | AUTH-09 | Phase 2 | Complete |
-| AUTH-10 | Phase 2 | Pending |
-| AUTH-11 | Phase 2 | Pending |
+| AUTH-10 | Phase 2 | Complete |
+| AUTH-11 | Phase 2 | Complete |
 | AUTH-12 | Phase 2 | Pending |
 | PEN-03 | Phase 6 | Pending |
 | SHELL-01 | Phase 3 | Pending |
