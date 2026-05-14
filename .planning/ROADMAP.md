@@ -20,7 +20,7 @@ Halo is built in six phases. Phases 1–5 build the app shell, auth flows, and f
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Foundation & Cross-Cutting Contracts** - Scaffold + provider stack + versioned localStorage + `PENDO_IDS` selector registry + UI primitive wrappers + masked-input primitive + public/`/app` route split (Pendo-ready markup, no Pendo runtime)
-- [ ] **Phase 2: Registration & Sign-In** - Four-URL signup wizard + sign-in/sign-out + RequireAuth/RequireAnon guards
+- [x] **Phase 2: Registration & Sign-In** - Four-URL signup wizard + sign-in/sign-out + RequireAuth/RequireAnon guards (completed 2026-05-14)
 - [ ] **Phase 3: Authenticated Shell & Dashboard** - AppShell (side nav + top bar + user menu) + post-sign-in Dashboard with stat cards, SVG charts, time range, and activity feed
 - [ ] **Phase 4: Core Pages (Lists, Settings, Reports)** - Task CRUD, settings tabs, reports with CSV export
 - [ ] **Phase 5: Team, Help & Polish** - Team invite/role flows, searchable Help with Resource Center anchor, cross-page polish, idempotent seeding, demo-ready audit
@@ -128,7 +128,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Cross-Cutting Contracts | 3/6 | In Progress|  |
-| 2. Registration & Sign-In | 9/10 | In Progress|  |
+| 2. Registration & Sign-In | 10/10 | Complete   | 2026-05-14 |
 | 3. Authenticated Shell & Dashboard | 0/TBD | Not started | - |
 | 4. Core Pages (Lists, Settings, Reports) | 0/TBD | Not started | - |
 | 5. Team, Help & Polish | 0/TBD | Not started | - |
