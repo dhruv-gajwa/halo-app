@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 2 UI-SPEC approved
-last_updated: "2026-05-14T15:11:35.492Z"
+stopped_at: Completed 02-03-PLAN.md (auth repo + SHA-256 password hash)
+last_updated: "2026-05-14T15:18:53.879Z"
 last_activity: 2026-05-14
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 16
-  completed_plans: 8
-  percent: 50
+  completed_plans: 9
+  percent: 56
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 ## Current Position
 
 Phase: 02 (registration-sign-in) — EXECUTING
-Plan: 3 of 10
+Plan: 4 of 10
 Status: Ready to execute
 Last activity: 2026-05-14
 
-Progress: [█████░░░░░] 50%
+Progress: [██████░░░░] 56%
 
 ## Performance Metrics
 
@@ -60,6 +60,7 @@ Progress: [█████░░░░░] 50%
 | Phase 01 P06 | 8 | 3 tasks | 9 files |
 | Phase 02 P01 | 2min | 2 tasks | 5 files |
 | Phase 02 P02 | 25min | 2 tasks | 6 files |
+| Phase Phase 02 PP03 | 4min | 2 tasks tasks | 5 files files |
 
 ## Accumulated Context
 
@@ -80,6 +81,9 @@ Recent decisions affecting current work:
 - [Phase ?]: Phase 02-02: Zod 4 idiomatic z.iso.datetime + chained z.string().min(1, msg).email(msg) preferred over deprecated z.string().datetime() (only chained form attaches distinct empty-vs-malformed messages)
 - [Phase ?]: Phase 02-02: User = Visitor as structural type alias (not interface re-export); AuthProvider keeps its inline narrower User until Plan 02-05 rewrites it — types coexist safely
 - [Phase ?]: Phase 02-02: Form-step + signin schemas not re-exported through storage barrel; uniqueness + credential-mismatch errors are page-handler concerns, not Zod refinements
+- [Phase ?]: Phase 02-03: authRepo enforces zero direct localStorage.* — every read goes through readWithSchema(K.x(), XSchema, []) so corrupt/tampered values fall through to [] (FND-04 compliance, smoke-asserted)
+- [Phase ?]: Phase 02-03: createVisitor returns Visitor with only passwordHash — TypeScript-enforced via explicit destructure + Visitor return type; smoke asserts no plaintext in returned record nor in stored JSON
+- [Phase ?]: Phase 02-03: nanoid@^5.1.11 pinned; supplies Visitor.id and Workspace.id (locks CLAUDE.md 'nanoid for Pendo visitor+account IDs' contract for Phase 6 PendoBridge)
 
 ### Pending Todos
 
@@ -100,6 +104,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-05-14T15:11:28.536Z
-Stopped at: Phase 2 UI-SPEC approved
+Last session: 2026-05-14T15:18:53.874Z
+Stopped at: Completed 02-03-PLAN.md (auth repo + SHA-256 password hash)
 Resume file: None
