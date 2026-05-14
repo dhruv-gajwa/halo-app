@@ -51,7 +51,7 @@ Plans:
 - [x] 01-04-PLAN.md — Provider stack (Storage → Auth → Workspace → PendoBridge-stub → Router slot) (FND-07)
 
 **Wave 4** *(blocked on Wave 3 completion)*
-- [ ] 01-05-PLAN.md — React Router 7 + public/`/app` route split + DemoBanner (FND-03, FND-06)
+- [x] 01-05-PLAN.md — React Router 7 + public/`/app` route split + DemoBanner (FND-03, FND-06)
 
 **Wave 5** *(blocked on Wave 4 completion)*
 - [ ] 01-06-PLAN.md — PENDO_IDS registry + UI primitive wrappers + masked PasswordInput + conventions doc + sandbox smoke-render (PEN-07, PEN-08, PEN-09)

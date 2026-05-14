@@ -9,10 +9,10 @@
 
 - [x] **FND-01**: Vite + React 18 + TypeScript scaffold runs locally via `npm run dev`
 - [x] **FND-02**: Mantine 7 is wired in with a Halo-branded theme (color, font, AppShell baseline) so every page looks like a real SaaS
-- [ ] **FND-03**: React Router 6 is configured with History API routing (no hash routes); a hard split exists between a public layout and an authenticated `/app/*` layout
+- [x] **FND-03**: React Router 6 is configured with History API routing (no hash routes); a hard split exists between a public layout and an authenticated `/app/*` layout
 - [x] **FND-04**: All persistent data lives in `localStorage` behind a namespaced versioned key scheme (`halo:v1:<domain>[:scopeId]`); every read is Zod-validated and falls back safely on parse failure
 - [x] **FND-05**: A `halo:v1:meta` key stores `{ schemaVersion, seededAt, appVersion }` and a boot-time migration runner upgrades older schemas
-- [ ] **FND-06**: A visible "Demo data only — never enter real credentials" banner appears on the public layout
+- [x] **FND-06**: A visible "Demo data only — never enter real credentials" banner appears on the public layout
 - [x] **FND-07**: Provider stack mounts in the order `Storage → Auth → Workspace → PendoBridge → Router`; sign-in / sign-out / workspace-change flow is the *only* trigger for Pendo identity changes
 
 ### Pendo Integration (cross-cutting)
@@ -164,10 +164,10 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 |-------------|-------|--------|
 | FND-01 | Phase 1 | Complete |
 | FND-02 | Phase 1 | Complete |
-| FND-03 | Phase 1 | Pending |
+| FND-03 | Phase 1 | Complete |
 | FND-04 | Phase 1 | Complete |
 | FND-05 | Phase 1 | Complete |
-| FND-06 | Phase 1 | Pending |
+| FND-06 | Phase 1 | Complete |
 | FND-07 | Phase 1 | Complete |
 | PEN-01 | Phase 6 | Pending |
 | PEN-02 | Phase 6 | Pending |

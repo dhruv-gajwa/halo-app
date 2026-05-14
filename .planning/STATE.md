@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "01-03-PLAN.md complete — storage envelope verified: halo:v1:meta present in browser localStorage, idempotent across refresh, console clean"
-last_updated: "2026-05-14T13:31:19.861Z"
+stopped_at: "01-05-PLAN.md complete — React Router 7 + public/app route split verified: DemoBanner on / only, /app deep-link survives refresh, console clean"
+last_updated: "2026-05-14T13:40:37.047Z"
 last_activity: 2026-05-14
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 6
-  completed_plans: 4
-  percent: 67
+  completed_plans: 5
+  percent: 83
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 ## Current Position
 
 Phase: 01 (foundation-cross-cutting-contracts) — EXECUTING
-Plan: 5 of 6 (01-01 + 01-02 + 01-03 complete; next: Wave 3 — 01-04 provider stack)
+Plan: 6 of 6 (01-01 + 01-02 + 01-03 complete; next: Wave 3 — 01-04 provider stack)
 Status: Ready to execute
 Last activity: 2026-05-14
 
-Progress: [███████░░░] 67%
+Progress: [████████░░] 83%
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Progress: [███████░░░] 67%
 | Phase 01 P02 | 8min | - tasks | - files |
 | Phase 01 P01-03 | 8min | 3 tasks | 10 files |
 | Phase 01 P04 | 16min | 3 tasks | 7 files |
+| Phase Phase 01 PPlan 05 | 15min | - tasks | - files |
 
 ## Accumulated Context
 
@@ -68,6 +69,7 @@ Recent decisions affecting current work:
 - Init: Multi-step registration ships as four distinct URLs (`/signup`, `/signup/details`, `/signup/company`, `/signup/preferences`)
 - 2026-05-13: User decision — defer all Pendo *runtime* (PEN-01..06) to a new end-of-milestone Phase 6 ("Pendo Install & Wiring"). Phases 1–5 build a Pendo-*ready* app (selector registry, `data-pendo-id` markup contract, SVG-only charting convention, masked-input primitive with `.pendo-sr-ignore` class) without any live Pendo wiring. Provider stack reserves the `PendoBridge` slot as a no-op pass-through stub.
 - [Phase ?]: FND-07 satisfied: provider stack assembled as thin Phase 1 stubs (Storage→Auth→Workspace→PendoBridge); each phase replaces provider body without touching App.tsx
+- [Phase ?]: 01-05: react-router@7.15 installed (unified react-router package); two-layout route split (/ PublicLayout + /app AppLayout); DemoBanner on public layout only; Phase 6 PendoRouteBridge slot reserved via TODO comments
 
 ### Pending Todos
 
@@ -88,6 +90,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-05-14T13:31:19.857Z
-Stopped at: 01-03-PLAN.md complete — storage envelope verified: halo:v1:meta present in browser localStorage, idempotent across refresh, console clean
+Last session: 2026-05-14T13:40:37.042Z
+Stopped at: 01-05-PLAN.md complete — React Router 7 + public/app route split verified: DemoBanner on / only, /app deep-link survives refresh, console clean
 Resume file: None
