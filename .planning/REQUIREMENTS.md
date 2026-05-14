@@ -23,9 +23,9 @@
 - [ ] **PEN-04**: `pendo.identify` is re-called whenever workspace switches or profile/workspace settings change, so metadata stays in sync
 - [ ] **PEN-05**: Sign-out resets Pendo identity (via `pendo.clearSession()` or a hard reload) and never leaves stale identity attached to the next session
 - [ ] **PEN-06**: Every SPA route change emits `pendo.location.setUrl(window.location.href)` so Pendo sees same-shell navigations
-- [ ] **PEN-07**: A centralized `PENDO_IDS` TypeScript registry is the *only* source of `data-pendo-id` values; every interactive element on every page carries one
-- [ ] **PEN-08**: Every chart is rendered as SVG (Recharts) — no canvas-backed charts anywhere — so Pendo guides and Session Replay can target chart elements
-- [ ] **PEN-09**: Sensitive fields (password inputs) carry a Session-Replay mask attribute so they never appear in replays
+- [x] **PEN-07**: A centralized `PENDO_IDS` TypeScript registry is the *only* source of `data-pendo-id` values; every interactive element on every page carries one
+- [x] **PEN-08**: Every chart is rendered as SVG (Recharts) — no canvas-backed charts anywhere — so Pendo guides and Session Replay can target chart elements
+- [x] **PEN-09**: Sensitive fields (password inputs) carry a Session-Replay mask attribute so they never appear in replays
 
 ### Authentication & Registration
 
@@ -172,9 +172,9 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 | PEN-01 | Phase 6 | Pending |
 | PEN-02 | Phase 6 | Pending |
 | PEN-06 | Phase 6 | Pending |
-| PEN-07 | Phase 1 | Pending |
-| PEN-08 | Phase 1 | Pending |
-| PEN-09 | Phase 1 | Pending |
+| PEN-07 | Phase 1 | Complete |
+| PEN-08 | Phase 1 | Complete |
+| PEN-09 | Phase 1 | Complete |
 | AUTH-01 | Phase 2 | Pending |
 | AUTH-02 | Phase 2 | Pending |
 | AUTH-03 | Phase 2 | Pending |

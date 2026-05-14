@@ -54,7 +54,7 @@ Plans:
 - [x] 01-05-PLAN.md — React Router 7 + public/`/app` route split + DemoBanner (FND-03, FND-06)
 
 **Wave 5** *(blocked on Wave 4 completion)*
-- [ ] 01-06-PLAN.md — PENDO_IDS registry + UI primitive wrappers + masked PasswordInput + conventions doc + sandbox smoke-render (PEN-07, PEN-08, PEN-09)
+- [x] 01-06-PLAN.md — PENDO_IDS registry + UI primitive wrappers + masked PasswordInput + conventions doc + sandbox smoke-render (PEN-07, PEN-08, PEN-09)
 
 ### Phase 2: Registration & Sign-In
 **Goal**: A four-step registration wizard (each step at its own URL), plus sign-in/sign-out, plus route guards — all functionally complete without any live Pendo wiring. Phase 6 will retrofit identify/clearSession calls onto the same flows.
