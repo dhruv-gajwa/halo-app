@@ -45,7 +45,7 @@
 ### App Shell & Navigation
 
 - [ ] **SHELL-01**: Authenticated routes render inside a Mantine AppShell with a persistent left side nav and a top bar
-- [ ] **SHELL-02**: Side nav links to: Dashboard, Lists, Reports, Team, Settings, Help; active route is visually indicated
+- [x] **SHELL-02**: Side nav links to: Dashboard, Lists, Reports, Team, Settings, Help; active route is visually indicated
 - [ ] **SHELL-03**: Top bar shows the current workspace name and a user-menu button (avatar + name); menu contains Profile, Settings, Sign Out
 - [ ] **SHELL-04**: Deep-linking works — refreshing on any `/app/*` route lands on that route (no fallback to root)
 
@@ -56,7 +56,7 @@
 - [x] **DASH-03**: Dashboard shows at least one bar/area chart (tasks completed over time) and one pie/donut chart (tasks by status or by assignee), both rendered with Recharts (SVG)
 - [ ] **DASH-04**: Dashboard has a time-range selector (e.g., last 7 / 30 / 90 days) that re-filters all charts and stats
 - [ ] **DASH-05**: Dashboard shows a recent-activity feed (most-recent task changes from seeded data)
-- [ ] **DASH-06**: Dashboard renders a friendly empty state when there are no tasks (good guide-anchor surface)
+- [x] **DASH-06**: Dashboard renders a friendly empty state when there are no tasks (good guide-anchor surface)
 
 ### Lists (Tasks)
 
@@ -189,7 +189,7 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 | AUTH-12 | Phase 2 | Complete |
 | PEN-03 | Phase 6 | Pending |
 | SHELL-01 | Phase 3 | Pending |
-| SHELL-02 | Phase 3 | Pending |
+| SHELL-02 | Phase 3 | Complete |
 | SHELL-03 | Phase 3 | Pending |
 | SHELL-04 | Phase 3 | Pending |
 | DASH-01 | Phase 3 | Pending |
@@ -197,7 +197,7 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 | DASH-03 | Phase 3 | Complete |
 | DASH-04 | Phase 3 | Pending |
 | DASH-05 | Phase 3 | Pending |
-| DASH-06 | Phase 3 | Pending |
+| DASH-06 | Phase 3 | Complete |
 | LIST-01 | Phase 4 | Pending |
 | LIST-02 | Phase 4 | Pending |
 | LIST-03 | Phase 4 | Pending |
