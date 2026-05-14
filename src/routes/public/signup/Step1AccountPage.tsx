@@ -38,6 +38,7 @@ import {
   findVisitorByUsername,
   readWizardDraft,
   writeWizardDraftStep,
+  setWizardPassword,
 } from '../../../auth'
 
 const EMAIL_DUPLICATE_MESSAGE = 'An account with this email already exists.'
@@ -80,7 +81,13 @@ export function Step1AccountPage(): React.JSX.Element {
       })
       return
     }
-    writeWizardDraftStep('step1', values)
+    // CR-02 mitigation: keep the plaintext password OUT of sessionStorage.
+    // The on-disk draft holds only fields safe to round-trip; the password
+    // lives in a tab-scoped in-memory holder for the rest of the wizard,
+    // dropped by clearWizardDraft() on completion or sign-out.
+    const { password, ...nonSecretValues } = values
+    setWizardPassword(password)
+    writeWizardDraftStep('step1', nonSecretValues)
     navigate('/signup/details')
   })
 

@@ -31,6 +31,49 @@ import { K } from '../storage'
 import { SignupDraftSchema } from './schemas'
 import type { SignupDraft } from './types'
 
+// ---------------------------------------------------------------------------
+// In-memory plaintext-password holder (CR-02 mitigation, Phase 2 code review).
+//
+// The Step 1 password is the ONE wizard field that is sensitive enough to
+// keep out of sessionStorage. Persisting plaintext to disk-adjacent storage
+// (sessionStorage IS visible to DevTools, extensions, and any in-tab JS)
+// widens the threat-model retention window beyond what UI-SPEC + the Phase 2
+// threat-model intend — abandonment, error paths, and tab-refresh cases all
+// leave the plaintext in `halo:v1:signup:draft` indefinitely.
+//
+// Trade-off: this holder lives in module scope so it is tab-scoped (same
+// JS realm as the wizard) and dropped on page refresh / tab close. Refreshing
+// mid-wizard means the user has to re-enter their password — acceptable for
+// a demo flow because the refresh case is rare and a re-typed password is
+// strictly safer than a sessionStorage-resident plaintext.
+//
+// Cleared by `clearWizardDraft()` (the same teardown that removes the disk
+// portion of the draft) so callers do not need a separate clear call.
+// ---------------------------------------------------------------------------
+
+let wizardPlaintextPassword: string | null = null
+
+/**
+ * Stash the Step 1 plaintext password for the duration of the wizard. Called
+ * by Step 1's onSubmit before navigating to Step 2. Replaces any previous
+ * value (re-entering Step 1 overwrites the prior attempt).
+ */
+export function setWizardPassword(password: string): void {
+  wizardPlaintextPassword = password
+}
+
+/**
+ * Read the in-memory plaintext password set by `setWizardPassword`. Returns
+ * `null` if Step 1 has not been submitted in this tab session (e.g. the user
+ * refreshed mid-wizard or deep-linked past Step 1 from a hand-edited URL).
+ * Step 4's completion handler treats `null` as a failure and routes back to
+ * `/signup` (or surfaces the generic Alert) because the schema-validated
+ * draft alone cannot reconstruct a password.
+ */
+export function getWizardPassword(): string | null {
+  return wizardPlaintextPassword
+}
+
 /**
  * Read the current wizard draft from sessionStorage, validating against
  * `SignupDraftSchema`. Returns `{}` on:
@@ -95,6 +138,10 @@ export function writeWizardDraftStep<Step extends keyof SignupDraft>(
  * Non-fatal: errors are swallowed silently.
  */
 export function clearWizardDraft(): void {
+  // Drop the in-memory plaintext password first — the on-disk draft never
+  // held it (CR-02 mitigation), so clearing this is the actual teardown of
+  // the wizard's plaintext-password retention window.
+  wizardPlaintextPassword = null
   try {
     sessionStorage.removeItem(K.signupDraft())
   } catch {

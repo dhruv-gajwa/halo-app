@@ -41,6 +41,8 @@ export {
   writeWizardDraftStep,
   clearWizardDraft,
   hasStep,
+  setWizardPassword,
+  getWizardPassword,
 } from './wizardSession'
 
 // Schemas + types — IS the surface for these files

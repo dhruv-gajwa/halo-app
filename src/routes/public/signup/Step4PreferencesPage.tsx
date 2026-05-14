@@ -42,6 +42,7 @@ import {
   writeWizardDraftStep,
   clearWizardDraft,
   hasStep,
+  getWizardPassword,
 } from '../../../auth'
 
 const USE_CASE_OPTIONS = [
@@ -93,8 +94,22 @@ export function Step4PreferencesPage(): React.JSX.Element {
       // and tampers with sessionStorage between mount and submit (T-02-39).
       // .parse(...) (not .safeParse) throws on schema mismatch; the catch
       // surfaces the generic Alert rather than writing half-data.
+      //
+      // CR-02 mitigation: the on-disk draft NO LONGER carries `password` —
+      // the plaintext lives only in `getWizardPassword()` (tab-scoped, in
+      // memory). Inject it back into the step-1 payload before parsing so
+      // step1Schema still enforces the same shape it always did.
       const freshDraft = readWizardDraft()
-      const s1 = step1Schema.parse(freshDraft.step1)
+      const plaintextPassword = getWizardPassword()
+      if (plaintextPassword === null) {
+        // No password in memory means the user refreshed mid-wizard or
+        // deep-linked here without going through Step 1 in this tab. The
+        // hasStep gate above caught the deep-link case; treat the refresh
+        // case as a generic failure (the user will be redirected to /signup
+        // on the next mount by the gate).
+        throw new Error('wizard password not in memory')
+      }
+      const s1 = step1Schema.parse({ ...freshDraft.step1, password: plaintextPassword })
       const s2 = step2Schema.parse(freshDraft.step2)
       const s3 = step3Schema.parse(freshDraft.step3)
 
