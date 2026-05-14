@@ -30,14 +30,14 @@
 ### Authentication & Registration
 
 - [ ] **AUTH-01**: User can sign up via a multi-step wizard, each step at its own URL: `/signup` (identity), `/signup/details` (personal details), `/signup/company` (company info), `/signup/preferences` (onboarding preferences)
-- [ ] **AUTH-02**: Step 1 captures basic identity: email, password, first name, last name, username
-- [ ] **AUTH-03**: Step 2 captures personal details: job title, role, years of experience, location
-- [ ] **AUTH-04**: Step 3 captures company info: company name, company size, industry, plan tier (free / pro / enterprise)
-- [ ] **AUTH-05**: Step 4 captures onboarding preferences: primary use case, team size, top goals (multi-select)
+- [x] **AUTH-02**: Step 1 captures basic identity: email, password, first name, last name, username
+- [x] **AUTH-03**: Step 2 captures personal details: job title, role, years of experience, location
+- [x] **AUTH-04**: Step 3 captures company info: company name, company size, industry, plan tier (free / pro / enterprise)
+- [x] **AUTH-05**: Step 4 captures onboarding preferences: primary use case, team size, top goals (multi-select)
 - [ ] **AUTH-06**: Each step is validated with React Hook Form + Zod; invalid input blocks advance and shows inline errors
 - [ ] **AUTH-07**: Wizard state persists to `sessionStorage` so browser refresh / back / forward mid-flow doesn't lose progress; clears on completion or sign-out
 - [ ] **AUTH-08**: On wizard completion, a visitor + workspace record is written to `localStorage`, the password is hashed (SHA-256 via `crypto.subtle.digest`) before storage, and the user is signed in
-- [ ] **AUTH-09**: User can sign in with email and password on a `/signin` page; password match is performed against the stored SHA-256 hash
+- [x] **AUTH-09**: User can sign in with email and password on a `/signin` page; password match is performed against the stored SHA-256 hash
 - [ ] **AUTH-10**: Authenticated session persists across browser refresh (auth state hydrated from localStorage on boot)
 - [ ] **AUTH-11**: User can sign out from the top-bar user menu; sign-out clears the in-memory session, resets Pendo, and returns the user to the public landing
 - [ ] **AUTH-12**: A `RequireAuth` route guard redirects unauthenticated users from `/app/*` to `/signin`; a `RequireAnon` guard redirects authenticated users away from signup/signin to `/app`
@@ -176,14 +176,14 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 | PEN-08 | Phase 1 | Complete |
 | PEN-09 | Phase 1 | Complete |
 | AUTH-01 | Phase 2 | Pending |
-| AUTH-02 | Phase 2 | Pending |
-| AUTH-03 | Phase 2 | Pending |
-| AUTH-04 | Phase 2 | Pending |
-| AUTH-05 | Phase 2 | Pending |
+| AUTH-02 | Phase 2 | Complete |
+| AUTH-03 | Phase 2 | Complete |
+| AUTH-04 | Phase 2 | Complete |
+| AUTH-05 | Phase 2 | Complete |
 | AUTH-06 | Phase 2 | Pending |
 | AUTH-07 | Phase 2 | Pending |
 | AUTH-08 | Phase 2 | Pending |
-| AUTH-09 | Phase 2 | Pending |
+| AUTH-09 | Phase 2 | Complete |
 | AUTH-10 | Phase 2 | Pending |
 | AUTH-11 | Phase 2 | Pending |
 | AUTH-12 | Phase 2 | Pending |

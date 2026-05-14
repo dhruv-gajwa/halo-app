@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Completed 01-06-PLAN.md — PENDO_IDS registry + primitives + sandbox + conventions; human-verify approved
-last_updated: "2026-05-14T14:03:54.600Z"
+status: executing
+stopped_at: Phase 2 UI-SPEC approved
+last_updated: "2026-05-14T15:02:42.091Z"
 last_activity: 2026-05-14
 progress:
   total_phases: 6
   completed_phases: 1
-  total_plans: 6
-  completed_plans: 6
-  percent: 100
+  total_plans: 16
+  completed_plans: 7
+  percent: 44
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-13)
 
 **Core value:** A convincing, multi-page SaaS surface that a Pendo customer or pre-sales engineer can install Pendo into and exercise track events & funnels, guides & in-app messaging, feature adoption analytics, and Session Replay & Listen — all without a backend.
-**Current focus:** Phase 01 — foundation-cross-cutting-contracts
+**Current focus:** Phase 02 — registration-sign-in
 
 ## Current Position
 
-Phase: 01 (foundation-cross-cutting-contracts) — EXECUTING
-Plan: 6 of 6 (01-01 + 01-02 + 01-03 complete; next: Wave 3 — 01-04 provider stack)
-Status: Phase complete — ready for verification
+Phase: 02 (registration-sign-in) — EXECUTING
+Plan: 2 of 10
+Status: Ready to execute
 Last activity: 2026-05-14
 
-Progress: [██████████] 100%
+Progress: [████░░░░░░] 44%
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Progress: [██████████] 100%
 | Phase Phase 01 PPlan 05 | 15min | - tasks | - files |
 | Phase 01 P06 | 8 | 2 tasks | 9 files |
 | Phase 01 P06 | 8 | 3 tasks | 9 files |
+| Phase 02 P01 | 2min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,8 @@ Recent decisions affecting current work:
 - [Phase ?]: FND-07 satisfied: provider stack assembled as thin Phase 1 stubs (Storage→Auth→Workspace→PendoBridge); each phase replaces provider body without touching App.tsx
 - [Phase ?]: 01-05: react-router@7.15 installed (unified react-router package); two-layout route split (/ PublicLayout + /app AppLayout); DemoBanner on public layout only; Phase 6 PendoRouteBridge slot reserved via TODO comments
 - [Phase ?]: PasswordInput applies .pendo-sr-ignore CSS class (NOT data-pendo-mask attribute) per Pendo SDK 2.324.0 verified source
+- [Phase 02-01]: Kept multi-line type-alias shape on new primitives (mirrors Phase 1 TextInput.tsx canonical); Task 2 single-line AC regex documented as plan-internal inconsistency in 02-01-SUMMARY Deviations
+- [Phase 02-01]: signup.* PENDO_IDS organized by step number (step1..step4) not URL slug — registry mirrors wizard narrative regardless of URL choices
 
 ### Pending Todos
 
@@ -93,6 +96,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-05-14T14:03:54.593Z
-Stopped at: Completed 01-06-PLAN.md — PENDO_IDS registry + primitives + sandbox + conventions; human-verify approved
+Last session: 2026-05-14T14:59:48.629Z
+Stopped at: Phase 2 UI-SPEC approved
 Resume file: None
