@@ -44,10 +44,10 @@
 
 ### App Shell & Navigation
 
-- [ ] **SHELL-01**: Authenticated routes render inside a Mantine AppShell with a persistent left side nav and a top bar
+- [x] **SHELL-01**: Authenticated routes render inside a Mantine AppShell with a persistent left side nav and a top bar
 - [x] **SHELL-02**: Side nav links to: Dashboard, Lists, Reports, Team, Settings, Help; active route is visually indicated
-- [ ] **SHELL-03**: Top bar shows the current workspace name and a user-menu button (avatar + name); menu contains Profile, Settings, Sign Out
-- [ ] **SHELL-04**: Deep-linking works — refreshing on any `/app/*` route lands on that route (no fallback to root)
+- [x] **SHELL-03**: Top bar shows the current workspace name and a user-menu button (avatar + name); menu contains Profile, Settings, Sign Out
+- [x] **SHELL-04**: Deep-linking works — refreshing on any `/app/*` route lands on that route (no fallback to root)
 
 ### Dashboard
 
@@ -188,10 +188,10 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 | AUTH-11 | Phase 2 | Complete |
 | AUTH-12 | Phase 2 | Complete |
 | PEN-03 | Phase 6 | Pending |
-| SHELL-01 | Phase 3 | Pending |
+| SHELL-01 | Phase 3 | Complete |
 | SHELL-02 | Phase 3 | Complete |
-| SHELL-03 | Phase 3 | Pending |
-| SHELL-04 | Phase 3 | Pending |
+| SHELL-03 | Phase 3 | Complete |
+| SHELL-04 | Phase 3 | Complete |
 | DASH-01 | Phase 3 | Complete |
 | DASH-02 | Phase 3 | Complete |
 | DASH-03 | Phase 3 | Complete |
