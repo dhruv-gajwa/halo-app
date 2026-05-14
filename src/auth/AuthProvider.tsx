@@ -12,18 +12,21 @@
  * The provider POSITION inside `src/App.tsx` is fixed per FND-07 — this
  * file's BODY is the only thing Phase 2 touches. App.tsx is not edited.
  *
- * Why no `useMemo` around `value`: Zustand selectors handle the change
- * detection that matters. The context value reference recreating on each
- * provider render is harmless because the components reading the context
- * subscribe to Zustand slices, and those slices only change when the
- * underlying store fields change.
+ * Why `useMemo` around `value` (WR-08): without memoization, the context
+ * value reference changes on every Provider render — fine for consumers
+ * that ALSO call `useAuthStore(...)` (Zustand handles their diffing), but a
+ * consumer that ONLY does `const { signOut } = useAuth()` would re-render on
+ * every Provider commit (e.g. every time `currentVisitor` changes) even
+ * though `signOut` itself is stable. Phase 3's top-bar will be one such
+ * consumer. Keying the memo on the subscribed slices keeps the reference
+ * stable across unrelated store updates.
  *
  * Why no loading state: hydration is synchronous (authStore's module-init
  * `hydrateAuthFromStorage()` runs before React mounts). There is no async
  * boot phase.
  */
 
-import { createContext } from 'react'
+import { createContext, useMemo } from 'react'
 import type { ReactNode } from 'react'
 import { useAuthStore } from './authStore'
 import type { Visitor, Workspace } from './types'
@@ -70,15 +73,25 @@ export function AuthProvider({ children }: { children: ReactNode }): React.JSX.E
   const signInFromVisitor = useAuthStore.getState().signInFromVisitor
   const signOut = useAuthStore.getState().signOut
 
-  const value: AuthContextValue = {
-    user: currentVisitor,
-    currentVisitor,
-    currentWorkspace,
-    isAuthenticated,
-    signInWithCredentials,
-    signInFromVisitor,
-    signOut,
-  }
+  const value = useMemo<AuthContextValue>(
+    () => ({
+      user: currentVisitor,
+      currentVisitor,
+      currentWorkspace,
+      isAuthenticated,
+      signInWithCredentials,
+      signInFromVisitor,
+      signOut,
+    }),
+    [
+      currentVisitor,
+      currentWorkspace,
+      isAuthenticated,
+      signInWithCredentials,
+      signInFromVisitor,
+      signOut,
+    ],
+  )
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
