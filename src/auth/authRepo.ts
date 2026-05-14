@@ -17,6 +17,15 @@
  *     `password` field; `VisitorSchema` enforces the `passwordHash` shape.
  *   - Errors from `writeJSON` (e.g. QuotaExceededError) are swallowed by the
  *     codec; the repo neither retries nor surfaces failure.
+ *   - **Non-atomic read-modify-write (WR-04):** Both `createVisitor` and
+ *     `createWorkspace` do `listX() → spread → writeJSON([...existing, x])`.
+ *     localStorage offers no lock primitive, so two concurrent calls — across
+ *     tabs OR `await`-spaced within a single tab (the `await hashPassword`
+ *     window in `createVisitor` is the realistic intra-tab gap) — can drop
+ *     records. Last-write-wins clobber. Do NOT lean on this repo for any
+ *     flow where data loss on race matters; storage-event reconciliation
+ *     (the auth-store cross-tab session sync TODO) does not help here
+ *     because that is a session-level concern, not a list-merge concern.
  */
 
 import { nanoid } from 'nanoid'
