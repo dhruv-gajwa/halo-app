@@ -1,52 +1,86 @@
 /**
- * AuthProvider — Phase 1 stub.
+ * AuthProvider — Phase 2 implementation. Bridges the Zustand `useAuthStore`
+ * into React Context so existing `useAuth()` consumers (and the FND-07
+ * provider position in `src/App.tsx`) keep working. The store itself owns
+ * all state and side effects; the Provider just keeps the position in the
+ * React tree and exposes the typed `AuthContextValue` via `useContext`.
  *
- * Returns `{ user: null, signIn, signOut }` where:
- *   - `signIn` throws to fail loudly if accidentally called in Phase 1 (not yet implemented)
- *   - `signOut` is a silent no-op so future UI affordances can be wired safely
+ * Phase 1 stub behavior (user=null, signIn throws, signOut no-op) is REMOVED.
+ * The inline `User` type that lived here in Phase 1 is also REMOVED — `User`
+ * (alias of `Visitor`) now lives in `./types` per Plan 02-02.
  *
- * Phase 2 replaces the BODY of this component with real localStorage-backed auth
- * (Zustand store, registration flow, session hydration). The provider POSITION in
- * src/App.tsx stays fixed — Phase 2 never needs to edit App.tsx.
+ * The provider POSITION inside `src/App.tsx` is fixed per FND-07 — this
+ * file's BODY is the only thing Phase 2 touches. App.tsx is not edited.
  *
- * NOTE: The `User` type defined inline here will be promoted to src/auth/types.ts in
- * Phase 2. Downstream plans (05, 06) can import it from this file in the interim.
+ * Why no `useMemo` around `value`: Zustand selectors handle the change
+ * detection that matters. The context value reference recreating on each
+ * provider render is harmless because the components reading the context
+ * subscribe to Zustand slices, and those slices only change when the
+ * underlying store fields change.
+ *
+ * Why no loading state: hydration is synchronous (authStore's module-init
+ * `hydrateAuthFromStorage()` runs before React mounts). There is no async
+ * boot phase.
  */
 
 import { createContext } from 'react'
 import type { ReactNode } from 'react'
+import { useAuthStore } from './authStore'
+import type { Visitor, Workspace } from './types'
+import type { SignInResult } from './authStore'
 
-/** Inline placeholder — Phase 2 promotes this to src/auth/types.ts */
-export type User = {
-  id: string
-  email: string
-  name: string
-}
-
+/**
+ * Public context-value shape. Seven fields:
+ *  - `user` is an alias of `currentVisitor`, preserved for back-compat with
+ *    the Plan 01-04 stub consumers.
+ *  - `signInWithCredentials` is the credentials-checking entry point used by
+ *    the `/signin` page (Plan 02-10).
+ *  - `signInFromVisitor` is the post-wizard sign-in path used by the
+ *    completion handler (Plan 02-09) — bypasses credential check because
+ *    the caller just created the visitor + workspace via `authRepo`.
+ *  - `signOut` is async (returns `Promise<void>`) for signature parity with
+ *    the previous Phase 1 stub. Resolves after clearing store + session +
+ *    wizard draft. Redirects (`navigate('/')`) are the calling page's job
+ *    per UI-SPEC's "redirect is the confirmation" rule.
+ */
 export type AuthContextValue = {
-  user: User | null
-  signIn: (email: string, password: string) => Promise<void>
+  user: Visitor | null
+  currentVisitor: Visitor | null
+  currentWorkspace: Workspace | null
+  isAuthenticated: boolean
+  signInWithCredentials: (email: string, password: string) => Promise<SignInResult>
+  signInFromVisitor: (visitor: Visitor, workspace: Workspace) => void
   signOut: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
-const STUB_VALUE: AuthContextValue = {
-  user: null,
-  signIn: async (_email: string, _password: string) => {
-    throw new Error(
-      'AuthProvider stub: signIn is not implemented in Phase 1. ' +
-        'Phase 2 replaces this stub with real localStorage-backed auth.',
-    )
-  },
-  signOut: async () => {
-    // no-op in Phase 1 — silent so future sign-out UI can be wired safely
-  },
-}
-
 export function AuthProvider({ children }: { children: ReactNode }): React.JSX.Element {
-  return <AuthContext.Provider value={STUB_VALUE}>{children}</AuthContext.Provider>
+  // Subscribe to the slices we expose via context. Selecting individual
+  // fields means context value only recomputes when those specific fields
+  // change — Zustand handles the diffing.
+  const currentVisitor = useAuthStore((s) => s.currentVisitor)
+  const currentWorkspace = useAuthStore((s) => s.currentWorkspace)
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
+
+  // Actions are stable across the store's lifetime — read them off the
+  // vanilla `getState()` so we don't trigger a re-render every time the
+  // store updates a non-action slice.
+  const signInWithCredentials = useAuthStore.getState().signInWithCredentials
+  const signInFromVisitor = useAuthStore.getState().signInFromVisitor
+  const signOut = useAuthStore.getState().signOut
+
+  const value: AuthContextValue = {
+    user: currentVisitor,
+    currentVisitor,
+    currentWorkspace,
+    isAuthenticated,
+    signInWithCredentials,
+    signInFromVisitor,
+    signOut,
+  }
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-// Re-export context for useAuth hook
+// Re-export context for the useAuth hook in ./useAuth.ts
 export { AuthContext }
