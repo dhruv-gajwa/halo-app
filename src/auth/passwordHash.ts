@@ -40,12 +40,13 @@ export async function hashPassword(password: string): Promise<string> {
  * Returns `false` (never throws) if `expectedHash` is not a 64-character
  * lowercase-hex string — defense against tampered or corrupted stored hashes.
  *
- * The equality check is length-prefixed and does NOT early-exit on the first
- * mismatching byte: the loop XORs each character-code pair into an accumulator
- * and only inspects the result after walking both strings to their declared
- * length. True constant-time comparison is impossible in JS without WASM (the
- * JIT can still reorder), but this explicit loop discourages timing-attack
- * accidents introduced by `===` short-circuiting.
+ * The equality check walks the full hash and XORs each character-code pair
+ * into an accumulator before inspecting the result — this loop avoids
+ * `===` short-circuiting. Do NOT infer real timing-attack resistance from
+ * it: Halo is a Pendo demo with no production threat model, and a JS-level
+ * "constant-time" compare is best-effort at best (the JIT can reorder, the
+ * GC can pause, the engine can deopt). The loop is documentation of intent,
+ * not a security guarantee.
  */
 export async function verifyPassword(
   password: string,
@@ -66,5 +67,8 @@ export async function verifyPassword(
   for (let i = 0; i < actualHash.length; i++) {
     acc |= actualHash.charCodeAt(i) ^ expectedHash.charCodeAt(i)
   }
-  return acc === 0 && actualHash.length === expectedHash.length
+  // WR-07: the redundant `actualHash.length === expectedHash.length` tail is
+  // gone — the early-return above already guarantees equality by the time
+  // we reach the accumulator inspection.
+  return acc === 0
 }
