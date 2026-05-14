@@ -103,7 +103,7 @@ export function Step1AccountPage(): React.JSX.Element {
             error={
               isEmailDuplicate ? (
                 <span>
-                  An account with this email already exists.{' '}
+                  {EMAIL_DUPLICATE_MESSAGE}{' '}
                   <Anchor
                     href="/signin"
                     pendoId={PENDO_IDS.signup.step1.signinAnchor}
