@@ -79,11 +79,14 @@ export function Step4PreferencesPage(): React.JSX.Element {
     // Validation fires on Create account click — matches UI-SPEC "validates on Next" rhythm.
     mode: 'onSubmit',
     defaultValues: {
-      primaryUseCase: undefined,
-      teamSize: undefined,
+      // Non-optional fields start undefined at form mount — surface the hole
+      // locally via per-field casts rather than `Partial<X> as X` double-casts
+      // that hide every other field's mismatch (WR-02).
+      primaryUseCase: undefined as unknown as Step4Values['primaryUseCase'],
+      teamSize: undefined as unknown as number,
       topGoals: [],
       ...(draft.step4 ?? {}),
-    } as Partial<Step4Values> as Step4Values,
+    },
   })
 
   const onSubmit = form.handleSubmit(async (step4Values) => {
@@ -182,13 +185,30 @@ export function Step4PreferencesPage(): React.JSX.Element {
           <Select
             label="What will you use Halo for?"
             placeholder="Pick what fits best"
-            data={USE_CASE_OPTIONS as unknown as string[]}
+            data={[...USE_CASE_OPTIONS]}
             value={form.watch('primaryUseCase') ?? null}
-            onChange={(value) =>
-              form.setValue('primaryUseCase', (value ?? '') as Step4Values['primaryUseCase'], {
-                shouldValidate: false,
-              })
-            }
+            onChange={(value) => {
+              // Mantine's Select hands back `string | null`. On clear (null)
+              // write undefined so the schema's enum mismatch fires the
+              // locked "Pick one to continue." copy. Narrow non-null via
+              // runtime enum-membership check (WR-02).
+              if (value === null) {
+                form.setValue(
+                  'primaryUseCase',
+                  undefined as unknown as Step4Values['primaryUseCase'],
+                  { shouldValidate: false },
+                )
+                return
+              }
+              const isKnown = (USE_CASE_OPTIONS as readonly string[]).includes(value)
+              form.setValue(
+                'primaryUseCase',
+                isKnown
+                  ? (value as Step4Values['primaryUseCase'])
+                  : (undefined as unknown as Step4Values['primaryUseCase']),
+                { shouldValidate: false },
+              )
+            }}
             error={form.formState.errors.primaryUseCase?.message}
             pendoId={PENDO_IDS.signup.step4.useCase}
           />
@@ -227,13 +247,18 @@ export function Step4PreferencesPage(): React.JSX.Element {
             label="What are you hoping to get out of Halo?"
             placeholder="Pick up to three"
             description="Select up to three."
-            data={GOAL_OPTIONS as unknown as string[]}
+            data={[...GOAL_OPTIONS]}
             value={form.watch('topGoals') ?? []}
-            onChange={(values) =>
-              form.setValue('topGoals', values as Step4Values['topGoals'], {
-                shouldValidate: false,
-              })
-            }
+            onChange={(values) => {
+              // Mantine's MultiSelect hands back `string[]`. Filter to known
+              // enum values so an unexpected string (creatable variant, paste)
+              // can't sneak past TS into RHF state. Zod re-validates at
+              // submit either way — this is defense in depth (WR-02).
+              const filtered = values.filter((v): v is Step4Values['topGoals'][number] =>
+                (GOAL_OPTIONS as readonly string[]).includes(v),
+              )
+              form.setValue('topGoals', filtered, { shouldValidate: false })
+            }}
             error={form.formState.errors.topGoals?.message}
             maxValues={3}
             pendoId={PENDO_IDS.signup.step4.goals}

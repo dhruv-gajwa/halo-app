@@ -62,11 +62,15 @@ export function Step2DetailsPage(): React.JSX.Element {
     mode: 'onSubmit',
     defaultValues: {
       jobTitle: '',
-      role: undefined,
-      yearsExperience: undefined,
+      // role + yearsExperience are non-optional in Step2Values but start
+      // empty (undefined) at form mount; the per-field cast surfaces the
+      // hole locally instead of laundering it through a `Partial<X> as X`
+      // pair of casts that hides every other field's mismatch too (WR-02).
+      role: undefined as unknown as Step2Values['role'],
+      yearsExperience: undefined as unknown as number,
       location: '',
       ...(draft.step2 ?? {}),
-    } as Partial<Step2Values> as Step2Values,
+    },
   })
 
   const onSubmit = form.handleSubmit((values) => {
@@ -97,13 +101,33 @@ export function Step2DetailsPage(): React.JSX.Element {
           <Select
             label="Role"
             placeholder="Select your role"
-            data={ROLE_OPTIONS as unknown as string[]}
+            data={[...ROLE_OPTIONS]}
             value={form.watch('role') ?? null}
-            onChange={(value) =>
-              form.setValue('role', (value ?? '') as Step2Values['role'], {
-                shouldValidate: false,
-              })
-            }
+            onChange={(value) => {
+              // Mantine's Select hands back `string | null`. On clear (null)
+              // we MUST write undefined so the schema's RoleEnum mismatch
+              // surfaces the locked "Pick the closest role." copy via
+              // z.number({message}) — NOT '' which would type-lie as a
+              // valid RoleEnum value (WR-02). On a non-null value we
+              // narrow via the runtime enum-membership check; an unknown
+              // string also falls to undefined (defensive — Mantine should
+              // only ever hand us a value from `data`, but a future
+              // creatable Select could).
+              if (value === null) {
+                form.setValue('role', undefined as unknown as Step2Values['role'], {
+                  shouldValidate: false,
+                })
+                return
+              }
+              const isKnown = (ROLE_OPTIONS as readonly string[]).includes(value)
+              form.setValue(
+                'role',
+                isKnown
+                  ? (value as Step2Values['role'])
+                  : (undefined as unknown as Step2Values['role']),
+                { shouldValidate: false },
+              )
+            }}
             error={form.formState.errors.role?.message}
             pendoId={PENDO_IDS.signup.step2.role}
           />

@@ -81,11 +81,14 @@ export function Step3CompanyPage(): React.JSX.Element {
     mode: 'onSubmit',
     defaultValues: {
       companyName: '',
-      companySize: undefined,
-      industry: undefined,
-      planTier: undefined,
+      // Non-optional enum fields start undefined at form mount — surface the
+      // hole locally via per-field casts rather than `Partial<X> as X`
+      // double-casts that hide every other field's mismatch (WR-02).
+      companySize: undefined as unknown as Step3Values['companySize'],
+      industry: undefined as unknown as Step3Values['industry'],
+      planTier: undefined as unknown as Step3Values['planTier'],
       ...(draft.step3 ?? {}),
-    } as Partial<Step3Values> as Step3Values,
+    },
   })
 
   const onSubmit = form.handleSubmit((values) => {
@@ -116,30 +119,56 @@ export function Step3CompanyPage(): React.JSX.Element {
           <Select
             label="Company size"
             placeholder="Select team size"
-            data={COMPANY_SIZE_OPTIONS as unknown as string[]}
+            data={[...COMPANY_SIZE_OPTIONS]}
             value={form.watch('companySize') ?? null}
-            onChange={(value) =>
+            onChange={(value) => {
+              // Mantine's Select hands back `string | null`. On clear (null)
+              // write undefined so the schema's enum mismatch fires the
+              // locked "Pick your company size." copy. On non-null narrow
+              // via the runtime enum-membership check (WR-02).
+              if (value === null) {
+                form.setValue(
+                  'companySize',
+                  undefined as unknown as Step3Values['companySize'],
+                  { shouldValidate: false },
+                )
+                return
+              }
+              const isKnown = (COMPANY_SIZE_OPTIONS as readonly string[]).includes(value)
               form.setValue(
                 'companySize',
-                (value ?? '') as Step3Values['companySize'],
+                isKnown
+                  ? (value as Step3Values['companySize'])
+                  : (undefined as unknown as Step3Values['companySize']),
                 { shouldValidate: false },
               )
-            }
+            }}
             error={form.formState.errors.companySize?.message}
             pendoId={PENDO_IDS.signup.step3.companySize}
           />
           <Select
             label="Industry"
             placeholder="Select an industry"
-            data={INDUSTRY_OPTIONS as unknown as string[]}
+            data={[...INDUSTRY_OPTIONS]}
             value={form.watch('industry') ?? null}
-            onChange={(value) =>
+            onChange={(value) => {
+              if (value === null) {
+                form.setValue(
+                  'industry',
+                  undefined as unknown as Step3Values['industry'],
+                  { shouldValidate: false },
+                )
+                return
+              }
+              const isKnown = (INDUSTRY_OPTIONS as readonly string[]).includes(value)
               form.setValue(
                 'industry',
-                (value ?? '') as Step3Values['industry'],
+                isKnown
+                  ? (value as Step3Values['industry'])
+                  : (undefined as unknown as Step3Values['industry']),
                 { shouldValidate: false },
               )
-            }
+            }}
             error={form.formState.errors.industry?.message}
             pendoId={PENDO_IDS.signup.step3.industry}
           />
@@ -147,15 +176,26 @@ export function Step3CompanyPage(): React.JSX.Element {
             label="Plan"
             placeholder="Choose a plan"
             description="You can change this later in Settings."
-            data={PLAN_OPTIONS as unknown as string[]}
+            data={[...PLAN_OPTIONS]}
             value={form.watch('planTier') ?? null}
-            onChange={(value) =>
+            onChange={(value) => {
+              if (value === null) {
+                form.setValue(
+                  'planTier',
+                  undefined as unknown as Step3Values['planTier'],
+                  { shouldValidate: false },
+                )
+                return
+              }
+              const isKnown = (PLAN_OPTIONS as readonly string[]).includes(value)
               form.setValue(
                 'planTier',
-                (value ?? '') as Step3Values['planTier'],
+                isKnown
+                  ? (value as Step3Values['planTier'])
+                  : (undefined as unknown as Step3Values['planTier']),
                 { shouldValidate: false },
               )
-            }
+            }}
             error={form.formState.errors.planTier?.message}
             pendoId={PENDO_IDS.signup.step3.planTier}
           />
