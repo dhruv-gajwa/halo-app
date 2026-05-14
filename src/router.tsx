@@ -1,6 +1,10 @@
 /**
  * Phase 1 route map — two top-level branches: `/` (public) and `/app` (authenticated shell).
  *
+ * Phase 1 also registers /sandbox under PublicLayout for the UI-primitive smoke render.
+ * Phase 5 polish may move /sandbox to a dev-only build flag; for Phase 1 it ships in
+ * the main route map for verifiability.
+ *
  * Phase 2 adds child routes under PublicLayout:
  *   - /signin            (sign-in form)
  *   - /signup            (multi-step registration: /signup, /signup/details,
@@ -20,6 +24,7 @@
 import { createBrowserRouter } from 'react-router'
 import { PublicLayout } from './routes/public/PublicLayout'
 import { Landing } from './routes/public/Landing'
+import { PrimitivesSandbox } from './routes/public/PrimitivesSandbox'
 import { AppLayout } from './routes/app/AppLayout'
 import { AppPlaceholder } from './routes/app/AppPlaceholder'
 
@@ -31,6 +36,10 @@ export const router = createBrowserRouter([
       {
         index: true,
         Component: Landing,
+      },
+      {
+        path: 'sandbox',
+        Component: PrimitivesSandbox,
       },
     ],
   },
