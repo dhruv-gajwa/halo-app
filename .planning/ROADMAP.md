@@ -48,7 +48,7 @@ Plans:
 - [x] 01-03-PLAN.md — Versioned localStorage envelope + Zod safe-read + migration runner + meta key (FND-04, FND-05)
 
 **Wave 3** *(blocked on Wave 2 completion)*
-- [ ] 01-04-PLAN.md — Provider stack (Storage → Auth → Workspace → PendoBridge-stub → Router slot) (FND-07)
+- [x] 01-04-PLAN.md — Provider stack (Storage → Auth → Workspace → PendoBridge-stub → Router slot) (FND-07)
 
 **Wave 4** *(blocked on Wave 3 completion)*
 - [ ] 01-05-PLAN.md — React Router 7 + public/`/app` route split + DemoBanner (FND-03, FND-06)

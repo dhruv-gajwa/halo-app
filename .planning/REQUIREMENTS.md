@@ -13,7 +13,7 @@
 - [x] **FND-04**: All persistent data lives in `localStorage` behind a namespaced versioned key scheme (`halo:v1:<domain>[:scopeId]`); every read is Zod-validated and falls back safely on parse failure
 - [x] **FND-05**: A `halo:v1:meta` key stores `{ schemaVersion, seededAt, appVersion }` and a boot-time migration runner upgrades older schemas
 - [ ] **FND-06**: A visible "Demo data only — never enter real credentials" banner appears on the public layout
-- [ ] **FND-07**: Provider stack mounts in the order `Storage → Auth → Workspace → PendoBridge → Router`; sign-in / sign-out / workspace-change flow is the *only* trigger for Pendo identity changes
+- [x] **FND-07**: Provider stack mounts in the order `Storage → Auth → Workspace → PendoBridge → Router`; sign-in / sign-out / workspace-change flow is the *only* trigger for Pendo identity changes
 
 ### Pendo Integration (cross-cutting)
 
@@ -168,7 +168,7 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 | FND-04 | Phase 1 | Complete |
 | FND-05 | Phase 1 | Complete |
 | FND-06 | Phase 1 | Pending |
-| FND-07 | Phase 1 | Pending |
+| FND-07 | Phase 1 | Complete |
 | PEN-01 | Phase 6 | Pending |
 | PEN-02 | Phase 6 | Pending |
 | PEN-06 | Phase 6 | Pending |
