@@ -13,7 +13,7 @@
  * Namespace growth plan:
  *   Phase 1: `layout`, `sandbox`
  *   Phase 2 (landed): `signup`, `signin`
- *   Phase 3: `nav`, `topbar`, `dashboard`
+ *   Phase 3: `nav`, `topbar`, `dashboard`, `comingSoon`
  *   Phase 4: `lists`, `settings`, `reports`
  *   Phase 5: `team`, `help`
  */
@@ -30,7 +30,6 @@ export const PENDO_IDS = {
   layout: {
     publicDemoBanner: 'layout.public.demo-banner',
     publicLanding: 'layout.public.landing',
-    appPlaceholder: 'layout.app.placeholder',
   },
 
   /**
@@ -106,6 +105,57 @@ export const PENDO_IDS = {
     password: 'signin.password',
     submit: 'signin.submit',
     signupAnchor: 'signin.signup-anchor',
+  },
+
+  /** Phase 3 side-nav targets. */
+  nav: {
+    dashboard: 'nav.dashboard',
+    lists:     'nav.lists',
+    reports:   'nav.reports',
+    team:      'nav.team',
+    settings:  'nav.settings',
+    help:      'nav.help',
+  },
+
+  /** Phase 3 top-bar + user-menu targets. */
+  topbar: {
+    logo:          'topbar.logo',
+    workspaceName: 'topbar.workspace-name',
+    userMenu: {
+      button:   'topbar.user-menu.button',
+      profile:  'topbar.user-menu.profile',
+      settings: 'topbar.user-menu.settings',
+      signout:  'topbar.user-menu.sign-out',
+    },
+  },
+
+  /** Phase 3 dashboard widget targets (KPIs, charts, activity, empty state). */
+  dashboard: {
+    timeRange: 'dashboard.time-range',
+    kpi: {
+      active:           'dashboard.kpi.active',
+      completedInRange: 'dashboard.kpi.completed-in-range',
+      overdue:          'dashboard.kpi.overdue',
+      completionRate:   'dashboard.kpi.completion-rate',
+      avgCycleTime:     'dashboard.kpi.avg-cycle-time',
+    },
+    chart: {
+      completedPerDay: 'dashboard.chart.completed-per-day',
+      byStatus:        'dashboard.chart.by-status',
+    },
+    activity: {
+      container: 'dashboard.activity.container',
+      item:      'dashboard.activity.item',
+    },
+    emptyState: {
+      container: 'dashboard.empty-state.container',
+      cta:       'dashboard.empty-state.cta',
+    },
+  },
+
+  /** Phase 3 shared placeholder-card target — single ID across all five placeholder routes. */
+  comingSoon: {
+    card: 'coming-soon.card',
   },
 } as const
 

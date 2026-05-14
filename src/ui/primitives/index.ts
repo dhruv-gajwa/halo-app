@@ -29,3 +29,6 @@ export type { MultiSelectProps } from './MultiSelect'
 
 export { NumberInput } from './NumberInput'
 export type { NumberInputProps } from './NumberInput'
+
+export { NavLink } from './NavLink'
+export type { NavLinkProps } from './NavLink'
