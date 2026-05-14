@@ -23,6 +23,13 @@ export const APP_VERSION = '0.1.0'
  * scoped keys like `tasks(accountId)` are added in Phase 4.
  *
  * Phase 2+ extends this object — do NOT add keys outside this file.
+ *
+ * Storage-backend note:
+ *   Every key in `K` is consumed against `localStorage` EXCEPT `K.signupDraft()`,
+ *   which Plan 02-04 writes to `sessionStorage` (per UI-SPEC AUTH-07 — wizard
+ *   draft state must clear when the browser session ends so abandoned signups
+ *   don't leak between users on shared machines). The key builder itself is
+ *   storage-agnostic; the consumer module decides which backend reads/writes.
  */
 export const K = {
   /** `halo:v1:meta` — boot-time schema version + seed timestamp record */
@@ -30,4 +37,17 @@ export const K = {
 
   /** `halo:v1:pendo:anonId` — anonymous Pendo visitor ID (set in Phase 6) */
   pendoAnonId: (): string => `halo:v${SCHEMA_VERSION}:pendo:anonId`,
+
+  /** `halo:v1:visitors` — array of registered Visitor records (Plan 02-03 owns the repo). */
+  visitors: (): string => `halo:v${SCHEMA_VERSION}:visitors`,
+
+  /** `halo:v1:workspaces` — array of Workspace records, one per registered visitor (Plan 02-03). */
+  workspaces: (): string => `halo:v${SCHEMA_VERSION}:workspaces`,
+
+  /** `halo:v1:session` — current Session record (visitorId + workspaceId + signedInAt). */
+  session: (): string => `halo:v${SCHEMA_VERSION}:session`,
+
+  /** `halo:v1:signup:draft` — wizard partial draft. Lives in `sessionStorage`, NOT `localStorage`
+   *  (see file-level "Storage-backend note" above). Cleared on signup completion / sign-out. */
+  signupDraft: (): string => `halo:v${SCHEMA_VERSION}:signup:draft`,
 } as const

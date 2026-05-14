@@ -30,3 +30,24 @@ export type Meta = z.infer<typeof MetaSchema>
  * it directly without a one-line schema module.
  */
 export const AnonIdSchema = z.string().min(1)
+
+// ---------------------------------------------------------------------------
+// Auth persistence schemas — re-exported from src/auth/schemas.ts so
+// `readWithSchema` callers and the storage barrel see a single import path:
+//
+//   import { VisitorSchema, SessionSchema } from './storage'
+//
+// We deliberately do NOT re-export the form-step / sign-in schemas
+// (`step1Schema`..`step4Schema`, `signinSchema`) — those are RHF resolver
+// inputs owned by the auth feature module and should not leak through the
+// storage barrel.
+// ---------------------------------------------------------------------------
+
+export {
+  VisitorSchema,
+  WorkspaceSchema,
+  SessionSchema,
+  SignupDraftSchema,
+  VisitorsArraySchema,
+  WorkspacesArraySchema,
+} from '../auth/schemas'
