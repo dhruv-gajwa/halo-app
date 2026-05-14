@@ -5,6 +5,7 @@ status: draft
 shadcn_initialized: false
 preset: not applicable
 created: 2026-05-14
+revised: 2026-05-14
 ---
 
 # Phase 3 — UI Design Contract
@@ -36,18 +37,19 @@ This contract inherits 100% of its primitives, tokens, and markup conventions fr
 
 ## Spacing Scale
 
-Phase 3 inherits Mantine 9's named spacing tokens without change. The same accepted deviation from strict 4-multiple values applies (see Phase 2 UI-SPEC §Spacing for rationale).
+Phase 3 inherits Mantine 9's named spacing tokens. The `xs` token (Mantine default: 10px) is **NOT used** anywhere in Phase 3 markup — 10px is not a multiple of 4 and therefore excluded from this phase's active scale. Icon-to-label gaps inside nav items and menu item icon-to-text gaps use the numeric value `gap={8}` instead of `gap="xs"`.
 
 | Mantine token | Pixel value | Usage in Phase 3 |
 |---------------|-------------|------------------|
-| `xs` | **10px** | Icon gap inside nav items (icon ↔ label); menu-item icon ↔ text |
+| `xs` | **10px** | **NOT USED in Phase 3.** Mantine default; excluded because 10 is not a multiple of 4. Use `gap={8}` (numeric) for icon-to-label gaps inside nav items and menu-item icon-to-text spacing. |
 | `sm` | **12px** | KPI card label-to-value gap; timeline body text top-margin |
 | `md` | **16px** | AppShell `padding="md"` (main content inset); `SimpleGrid` gap for KPI cards; inner Paper padding on KPI cards; chart Paper inner padding |
 | `lg` | **20px** | Gap between chart row and KPI row; gap between activity feed header and items |
 | `xl` | **32px** | Dashboard section-to-section vertical gap; ComingSoonCard Paper `p="xl"` |
 
 **Hard rules (inherited):**
-- Raw pixel values are FORBIDDEN in Phase 3 markup. Every spacing prop references a Mantine token.
+- Named Mantine tokens (`sm`, `md`, `lg`, `xl`) are the only string spacing values in Phase 3 markup. `gap="xs"` is FORBIDDEN — use `gap={8}` (numeric) instead.
+- Raw pixel values are FORBIDDEN in Phase 3 markup as CSS props. Every spacing prop references a Mantine token or the approved `gap={8}` numeric exception.
 - Exception: icon `size={18}`, `size={16}`, `size={64}` props on `@tabler/icons-react` — Tabler accepts pixel numbers, not tokens.
 - The AppShell fixed dimensions (`navbar={{ width: 240 }}`, `header={{ height: 56 }}`) are structural, not spacing — expressed in the Mantine `AppShell` config props, not as CSS margin/padding overrides.
 
@@ -55,21 +57,23 @@ Phase 3 inherits Mantine 9's named spacing tokens without change. The same accep
 
 ## Typography
 
-Phase 3 inherits the four-role, two-weight typography system from Phase 2. No new sizes or weights are introduced.
+Phase 3 uses exactly **four font sizes** and **two weights**. No fifth size is permitted — if copy doesn't fit the four roles, rewrite the copy.
 
 | Role | Mantine API | Size | Weight | Line Height | Where used in Phase 3 |
 |------|-------------|------|--------|-------------|----------------------|
-| Display | `<Title order={1}>` | **34px** | **600** | 1.3 | Not used in Phase 3 — AppShell has no page-level Display title. The "Halo" wordmark uses `<Text fw={600} size="lg">` (see Topbar, below). |
-| Heading | `<Title order={2}>` | **26px** | **600** | 1.35 | Dashboard section headings ("Overview", "Completed per day", "Tasks by status", "Recent activity"); `<ComingSoonCard>` feature-name heading (uses `<Title order={3}>` — see note). |
-| Body | `<Text size="md">` (default) | **16px** | **400** | 1.55 | ComingSoonCard one-line description; Dashboard intro text (if any); empty state body copy. |
-| Label | `<Text size="sm">` / `<Text size="xs">` | **14px / 12px** | **400 / 400** | 1.45 | KPI card label (`<Text size="xs" c="dimmed" tt="uppercase">`); KPI value (`<Title order={2}>`); nav item labels; top-bar workspace name (`<Text size="sm" c="dimmed">`); user name in trigger (`<Text size="sm" fw={500}>`); timeline event text (`<Text size="sm">`); relative time stamps (`<Text size="xs" c="dimmed">`). |
+| Heading | `<Title order={2}>` | **26px** | **600** | 1.35 | KPI card values; Dashboard section headings ("Overview", "Completed per day", "Tasks by status", "Recent activity") |
+| Sub-heading | `<Title order={3}>` | **~22px** | **600** | 1.35 | `<ComingSoonCard>` feature-name heading; empty-state heading ("No tasks yet"); "Halo" wordmark (see note 1) |
+| Body | `<Text size="md">` (default) | **16px** | **400** | 1.55 | ComingSoonCard one-line description; Dashboard intro text (if any); empty state body copy |
+| Label | `<Text size="sm">` | **14px** | **400** | 1.45 | KPI card labels (`tt="uppercase" c="dimmed"`); nav item labels; top-bar workspace name (`c="dimmed"`); user name in trigger (`fw={500}`); timeline event text; relative timestamps; chart axis tick labels; chart container titles (`fw={600}`) |
 
 **Phase 3 typography notes:**
 
-1. `<ComingSoonCard>` uses `<Title order={3}>` (not order={2}) to avoid over-weighting placeholder content. `order={3}` is approximately 22px in Mantine 9 — within the Heading role range, acceptable as a sub-heading variant. This is the ONLY use of `order={3}` in Phase 3.
-2. The "Halo" wordmark in the top bar uses `<Text fw={600} size="lg" c="indigo.7">` — `size="lg"` is Mantine's 20px text size. This is a one-off branding treatment, not a new typography role.
-3. No `fw={700}` anywhere in Phase 3 (inherited rule from Phase 2).
-4. No 5th font size. If copy doesn't fit the four roles, rewrite the copy.
+1. The "Halo" wordmark in the top bar: use `<Title order={3} c="indigo.7">Halo</Title>` (Sub-heading role, ~22px, weight 600). This replaces the previous `<Text fw={600} size="lg">` one-off. The wordmark is a heading-level brand element — mapping it to `order={3}` gives it semantic weight and eliminates the 20px outlier size.
+2. `<ComingSoonCard>` uses `<Title order={3}>` (not `order={2}`) to avoid over-weighting placeholder content relative to the Dashboard's real data headings.
+3. KPI values use `<Title order={2}>` (26px, weight 600) — these are the numeric payloads users scan first.
+4. Chart axis tick labels (`fontSize: 12` in Recharts inline style) are SVG attributes, not React layout typography — they do not count as a fifth font size. Use `fontSize: 14` on all chart `<XAxis tick={{ fontSize: 14 }} />` and `<YAxis tick={{ fontSize: 14 }} />` to align with the Label role.
+5. No `fw={700}` anywhere in Phase 3 (inherited rule from Phase 2). The sole weight exception is `fw={500}` on the user's name inside the menu trigger (semi-emphasis, not bold).
+6. The donut chart center `<Label>` uses `style={{ fontSize: 20, fontWeight: 600 }}` as a Recharts SVG attribute — reduce to `style={{ fontSize: 16, fontWeight: 600 }}` to stay within the four-size contract.
 
 ---
 
@@ -89,7 +93,7 @@ Phase 3 inherits the locked indigo-on-light-neutral palette from Phase 2 with on
 **Accent (indigo) reserved for — exhaustive list for Phase 3. NOTHING ELSE may use indigo:**
 
 1. Active NavLink state: `variant="light"` on Mantine `<NavLink>` renders `indigo.0` tinted background with `indigo.7` text for the active route item. This is the ONE new indigo surface added in Phase 3 — a deliberate, documented exception to the Phase 2 rule that prohibited `bg="indigo.0"`. The exception is limited strictly to `NavLink` `variant="light"` active state; no other element in Phase 3 uses indigo as a background fill.
-2. "Halo" wordmark: `c="indigo.7"` — branding treatment on the top-bar text only.
+2. "Halo" wordmark: `c="indigo.7"` on `<Title order={3}>` — branding treatment on the top-bar text only.
 3. Avatar in user menu trigger: `color="indigo"` on Mantine `<Avatar>` — generates the indigo initials avatar automatically.
 4. Area chart fill: `indigo.6` stroke at 100% + `indigo.6` fill at 60% opacity — chart-only, inside the chart SVG container.
 5. "In progress" donut segment: `indigo.6` — inside the PieChart SVG container only.
@@ -111,6 +115,16 @@ Phase 3 inherits the locked indigo-on-light-neutral palette from Phase 2 with on
 ---
 
 ## Layout
+
+### Visual Hierarchy — Populated Dashboard State
+
+**Primary focal point:** The KPI row (five stat cards in a `SimpleGrid`) is the primary visual anchor of the populated Dashboard state. It is the first element below the time-range `SegmentedControl` and draws the eye before the charts or activity feed. The five cards are equal-width, horizontally distributed across the full content area, and carry the highest-weight typography in the dashboard (`<Title order={2}>` at 26px). Nothing above the KPI row except the time-range control competes for visual weight.
+
+**Visual flow (top → bottom):**
+1. Time-range control (`SegmentedControl`, right-aligned) — compact, non-dominant
+2. **KPI row** — primary anchor; 5 cards, 26px values, `withBorder` surface separation
+3. Charts row — secondary; 2 equal-width charts side by side
+4. Activity feed — tertiary; full-width, lower visual weight than charts
 
 ### AppShell structure
 
@@ -153,7 +167,7 @@ Phase 3 inherits the locked indigo-on-light-neutral palette from Phase 2 with on
 
 ```
 <AppShell.Navbar p="md">
-  <Stack gap="xs">
+  <Stack gap={8}>
     <NavLink label="Dashboard"   leftSection={<IconLayoutDashboard size={18} stroke={1.6} />} active={...} variant="light" pendoId={PENDO_IDS.nav.dashboard} />
     <NavLink label="Lists"       leftSection={<IconChecklist size={18} stroke={1.6} />}       active={...} variant="light" pendoId={PENDO_IDS.nav.lists} />
     <NavLink label="Reports"     leftSection={<IconChartBar size={18} stroke={1.6} />}         active={...} variant="light" pendoId={PENDO_IDS.nav.reports} />
@@ -163,6 +177,8 @@ Phase 3 inherits the locked indigo-on-light-neutral palette from Phase 2 with on
   </Stack>
 </AppShell.Navbar>
 ```
+
+Note: `gap={8}` (numeric, 8px) is used on the `<Stack>` wrapping the nav items — NOT `gap="xs"` (which is 10px and not a multiple of 4). The icon-to-label gap within each `<NavLink>` item is Mantine's internal default for `NavLink`; if overridable, use `gap={8}` there as well.
 
 Active detection logic (one helper function):
 - `/app` (exact) → Dashboard active
@@ -179,9 +195,9 @@ Active detection logic (one helper function):
   <Group h="100%" px="md" justify="space-between">
     {/* Left: wordmark aligned to navbar column width */}
     <Box w={208}>  {/* 240px navbar - md padding on each side = ~208px */}
-      <Text fw={600} size="lg" c="indigo.7" data-pendo-id={PENDO_IDS.topbar.logo}>
+      <Title order={3} c="indigo.7" data-pendo-id={PENDO_IDS.topbar.logo}>
         Halo
-      </Text>
+      </Title>
     </Box>
     {/* Right: workspace name + user menu trigger */}
     <Group gap="md">
@@ -191,7 +207,7 @@ Active detection logic (one helper function):
       <Menu>
         <Menu.Target>
           <UnstyledButton data-pendo-id={PENDO_IDS.topbar.userMenu.button}>
-            <Group gap="xs">
+            <Group gap={8}>
               <Avatar size="sm" color="indigo" radius="xl">{initials}</Avatar>
               <Text size="sm" fw={500}>{visitor.firstName} {visitor.lastName}</Text>
               <IconChevronDown size={14} />
@@ -210,6 +226,8 @@ Active detection logic (one helper function):
 </AppShell.Header>
 ```
 
+Note: `gap={8}` (numeric) on the `<Group>` inside the menu trigger button — NOT `gap="xs"`.
+
 Initials: `visitor.firstName[0].toUpperCase() + visitor.lastName[0].toUpperCase()`.
 `Menu.Item` color for Sign out: **no `color` prop** (default text, not red) — sign-out is reversible, no destructive color treatment.
 
@@ -226,7 +244,7 @@ Initials: `visitor.firstName[0].toUpperCase() + visitor.lastName[0].toUpperCase(
     />
   </Group>
 
-  {/* KPI cards */}
+  {/* KPI cards — PRIMARY VISUAL ANCHOR */}
   <SimpleGrid cols={{ base: 1, sm: 2, md: 5 }} gap="md">
     {/* 5× KPI Paper — see KPI card spec below */}
   </SimpleGrid>
@@ -253,10 +271,12 @@ When `listTasks(workspaceId).length === 0`: render empty state instead of all of
 
 ```
 <Paper withBorder p="md" radius="md" data-pendo-id={PENDO_IDS.dashboard.kpi.[name]}>
-  <Text size="xs" c="dimmed" tt="uppercase" mb="sm">{label}</Text>
+  <Text size="sm" c="dimmed" tt="uppercase" mb="sm">{label}</Text>
   <Title order={2}>{value}</Title>
 </Paper>
 ```
+
+Note: KPI labels use `size="sm"` (14px, Label role) — NOT `size="xs"`. This eliminates the 12px size from Phase 3 markup.
 
 | KPI | Label | Value logic | Pendo ID leaf |
 |-----|-------|-------------|---------------|
@@ -273,8 +293,8 @@ When `listTasks(workspaceId).length === 0`: render empty state instead of all of
   <Text fw={600} mb="md">Completed per day</Text>
   <AreaChart width={...} height={240} data={buckets}>
     <CartesianGrid strokeDasharray="3 3" stroke="var(--mantine-color-gray-2)" />
-    <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-    <YAxis tick={{ fontSize: 12 }} />
+    <XAxis dataKey="date" tick={{ fontSize: 14 }} />
+    <YAxis tick={{ fontSize: 14 }} />
     <Tooltip />
     <Area type="monotone" dataKey="count" stroke="#3b5bdb" fill="#4263eb" fillOpacity={0.6} />
   </AreaChart>
@@ -293,13 +313,15 @@ X axis: day-bucket labels across the selected window. For 7d: 7 ticks. For 30d: 
       {/* To do: fill="#a5b4fc" (indigo.3) */}
       {/* In progress: fill="#4263eb" (indigo.6) */}
       {/* Done: fill="#adb5bd" (gray.5) */}
-      <Label value={totalCount} position="center" style={{ fontSize: 20, fontWeight: 600 }} />
+      <Label value={totalCount} position="center" style={{ fontSize: 16, fontWeight: 600 }} />
     </Pie>
     <Tooltip />
     <Legend />
   </PieChart>
 </Paper>
 ```
+
+Note: Center `<Label>` uses `fontSize: 16` (Body role size) — NOT 20px. This keeps SVG text within the four-size contract.
 
 Color mapping:
 - To do: `#a5b4fc` (Mantine indigo.3)
@@ -318,9 +340,11 @@ Each of the 8 most recent events is a `Timeline.Item`:
   data-pendo-id={PENDO_IDS.dashboard.activity.item}
   data-pendo-task-id={task.id}
 >
-  <Text size="xs" c="dimmed">{relativeTime}</Text>
+  <Text size="sm" c="dimmed">{relativeTime}</Text>
 </Timeline.Item>
 ```
+
+Note: Relative timestamps use `size="sm"` (14px) — NOT `size="xs"` (12px). This consolidates timestamps into the Label role and eliminates the 12px outlier.
 
 Verb + icon + color map:
 - `completedAt` latest → verb `"completed"`, icon `IconCheck`, color `"green.6"`
@@ -608,8 +632,8 @@ Every value in this UI-SPEC was sourced from upstream artifacts — no new user 
 | Design System: shadcn = none | CLAUDE.md + `components.json` absent from repo |
 | Design System: icons | Phase 1 (`@tabler/icons-react@3.44.0` installed), 03-CONTEXT.md D-12 |
 | Design System: font | `src/theme.ts` (`Inter` locked) |
-| Spacing scale | Mantine 9 default theme (inherited from Phase 2 UI-SPEC) |
-| Typography | Mantine 9 default theme (inherited from Phase 2 UI-SPEC) + 03-CONTEXT.md D-14 |
+| Spacing scale | Mantine 9 default theme (inherited from Phase 2 UI-SPEC); xs excluded (10px not multiple of 4) |
+| Typography | Mantine 9 default theme (inherited from Phase 2 UI-SPEC) + 03-CONTEXT.md D-14; collapsed to 4 sizes (rev 2026-05-14) |
 | Color: indigo primary | `src/theme.ts` (`primaryColor: 'indigo'`) |
 | Color: NavLink active exception | 03-CONTEXT.md D-12 + `<specifics>` note on Phase 2 UI-SPEC §Color "Forbidden uses" |
 | AppShell dimensions | 03-CONTEXT.md D-11 (`width: 240`, `height: 56`, `padding="md"`) |
@@ -631,6 +655,9 @@ Every value in this UI-SPEC was sourced from upstream artifacts — no new user 
 | Schema version unchanged | 03-CONTEXT.md D-27 |
 | Copywriting per-route | 03-CONTEXT.md D-02 (ComingSoonCard copy left to "Claude's Discretion" → resolved here) |
 | Phase 6 deferral | STATE.md "2026-05-13: User decision — defer all Pendo runtime to Phase 6" |
+| Typography revision (4 sizes) | Checker feedback 2026-05-14: collapsed 6 sizes → 4; xs eliminated, 20px wordmark → order={3}, 12px labels → 14px |
+| Spacing revision (xs excluded) | Checker feedback 2026-05-14: xs (10px) not a multiple of 4; replaced gap="xs" with gap={8} numeric |
+| Visual focal point | Checker feedback 2026-05-14: KPI row declared as primary visual anchor |
 
 ---
 
