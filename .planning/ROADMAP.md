@@ -129,8 +129,8 @@ Plans:
 **Plans**: 6 plans
 Plans:
 **Wave 1**
-- [ ] 05-01-PLAN.md — Team data layer: schemas, types, teamsRepo, teamSeed, K.teammates (TEAM-01, DATA-01)
-- [ ] 05-02-PLAN.md — Help static module: HelpArticleSchema, faker.seed-pinned HELP_ARTICLES, accessors (HELP-01, DATA-01)
+- [x] 05-01-PLAN.md — Team data layer: schemas, types, teamsRepo, teamSeed, K.teammates (TEAM-01, DATA-01)
+- [x] 05-02-PLAN.md — Help static module: HelpArticleSchema, faker.seed-pinned HELP_ARTICLES, accessors (HELP-01, DATA-01)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 - [ ] 05-03-PLAN.md — Seed coordinator + tasksSeed amendments + assigneeOptions source swap + AppLayout call-site swap (DATA-01)
