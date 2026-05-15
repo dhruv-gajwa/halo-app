@@ -34,6 +34,7 @@
  * `TaskSchema.dueDate: z.iso.datetime().nullable()`.
  */
 
+import { useEffect, useMemo, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Modal, Stack, Group } from '@mantine/core'
@@ -103,33 +104,65 @@ export function TaskFormModal({
     name: `${visitor.firstName} ${visitor.lastName}`,
   }
 
-  const defaultValues: TaskFormValues =
-    mode === 'edit' && initialTask
-      ? {
-          title: initialTask.title,
-          description: initialTask.description,
-          status: initialTask.status,
-          priority: initialTask.priority,
-          assignee: initialTask.assignee,
-          dueDate: initialTask.dueDate,
-        }
-      : {
-          title: '',
-          description: '',
-          status: 'todo',
-          priority: 'medium',
-          assignee: defaultAssignee,
-          dueDate: null,
-        }
+  // Wrap defaultValues in useMemo so the `form.reset(defaultValues)` call in the
+  // create-mode open-transition effect (below) receives a stable reference and
+  // the effect's dep array is honest. Without useMemo, every render produces a
+  // new object identity → the effect would re-run on every render rather than
+  // only on the false→true open transition for create mode.
+  const defaultValues: TaskFormValues = useMemo(
+    () =>
+      mode === 'edit' && initialTask
+        ? {
+            title: initialTask.title,
+            description: initialTask.description,
+            status: initialTask.status,
+            priority: initialTask.priority,
+            assignee: initialTask.assignee,
+            dueDate: initialTask.dueDate,
+          }
+        : {
+            title: '',
+            description: '',
+            status: 'todo',
+            priority: 'medium',
+            assignee: defaultAssignee,
+            dueDate: null,
+          },
+    // defaultAssignee is derived from visitor.{id,firstName,lastName}; list its
+    // primitives directly so the memo is stable when visitor identity doesn't
+    // change but its container reference does.
+    [mode, initialTask, visitor.id, visitor.firstName, visitor.lastName],
+  )
 
   const form = useForm<TaskFormValues>({
     resolver: zodResolver(TaskFormSchema),
     mode: 'onSubmit',
     // Reset across opens / mode flips: RHF holds the values across renders, so
     // when the parent flips `initialTask`, the next open needs the new defaults.
-    // RHF's `values` prop drives controlled re-defaulting.
+    // RHF's `values` prop drives controlled re-defaulting on edit-mode
+    // initialTask flips. It does NOT close the create-mode reopen defect
+    // (CR-01) because create-mode defaultValues is structurally identical
+    // across opens — handled by the explicit reset effect below.
     values: defaultValues,
   })
+
+  // CR-01 fix: explicit RHF reset on the false→true open transition for create
+  // mode. `TaskFormModal` stays mounted across the parent's create/edit cycles,
+  // so `useForm`'s internal ref preserves previously-submitted values. The
+  // `values: defaultValues` bridge above won't rescue create-mode reopens
+  // because RHF's deep-equality short-circuits when create-mode defaultValues
+  // is structurally identical to the previously-seen value. Tracking the prior
+  // `opened` value via a ref lets us reset ONLY on the transition (not on
+  // every render while open), and only for create mode (edit mode is driven
+  // by the `values` prop on initialTask flips).
+  const prevOpenedRef = useRef(opened)
+  useEffect(() => {
+    const wasClosed = !prevOpenedRef.current
+    prevOpenedRef.current = opened
+    if (opened && wasClosed && mode === 'create') {
+      form.reset(defaultValues)
+    }
+  }, [opened, mode, form, defaultValues])
 
   // Available assignees for this workspace, plus the current visitor. Built
   // as a Map<id, Assignee> so the form can resolve the selected id back to a
