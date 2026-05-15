@@ -23,7 +23,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Registration & Sign-In** - Four-URL signup wizard + sign-in/sign-out + RequireAuth/RequireAnon guards (completed 2026-05-14)
 - [x] **Phase 3: Authenticated Shell & Dashboard** - AppShell (side nav + top bar + user menu) + post-sign-in Dashboard with stat cards, SVG charts, time range, and activity feed (completed 2026-05-14)
 - [x] **Phase 4: Core Pages (Lists, Settings, Reports)** - Task CRUD, settings tabs, reports with CSV export (completed 2026-05-15)
-- [ ] **Phase 5: Team, Help & Polish** - Team invite/role flows, searchable Help with Resource Center anchor, cross-page polish, idempotent seeding, demo-ready audit
+- [x] **Phase 5: Team, Help & Polish** - Team invite/role flows, searchable Help with Resource Center anchor, cross-page polish, idempotent seeding, demo-ready audit (completed 2026-05-15)
 - [ ] **Phase 6: Pendo Install & Wiring** - Install Pendo snippet + initialize anonymously at boot + identify on registration/sign-in + clear on sign-out + sync metadata on workspace/profile changes + setUrl on route changes
 
 ## Phase Details
