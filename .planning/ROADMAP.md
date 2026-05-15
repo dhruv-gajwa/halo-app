@@ -104,7 +104,16 @@ Plans:
   3. A "Reset demo data" button in Settings (with a destructive-action confirmation modal) clears every `halo:v1:*` key and reloads the app to the public landing
   4. At `/app/reports` the user can filter task data by date range and at least one other dimension (assignee or status), view the filtered data in a TanStack Table with at least 5 columns and at least one SVG chart, and click "Export CSV" to download the filtered table as a client-side CSV blob
   5. Every interactive element on Lists, Settings, and Reports carries a stable `data-pendo-id` from the `PENDO_IDS` registry
-**Plans**: TBD
+**Plans**: 5 plans
+Plans:
+**Wave 1**
+- [ ] 04-01-PLAN.md — Install runtime deps + dark-mode wiring + Notifications mount + PENDO_IDS registry extension (lists/settings/reports namespaces)
+- [ ] 04-02-PLAN.md — Repo extensions (tasksRepo completedAt invariant + authRepo updateVisitor/Workspace) + TaskFormSchema + badge color maps + now-ref/assigneeOptions helpers + new primitive wrappers (Checkbox/Textarea/DatePickerInput)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+- [ ] 04-03-PLAN.md — Lists page: TanStack Table + filter bar + task form modal + delete confirm + two empty states (LIST-01..09)
+- [ ] 04-04-PLAN.md — Settings page: URL-driven tabs + Profile/Workspace forms + theme toggle + Reset demo data (SET-01..04, SET-06)
+- [ ] 04-05-PLAN.md — Reports page: date/assignee/status filters + Recharts stacked bar + TanStack read-only table + CSV export (REP-01..04)
 **UI hint**: yes
 
 ### Phase 5: Team, Help & Polish
