@@ -36,7 +36,7 @@
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Modal, Stack, Group, Title } from '@mantine/core'
+import { Modal, Stack, Group } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 import { IconCheck } from '@tabler/icons-react'
 import {
@@ -237,7 +237,7 @@ export function TaskFormModal({
     <Modal
       opened={opened}
       onClose={onClose}
-      title={<Title order={3}>{mode === 'create' ? 'New task' : 'Edit task'}</Title>}
+      title={mode === 'create' ? 'New task' : 'Edit task'}
       size="md"
       centered
       data-pendo-id={PENDO_IDS.lists.modal.container}

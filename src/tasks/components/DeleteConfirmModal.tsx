@@ -21,7 +21,7 @@
  * two button leaves, no `.container` leaf).
  */
 
-import { Modal, Stack, Text, Group, Title } from '@mantine/core'
+import { Modal, Stack, Text, Group } from '@mantine/core'
 import { Button } from '../../ui/primitives'
 import { PENDO_IDS } from '../../pendo/PENDO_IDS'
 
@@ -43,7 +43,7 @@ export function DeleteConfirmModal({
     <Modal
       opened={opened}
       onClose={onClose}
-      title={<Title order={3}>Delete this task?</Title>}
+      title="Delete this task?"
       size="sm"
       centered
     >

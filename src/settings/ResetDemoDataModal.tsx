@@ -35,7 +35,7 @@
  * inline below.
  */
 
-import { Modal, Group, Title, Text } from '@mantine/core'
+import { Modal, Group, Text } from '@mantine/core'
 import { Button } from '../ui/primitives'
 import { PENDO_IDS } from '../pendo/PENDO_IDS'
 import { K } from '../storage/keys'
@@ -86,7 +86,7 @@ export function ResetDemoDataModal({ opened, onClose }: ResetDemoDataModalProps)
     <Modal
       opened={opened}
       onClose={onClose}
-      title={<Title order={3}>Reset demo data?</Title>}
+      title="Reset demo data?"
       size="sm"
       centered
     >
