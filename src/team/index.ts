@@ -11,3 +11,5 @@
  */
 export * from './schemas'
 export * from './types'
+export * from './teamsRepo'
+export { seedTeammatesIfNeeded } from './teamSeed'
