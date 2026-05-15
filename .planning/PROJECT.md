@@ -97,4 +97,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-15 after Phase 3 (authenticated-shell-dashboard) completion*
+*Last updated: 2026-05-15 after Phase 4 (core-pages-lists-settings-reports) completion — Lists CRUD, Settings (Profile/Workspace/Preferences), Reports (filters + Recharts SVG + CSV export), and Reset demo data all ship. Phase 5 (Team, Help & Polish) is next.*
