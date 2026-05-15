@@ -111,7 +111,7 @@ Plans:
 - [x] 04-02-PLAN.md — Repo extensions (tasksRepo completedAt invariant + authRepo updateVisitor/Workspace) + TaskFormSchema + badge color maps + now-ref/assigneeOptions helpers + new primitive wrappers (Checkbox/Textarea/DatePickerInput)
 
 **Wave 2** *(blocked on Wave 1 completion)*
-- [ ] 04-03-PLAN.md — Lists page: TanStack Table + filter bar + task form modal + delete confirm + two empty states (LIST-01..09)
+- [x] 04-03-PLAN.md — Lists page: TanStack Table + filter bar + task form modal + delete confirm + two empty states (LIST-01..09)
 - [ ] 04-04-PLAN.md — Settings page: URL-driven tabs + Profile/Workspace forms + theme toggle + Reset demo data (SET-01..04, SET-06)
 - [ ] 04-05-PLAN.md — Reports page: date/assignee/status filters + Recharts stacked bar + TanStack read-only table + CSV export (REP-01..04)
 **UI hint**: yes
@@ -151,6 +151,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Foundation & Cross-Cutting Contracts | 3/6 | In Progress|  |
 | 2. Registration & Sign-In | 10/10 | Complete    | 2026-05-14 |
 | 3. Authenticated Shell & Dashboard | 6/6 | Complete   | 2026-05-14 |
-| 4. Core Pages (Lists, Settings, Reports) | 0/TBD | Not started | - |
+| 4. Core Pages (Lists, Settings, Reports) | 3/5 | In Progress|  |
 | 5. Team, Help & Polish | 0/TBD | Not started | - |
 | 6. Pendo Install & Wiring | 0/TBD | Not started | - |

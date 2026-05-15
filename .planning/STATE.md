@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 4 UI-SPEC approved
-last_updated: "2026-05-15T14:55:46.221Z"
+last_updated: "2026-05-15T15:07:48.136Z"
 last_activity: 2026-05-15
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 27
-  completed_plans: 24
-  percent: 89
+  completed_plans: 25
+  percent: 93
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 ## Current Position
 
 Phase: 04 (core-pages-lists-settings-reports) — EXECUTING
-Plan: 3 of 5
+Plan: 4 of 5
 Status: Ready to execute
 Last activity: 2026-05-15
 
-Progress: [█████████░] 89%
+Progress: [█████████░] 93%
 
 ## Performance Metrics
 
@@ -76,6 +76,7 @@ Progress: [█████████░] 89%
 | Phase 03-authenticated-shell-dashboard P05 | 3 | 2 tasks | 3 files |
 | Phase 04 P01 | 3min 2sec | 2 tasks | 6 files |
 | Phase 04 P02 | 4min 49sec | 2 tasks | 13 files |
+| Phase 04 PP03 | 11min 26sec | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -141,6 +142,11 @@ Recent decisions affecting current work:
 - [Phase ?]: Phase 04-02: TaskFormSchema uses raw z.enum([...], { message: '...' }) at the form level instead of reusing persistence enums TaskStatusEnum/TaskPriorityEnum — persistence enums stay message-less so corrupt-storage Zod errors don't surface user-facing copy. Form schema co-located with TaskSchema in src/tasks/schemas.ts (mirrors auth/schemas.ts step1..step4 co-location with VisitorSchema).
 - [Phase ?]: Phase 04-02: computeNowRef extracted from Dashboard.tsx into src/tasks/now-ref.ts (D-22) — shared between Dashboard (Phase 3) and ReportsPage (Phase 4). Dashboard imports directly from '../tasks/now-ref' mirroring its existing direct-module-import precedent for formatRelative.
 - [Phase ?]: Phase 04-02: Checkbox primitive wrapper forwards BOTH pendoId (required → data-pendo-id) and optional taskId (→ data-pendo-task-id) — implements CLAUDE.md dynamic-list parameterization rule for the Lists row complete-toggle. Multi-prop forwarding shape modeled on PasswordInput.tsx.
+- [Phase ?]: Phase 04-03: TaskTable uses presorted input (createdAt desc) + empty initial SortingState — three-state header click cycle (asc → desc → clear → return to default presorted order)
+- [Phase ?]: Phase 04-03: TaskFormModal uses RHF controlled 'values' prop so flipping mode/initialTask between create and edit opens cleanly re-defaults the form
+- [Phase ?]: Phase 04-03: Mantine v9 DatePickerInput returns DateStringValue (YYYY-MM-DD); form bridges via new Date(value).toISOString() so persisted dueDate matches z.iso.datetime(). Display value uses currentDueDate.slice(0,10)
+- [Phase ?]: Phase 04-03: FilteredEmptyState uses raw Mantine <Anchor component='button'> with explicit data-pendo-id — Halo wrapper doesn't expose Mantine polymorphic 'component' prop. S3 exception, value still from PENDO_IDS
+- [Phase ?]: Phase 04-03: D-11 modal-on-modal avoidance — TaskFormModal Delete button calls onClose() FIRST then onRequestDelete?.(task); parent setDeleteTarget opens DeleteConfirmModal next tick. React batches so only one modal visible at a time
 
 ### Pending Todos
 
@@ -161,6 +167,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-05-15T14:55:33.765Z
+Last session: 2026-05-15T15:07:10.272Z
 Stopped at: Phase 4 UI-SPEC approved
 Resume file: None

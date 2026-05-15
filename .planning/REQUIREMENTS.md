@@ -60,14 +60,14 @@
 
 ### Lists (Tasks)
 
-- [ ] **LIST-01**: User can view a list of tasks at `/app/lists` (or `/app/tasks`) in a List view
-- [ ] **LIST-02**: User can create a new task via a modal form with at minimum: title, description, status, priority, due date, assignee
-- [ ] **LIST-03**: User can edit an existing task via the same modal form
+- [x] **LIST-01**: User can view a list of tasks at `/app/lists` (or `/app/tasks`) in a List view
+- [x] **LIST-02**: User can create a new task via a modal form with at minimum: title, description, status, priority, due date, assignee
+- [x] **LIST-03**: User can edit an existing task via the same modal form
 - [x] **LIST-04**: User can mark a task complete / incomplete with a single click on the row
-- [ ] **LIST-05**: User can delete a task with a confirmation modal
-- [ ] **LIST-06**: User can sort the list by any visible column
-- [ ] **LIST-07**: User can filter the list by status, priority, and assignee
-- [ ] **LIST-08**: List has a friendly empty state when no tasks exist (good guide-anchor surface)
+- [x] **LIST-05**: User can delete a task with a confirmation modal
+- [x] **LIST-06**: User can sort the list by any visible column
+- [x] **LIST-07**: User can filter the list by status, priority, and assignee
+- [x] **LIST-08**: List has a friendly empty state when no tasks exist (good guide-anchor surface)
 - [x] **LIST-09**: All task mutations persist to localStorage and survive refresh
 
 ### Settings
@@ -198,14 +198,14 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 | DASH-04 | Phase 3 | Complete |
 | DASH-05 | Phase 3 | Complete |
 | DASH-06 | Phase 3 | Complete |
-| LIST-01 | Phase 4 | Pending |
-| LIST-02 | Phase 4 | Pending |
-| LIST-03 | Phase 4 | Pending |
+| LIST-01 | Phase 4 | Complete |
+| LIST-02 | Phase 4 | Complete |
+| LIST-03 | Phase 4 | Complete |
 | LIST-04 | Phase 4 | Complete |
-| LIST-05 | Phase 4 | Pending |
-| LIST-06 | Phase 4 | Pending |
-| LIST-07 | Phase 4 | Pending |
-| LIST-08 | Phase 4 | Pending |
+| LIST-05 | Phase 4 | Complete |
+| LIST-06 | Phase 4 | Complete |
+| LIST-07 | Phase 4 | Complete |
+| LIST-08 | Phase 4 | Complete |
 | LIST-09 | Phase 4 | Complete |
 | SET-01 | Phase 4 | Pending |
 | SET-02 | Phase 4 | Complete |
