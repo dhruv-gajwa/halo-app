@@ -142,7 +142,7 @@ Plans:
 - [x] 05-05-PLAN.md — Help UI: HelpSearchInput + HelpList + HelpNoResultsState + HelpPage composer + HelpArticlePage + nested router child + PENDO_IDS help namespace (HELP-01, HELP-02, HELP-03, HELP-04, UI-01)
 
 **Wave 5** *(blocked on Waves 1–4 completion)*
-- [ ] 05-06-PLAN.md — Cross-page polish + Pendo-readiness audit + manual "Looks Done But Isn't" checkpoint (UI-01, UI-02, UI-03, UI-04)
+- [x] 05-06-PLAN.md — Cross-page polish + Pendo-readiness audit + manual "Looks Done But Isn't" checkpoint (UI-01, UI-02, UI-03, UI-04)
 **UI hint**: yes
 
 ### Phase 6: Pendo Install & Wiring
