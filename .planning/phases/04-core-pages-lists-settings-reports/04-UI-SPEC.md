@@ -72,24 +72,23 @@ Phase 4 inherits the Phase 3 spacing contract verbatim. The `xs` token (10px) re
 
 ## Typography
 
-Phase 4 inherits the Phase 3 four-size, two-weight typography contract exactly. No fifth size. No third weight.
+Phase 4 inherits the Phase 3 four-size, two-weight typography contract exactly. No fifth size. No third weight. Phase 4 uses exactly four font sizes inherited from Phase 3 — no fifth size added.
 
 | Role | Mantine API | Size | Weight | Line Height | Phase 4 usage |
 |------|-------------|------|--------|-------------|---------------|
 | Heading | `<Title order={2}>` | **26px** | **600** | 1.35 | Page section headings if needed (not expected — pages use sub-heading or label for titles) |
-| Sub-heading | `<Title order={3}>` | **~22px** | **600** | 1.35 | Empty-state heading ("No tasks yet", "No tasks match these filters"); Settings tab section sub-labels if needed |
+| Sub-heading | `<Title order={3}>` | **~22px** | **600** | 1.35 | Empty-state heading ("No tasks yet", "No tasks match these filters"); Settings tab section sub-labels if needed; Danger zone card heading (`c="red.7"` distinguishes it visually from other Sub-heading instances) |
 | Body | `<Text size="md">` (default) | **16px** | **400** | 1.55 | Modal body copy; Danger zone description; Settings intro copy; empty-state body copy |
 | Label | `<Text size="sm">` | **14px** | **400** | 1.45 | Table column headers; filter labels; form field labels (Mantine auto-applies via `label=` prop); badge text; tab labels; chart axis ticks (`fontSize: 14` on `<XAxis tick>` and `<YAxis tick>`) |
 
 **Phase 4 typography notes:**
 
 1. Table column headers: use `<Text size="sm" fw={500}>` — the `fw={500}` semi-emphasis is permitted per the "sole exception" rule from Phase 3 (note 5). This is the same weight treatment as the user name in the top-bar trigger.
-2. `<Title order={4}>` is used ONCE: the Danger zone card heading `<Title order={4} c="red.7">Danger zone</Title>`. This is a documented Phase 4 exception — `order={4}` maps to approximately 20px (Mantine default h4), which is within the Body-to-Sub-heading range. Accept as a named-role anchor for the danger section.
+2. The Danger zone card heading uses `<Title order={3} c="red.7">Danger zone</Title>` — Sub-heading role (~22px, weight 600). The `c="red.7"` color token visually distinguishes this heading from other Sub-heading instances without adding a fifth font size. No `order={4}` appears anywhere in Phase 4.
 3. Chart `<XAxis tick={{ fontSize: 14 }} />` and `<YAxis tick={{ fontSize: 14 }} />` — SVG attribute, same as Phase 3. Not a new font size.
 4. No `fw={700}` anywhere in Phase 4 (inherited prohibition).
 5. Recharts `<Legend>` text: `style={{ fontSize: 14 }}` — align with Label role.
 6. Modal title: `<Title order={3}>` (Sub-heading role, ~22px, weight 600). Consistent with Phase 3 empty-state heading level.
-7. `<Title order={4}>` appears only in the Danger zone card (one instance). No other Phase 4 element uses h4.
 
 ---
 
@@ -370,7 +369,7 @@ Status + Priority in a `<Group grow>` (side by side). Assignee + Due date in a `
   {/* Right — always present */}
   <Group gap="md" ml="auto">
     <Button variant="default" pendoId={PENDO_IDS.lists.modal.cancel} onClick={close}>
-      Cancel
+      Discard
     </Button>
     <Button
       variant="filled"
@@ -385,7 +384,7 @@ Status + Priority in a `<Group grow>` (side by side). Assignee + Due date in a `
 ```
 
 Rules:
-- Cancel is always left of Save (left → right: Cancel / Save).
+- Discard is always left of Save (left → right: Discard / Save).
 - Delete is left-aligned (destructive actions left, primary right — visual quarantine).
 - In create mode, Delete button is absent entirely.
 - Closing the edit modal to open the delete confirm: close the edit modal first (`close()`), then open the delete confirm. Avoid modal stacking.
@@ -423,6 +422,7 @@ Rules:
 - `size="sm"` (compact — this is a single-question dialog, not a form).
 - Task title rendered in straight double quotes (no italics, no special styling).
 - Cancel on the left, Delete on the right (standard confirm-dialog order for destructive confirms).
+- "Cancel" is retained here because it is unambiguously paired with the destructive action "Delete task" — the abort action is self-evident.
 
 ---
 
@@ -488,7 +488,7 @@ Email is NOT a field (D-13 lock — email is the sign-in key).
         pendoId={PENDO_IDS.settings.profile.cancel}
         onClick={() => form.reset()}
       >
-        Cancel
+        Discard changes
       </Button>
       <Button
         variant="filled"
@@ -496,14 +496,14 @@ Email is NOT a field (D-13 lock — email is the sign-in key).
         disabled={!form.formState.isDirty}
         pendoId={PENDO_IDS.settings.profile.save}
       >
-        Save
+        Save profile
       </Button>
     </Group>
   </Stack>
 </form>
 ```
 
-`maw={480}` keeps the form at a readable width on wide desktops. Save disabled when form not dirty (`isDirty` from RHF). Cancel calls `form.reset()` (reverts to current `defaultValues`).
+`maw={480}` keeps the form at a readable width on wide desktops. Save disabled when form not dirty (`isDirty` from RHF). Discard changes calls `form.reset()` (reverts to current `defaultValues`).
 
 ### Workspace tab
 
@@ -522,10 +522,10 @@ Same layout pattern as Profile tab. Save/Cancel button placement identical.
 
   <Group gap="md" mt="lg">
     <Button variant="default" pendoId={PENDO_IDS.settings.workspace.cancel} onClick={() => form.reset()}>
-      Cancel
+      Discard changes
     </Button>
     <Button variant="filled" type="submit" disabled={!form.formState.isDirty} pendoId={PENDO_IDS.settings.workspace.save}>
-      Save
+      Save workspace
     </Button>
   </Group>
 </Stack>
@@ -555,7 +555,7 @@ Same layout pattern as Profile tab. Save/Cancel button placement identical.
   {/* Danger zone */}
   <Paper withBorder p="lg" radius="md" mt="xl">
     <Stack gap="md">
-      <Title order={4} c="red.7">Danger zone</Title>
+      <Title order={3} c="red.7">Danger zone</Title>
       <Text size="md">
         Reset all demo data for this workspace. This will permanently delete all tasks,
         settings, and accounts in this browser, and sign you out.
@@ -584,7 +584,7 @@ Same layout pattern as Profile tab. Save/Cancel button placement identical.
 - `withBorder p="lg" radius="md"` — matches D-17 spec.
 - `mt="xl"` from the theme toggle section — visual quarantine.
 - Red border is NOT used (just standard `withBorder` gray border — the red `<Title>` text is the danger signal).
-- `<Title order={4} c="red.7">` — only instance of order=4 in Phase 4.
+- `<Title order={3} c="red.7">` — Sub-heading role (~22px). The `c="red.7"` color distinguishes this heading visually from other `order={3}` Sub-heading instances. No `order={4}` is used anywhere in Phase 4.
 
 ### Danger zone reset confirmation modal
 
@@ -619,6 +619,8 @@ Same layout pattern as Profile tab. Save/Cancel button placement identical.
   </Group>
 </Modal>
 ```
+
+"Cancel" is retained here because it is unambiguously paired with the destructive action "Reset demo data" — the abort action is self-evident in this destructive-confirm flow.
 
 Reset handler sequence (D-17 lock):
 1. Enumerate `Object.keys(localStorage)` for keys matching prefix `halo:v`.
@@ -1039,14 +1041,16 @@ Halo does not use shadcn or any third-party component registry. The vetting gate
 | Task create modal — Save button | `Create task` |
 | Task edit modal — Save button | `Save changes` |
 | Task edit modal — Delete button | `Delete task` |
+| Task form modal — Cancel/Discard button | `Discard` |
+| Task delete confirm — Cancel button | `Cancel` (retained — paired with destructive "Delete task") |
 | Task delete confirm | `Delete task` |
-| Settings Profile — Save | `Save` |
-| Settings Profile — Cancel | `Cancel` |
-| Settings Workspace — Save | `Save` |
-| Settings Workspace — Cancel | `Cancel` |
+| Settings Profile — Save | `Save profile` |
+| Settings Profile — Cancel | `Discard changes` |
+| Settings Workspace — Save | `Save workspace` |
+| Settings Workspace — Cancel | `Discard changes` |
 | Danger zone trigger | `Reset demo data` |
 | Danger zone confirm | `Reset demo data` |
-| Danger zone cancel | `Cancel` |
+| Danger zone cancel | `Cancel` (retained — paired with destructive "Reset demo data") |
 | Reports — Export | `Export CSV` |
 | Filter-empty clear | `Clear filters` |
 
@@ -1078,7 +1082,7 @@ Halo does not use shadcn or any third-party component registry. The vetting gate
 
 | Element | Copy |
 |---------|------|
-| Card title `<Title order={4} c="red.7">` | `Danger zone` |
+| Card title `<Title order={3} c="red.7">` | `Danger zone` |
 | Card body `<Text size="md">` | `Reset all demo data for this workspace. This will permanently delete all tasks, settings, and accounts in this browser, and sign you out.` |
 
 ### Toast copy (verbatim)
@@ -1138,8 +1142,8 @@ Every value in this UI-SPEC was sourced from upstream artifacts. No new user que
 | Design System: @mantine/dates + dayjs | D-19, D-21, D-23 |
 | Design System: @mantine/notifications | 04-CONTEXT.md code_context §"Toast pattern" |
 | Spacing (xs excluded) | Phase 3 UI-SPEC §Spacing (inherited) |
-| Typography (4 sizes, 2 weights) | Phase 3 UI-SPEC §Typography (inherited) |
-| Title order=4 exception (Danger zone) | D-17 spec + Phase 3 typography rules (closest acceptable mapping) |
+| Typography (4 sizes, 2 weights, no fifth size) | Phase 3 UI-SPEC §Typography (inherited) |
+| Danger zone heading: Title order=3 with c="red.7" | Phase 3 typography rules (four-size contract maintained; red color distinguishes visually) |
 | Color: badge mapping | D-02 (status/priority badges via labels.ts), Phase 3 donut segment colors |
 | Color: Recharts stacked bar | D-20 (To do=indigo.3, In progress=indigo.6, Done=gray.5) |
 | Color: dark mode | D-18 (CSS-var resolution requirement) |
@@ -1167,6 +1171,7 @@ Every value in this UI-SPEC was sourced from upstream artifacts. No new user que
 | Inline validation idiom | Phase 2 UI-SPEC §Inline validation errors (inherited) |
 | Pendo deferred | STATE.md 2026-05-13 decision; ROADMAP §Phase 4 preamble |
 | App.tsx ColorScheme fix | 04-CONTEXT.md code_context §"useMantineColorScheme()" |
+| CTA labels: Save profile, Save workspace, Discard changes, Discard | Checker revision — generic labels resolved |
 
 ---
 
