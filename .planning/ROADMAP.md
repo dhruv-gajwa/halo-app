@@ -136,7 +136,7 @@ Plans:
 - [x] 05-03-PLAN.md — Seed coordinator + tasksSeed amendments + assigneeOptions source swap + AppLayout call-site swap (DATA-01)
 
 **Wave 3** *(blocked on Wave 2 completion)*
-- [ ] 05-04-PLAN.md — Team UI: TeamTable + InviteTeammateModal + TeamEmptyState + TeamPage composer + PENDO_IDS team namespace (TEAM-01, TEAM-02, TEAM-03, UI-01, UI-02)
+- [x] 05-04-PLAN.md — Team UI: TeamTable + InviteTeammateModal + TeamEmptyState + TeamPage composer + PENDO_IDS team namespace (TEAM-01, TEAM-02, TEAM-03, UI-01, UI-02)
 
 **Wave 4** *(blocked on Wave 3 completion — serialized on src/pendo/PENDO_IDS.ts after Plan 04 appends `team`)*
 - [ ] 05-05-PLAN.md — Help UI: HelpSearchInput + HelpList + HelpNoResultsState + HelpPage composer + HelpArticlePage + nested router child + PENDO_IDS help namespace (HELP-01, HELP-02, HELP-03, HELP-04, UI-01)
