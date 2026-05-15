@@ -53,6 +53,7 @@ import { ReportsPage } from './routes/app/reports/ReportsPage'
 import { TeamPage } from './routes/app/team/TeamPage'
 import { SettingsPage } from './routes/app/settings/SettingsPage'
 import { HelpPage } from './routes/app/help/HelpPage'
+import { HelpArticlePage } from './routes/app/help/HelpArticlePage'
 import { RequireAuth, RequireAnon } from './auth'
 import { SignupShell } from './routes/public/signup/SignupShell'
 import { Step1AccountPage } from './routes/public/signup/Step1AccountPage'
@@ -118,6 +119,11 @@ export const router = createBrowserRouter([
           { path: 'team',          Component: TeamPage },
           { path: 'settings',      Component: SettingsPage },
           { path: 'help',          Component: HelpPage },
+          // D-07: First router.tsx edit since Phase 3 D-01 lock — flat sibling
+          // shape used (not nested child) because HelpPage has no <Outlet />;
+          // nesting would render the list above the detail simultaneously.
+          // UI-SPEC line 840 explicitly accepts either nested or flat sibling shape.
+          { path: 'help/:slug',   Component: HelpArticlePage },
         ],
       },
     ],

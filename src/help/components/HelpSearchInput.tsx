@@ -5,10 +5,9 @@ import { PENDO_IDS } from '../../pendo/PENDO_IDS'
 /**
  * HelpSearchInput — controlled TextInput with an IconSearch left section.
  *
- * Debounce is NOT applied here — it's a page-level concern via
- * `useDebouncedValue(query, 150)` in HelpPage (CONTEXT D-08). This component
- * is a thin controlled wrapper so the search input can be independently
- * composed and re-used if needed.
+ * Debounce is NOT applied here — it's a page-level concern (150ms in HelpPage
+ * via @mantine/hooks per CONTEXT D-08). This component is a thin controlled
+ * wrapper so the search input can be independently composed and re-used.
  */
 
 export type HelpSearchInputProps = {
