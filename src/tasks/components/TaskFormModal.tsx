@@ -240,6 +240,7 @@ export function TaskFormModal({
       title={mode === 'create' ? 'New task' : 'Edit task'}
       size="md"
       centered
+      keepMounted={false}
       data-pendo-id={PENDO_IDS.lists.modal.container}
     >
       <form onSubmit={onSubmit} noValidate>
