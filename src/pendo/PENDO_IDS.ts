@@ -157,6 +157,98 @@ export const PENDO_IDS = {
   comingSoon: {
     card: 'coming-soon.card',
   },
+
+  /** Phase 4 Lists page targets (task table + filters + modals + empty states + row-level dynamic IDs). */
+  lists: {
+    newTaskButton: 'lists.new-task-button',
+    filter: {
+      bar:      'lists.filter.bar',
+      status:   'lists.filter.status',
+      priority: 'lists.filter.priority',
+      assignee: 'lists.filter.assignee',
+    },
+    row: {
+      completeToggle: 'lists.row.complete-toggle',
+      kebab:          'lists.row.kebab',
+      kebabEdit:      'lists.row.kebab-edit',
+      kebabDelete:    'lists.row.kebab-delete',
+    },
+    modal: {
+      container:   'lists.modal.container',
+      title:       'lists.modal.title',
+      description: 'lists.modal.description',
+      status:      'lists.modal.status',
+      priority:    'lists.modal.priority',
+      assignee:    'lists.modal.assignee',
+      dueDate:     'lists.modal.due-date',
+      cancel:      'lists.modal.cancel',
+      save:        'lists.modal.save',
+      delete:      'lists.modal.delete',
+    },
+    deleteConfirm: {
+      cancel:  'lists.delete-confirm.cancel',
+      confirm: 'lists.delete-confirm.confirm',
+    },
+    emptyState: {
+      container: 'lists.empty-state.container',
+      cta:       'lists.empty-state.cta',
+    },
+    filteredEmpty: {
+      container: 'lists.filtered-empty.container',
+      clearLink: 'lists.filtered-empty.clear-link',
+    },
+  },
+
+  /** Phase 4 Settings page targets (three tabs + profile/workspace forms + theme toggle + danger zone). */
+  settings: {
+    tabs: {
+      profile:     'settings.tabs.profile',
+      workspace:   'settings.tabs.workspace',
+      preferences: 'settings.tabs.preferences',
+    },
+    profile: {
+      firstName: 'settings.profile.first-name',
+      lastName:  'settings.profile.last-name',
+      username:  'settings.profile.username',
+      jobTitle:  'settings.profile.job-title',
+      role:      'settings.profile.role',
+      location:  'settings.profile.location',
+      save:      'settings.profile.save',
+      cancel:    'settings.profile.cancel',
+    },
+    workspace: {
+      companyName: 'settings.workspace.company-name',
+      companySize: 'settings.workspace.company-size',
+      industry:    'settings.workspace.industry',
+      planTier:    'settings.workspace.plan-tier',
+      save:        'settings.workspace.save',
+      cancel:      'settings.workspace.cancel',
+    },
+    preferences: {
+      themeToggle: 'settings.preferences.theme-toggle',
+    },
+    dangerZone: {
+      button:        'settings.danger-zone.button',
+      confirmCancel: 'settings.danger-zone.confirm-cancel',
+      confirmButton: 'settings.danger-zone.confirm-button',
+    },
+  },
+
+  /** Phase 4 Reports page targets (filter bar + stacked-bar chart + read-only table + CSV export). */
+  reports: {
+    filter: {
+      dateRange: 'reports.filter.date-range',
+      assignee:  'reports.filter.assignee',
+      status:    'reports.filter.status',
+    },
+    chart: {
+      statusByDay: 'reports.chart.status-by-day',
+    },
+    table: {
+      container: 'reports.table.container',
+    },
+    csvExport: 'reports.csv-export',
+  },
 } as const
 
 /**
