@@ -1,5 +1,6 @@
 import React from 'react'
 import { MantineProvider } from '@mantine/core'
+import { Notifications } from '@mantine/notifications'
 import { RouterProvider } from 'react-router'
 import { haloTheme } from './theme'
 import { router } from './router'
@@ -24,7 +25,8 @@ import { PendoBridge } from './pendo/PendoBridge'
  */
 export default function App(): React.JSX.Element {
   return (
-    <MantineProvider theme={haloTheme} defaultColorScheme="light">
+    <MantineProvider theme={haloTheme} defaultColorScheme="auto">
+      <Notifications />
       <StorageProvider>
         <AuthProvider>
           <WorkspaceProvider>

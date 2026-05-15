@@ -1,4 +1,6 @@
 import '@mantine/core/styles.css'
+import '@mantine/dates/styles.css'
+import '@mantine/notifications/styles.css'
 import { runMigrations } from './storage'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
