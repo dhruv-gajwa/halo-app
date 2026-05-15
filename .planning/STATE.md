@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 4 UI-SPEC approved
-last_updated: "2026-05-15T15:07:48.136Z"
+last_updated: "2026-05-15T15:18:41.004Z"
 last_activity: 2026-05-15
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 27
-  completed_plans: 25
-  percent: 93
+  completed_plans: 26
+  percent: 96
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 ## Current Position
 
 Phase: 04 (core-pages-lists-settings-reports) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Last activity: 2026-05-15
 
-Progress: [█████████░] 93%
+Progress: [██████████] 96%
 
 ## Performance Metrics
 
@@ -77,6 +77,7 @@ Progress: [█████████░] 93%
 | Phase 04 P01 | 3min 2sec | 2 tasks | 6 files |
 | Phase 04 P02 | 4min 49sec | 2 tasks | 13 files |
 | Phase 04 PP03 | 11min 26sec | 2 tasks | 8 files |
+| Phase 04 P04 | 5min 38sec | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -147,6 +148,11 @@ Recent decisions affecting current work:
 - [Phase ?]: Phase 04-03: Mantine v9 DatePickerInput returns DateStringValue (YYYY-MM-DD); form bridges via new Date(value).toISOString() so persisted dueDate matches z.iso.datetime(). Display value uses currentDueDate.slice(0,10)
 - [Phase ?]: Phase 04-03: FilteredEmptyState uses raw Mantine <Anchor component='button'> with explicit data-pendo-id — Halo wrapper doesn't expose Mantine polymorphic 'component' prop. S3 exception, value still from PENDO_IDS
 - [Phase ?]: Phase 04-03: D-11 modal-on-modal avoidance — TaskFormModal Delete button calls onClose() FIRST then onRequestDelete?.(task); parent setDeleteTarget opens DeleteConfirmModal next tick. React batches so only one modal visible at a time
+- [Phase ?]: Phase 04-04: Settings form schemas (ProfileFormSchema, WorkspaceFormSchema) defined locally inside each tab module — single-consumer form-only .pick() lenses stay local; src/auth/schemas.ts co-location pattern is for schemas that are both form-step and persistence
+- [Phase ?]: Phase 04-04: SettingsPage parseTab(rawTab) extracted as a named whitelist function over VALID_TABS — T-04-04-02 tampering mitigation lives in the named function, not an inlined ternary
+- [Phase ?]: Phase 04-04: Reset handler uses two-pass collect-then-remove over localStorage.key(i) (modifying during iteration shifts indices); sessionStorage.removeItem wrapped in try/catch (T-04-04-05 private-browsing mitigation)
+- [Phase ?]: Phase 04-04: SET-05 deferral marker comments placed in ProfileTab.tsx + WorkspaceTab.tsx onSubmit success branches — Phase 6 greps 'SET-05 deferred to Phase 6' to find both call sites in one command
+- [Phase ?]: Phase 04-04: Compile-time canary blocks (_ROLE_OPTIONS_TYPECHECK etc.) typed against form-values inferred types lock local Select option arrays to upstream Zod enums — Phase 5 enum extension that forgets to update local options fails at typecheck
 
 ### Pending Todos
 
@@ -167,6 +173,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-05-15T15:07:10.272Z
+Last session: 2026-05-15T15:18:09.756Z
 Stopped at: Phase 4 UI-SPEC approved
 Resume file: None
