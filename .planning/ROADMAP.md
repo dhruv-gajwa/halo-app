@@ -151,6 +151,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Foundation & Cross-Cutting Contracts | 3/6 | In Progress|  |
 | 2. Registration & Sign-In | 10/10 | Complete    | 2026-05-14 |
 | 3. Authenticated Shell & Dashboard | 6/6 | Complete   | 2026-05-14 |
-| 4. Core Pages (Lists, Settings, Reports) | 5/5 | Complete   | 2026-05-15 |
+| 4. Core Pages (Lists, Settings, Reports) | 7/7 | Complete   | 2026-05-15 |
 | 5. Team, Help & Polish | 0/TBD | Not started | - |
 | 6. Pendo Install & Wiring | 0/TBD | Not started | - |

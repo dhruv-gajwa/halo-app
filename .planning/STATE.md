@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 4 complete (plans 04-01..05); ready for verification/transition
-last_updated: "2026-05-15T17:51:06.781Z"
-last_activity: 2026-05-15 -- Phase 04 planning complete
+stopped_at: "Completed 04-07-PLAN.md (UAT gap-closure: modal heading nesting, form reset, prevStatus, JSDoc)"
+last_updated: "2026-05-15T17:59:34.911Z"
+last_activity: 2026-05-15
 progress:
   total_phases: 6
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 29
-  completed_plans: 28
-  percent: 97
+  completed_plans: 29
+  percent: 100
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 ## Current Position
 
 Phase: 04 (core-pages-lists-settings-reports) — EXECUTING
-Plan: 2 of 6
+Plan: 2 of 7
 Status: Ready to execute
-Last activity: 2026-05-15 -- Phase 04 planning complete
+Last activity: 2026-05-15
 
 Progress: [██████████] 100%
 
@@ -80,6 +80,7 @@ Progress: [██████████] 100%
 | Phase 04 P04 | 5min 38sec | 2 tasks | 5 files |
 | Phase 04 PP05 | 7min 8sec | 2 tasks tasks | 6 files files |
 | Phase 04-core-pages-lists-settings-reports P04-06 | 15min | 5 tasks | 6 files |
+| Phase 04 P07 | 8min | 4 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -161,6 +162,9 @@ Recent decisions affecting current work:
 - [Phase ?]: Phase 04-05: Hand-rolled RFC 4180 CSV in src/reports/csvExport.ts — quoter handles comma/newline/double-quote (doubled-escape); no library; Blob+URL.createObjectURL+ephemeral <a download>+URL.revokeObjectURL sequence; filename halo-tasks-YYYY-MM-DD.csv via dayjs(); empty assignee renders as empty string in CSV body (not em-dash)
 - [Phase ?]: Phase 04-05: ReportsTable shares TaskTable.module.css cell-padding module rather than duplicating — plan task body authorizes 'pick whichever is simpler'; both tables sit under the same UI-SPEC Spacing rule (var(--mantine-spacing-sm) var(--mantine-spacing-md))
 - [Phase ?]: Phase 04-05: Empty status filter (deselect-all-three Status options) is a deliberate empty-state trigger — filteredTasks predicate returns false when statusFilter.length===0; chart shows empty buckets, table shows compact 'No tasks match these filters' state, Export CSV disabled
+- [Phase ?]: Phase 04-07: keepMounted={false} chosen for TaskFormModal create-mode reset — one-line fix, no useEffect timing risk, RHF cleanup implicit on unmount
+- [Phase ?]: Phase 04-07: prevStatus field added as TaskStatusEnum.optional().nullable() — no SCHEMA_VERSION bump per D-26; additive+backwards-compatible with legacy tasks
+- [Phase ?]: Phase 04-07: UAT 2b resolved as doc-only fix — two-pass collect-then-remove in ResetDemoDataModal was already correct; planning_context live-mutation framing was a misread
 
 ### Pending Todos
 
@@ -181,6 +185,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-05-15T17:19:44.321Z
-Stopped at: Phase 4 complete (plans 04-01..05); ready for verification/transition
+Last session: 2026-05-15T17:59:34.906Z
+Stopped at: Completed 04-07-PLAN.md (UAT gap-closure: modal heading nesting, form reset, prevStatus, JSDoc)
 Resume file: None
