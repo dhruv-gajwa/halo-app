@@ -64,6 +64,14 @@ export const TaskSchema = z.object({
   updatedAt: z.iso.datetime(),
   dueDate: z.iso.datetime().nullable(),
   completedAt: z.iso.datetime().nullable(),
+  /**
+   * Prior non-'done' status captured at the →done transition (symmetric to D-09
+   * completedAt). Set by tasksRepo.updateTask / createTask; never set by UI code.
+   * Optional (legacy records lack the key) + nullable (cleared to null on off-done
+   * transition). The off-toggle predicate in ListsPage reads this to restore the
+   * original status when un-completing a task.
+   */
+  prevStatus: TaskStatusEnum.optional().nullable(),
 })
 
 // ---------------------------------------------------------------------------

@@ -145,7 +145,9 @@ export function ListsPage(): React.JSX.Element {
               onDelete={(task) => setDeleteTarget(task)}
               onToggleComplete={(task, nextDone) => {
                 updateTask(workspaceId, task.id, {
-                  status: nextDone ? 'done' : 'todo',
+                  // Off-toggle: restore prior non-done status if recorded;
+                  // fall back to 'todo' for legacy tasks without prevStatus.
+                  status: nextDone ? 'done' : (task.prevStatus ?? 'todo'),
                 })
                 refresh()
               }}

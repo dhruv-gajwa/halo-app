@@ -56,9 +56,11 @@ export function getTaskById(workspaceId: string, id: string): Task | undefined {
  */
 export function createTask(workspaceId: string, input: CreateTaskInput): Task {
   const now = new Date().toISOString()
+  // D-09 completedAt + prevStatus invariant: tasks created in 'done' state get
+  // completedAt stamped and prevStatus set to null (no prior status to recall).
   const stamped: CreateTaskInput =
     input.status === 'done' && input.completedAt == null
-      ? { ...input, completedAt: now }
+      ? { ...input, completedAt: now, prevStatus: null }
       : input
   const task: Task = {
     id: nanoid(),
@@ -96,15 +98,23 @@ export function updateTask(
   const idx = existing.findIndex((t) => t.id === id)
   if (idx === -1) return undefined
 
-  // D-09: clone the patch locally before stamping completedAt so we never mutate
-  // the caller's object.
+  // D-09: clone the patch locally before stamping completedAt + prevStatus so
+  // we never mutate the caller's object.
   const stamped: Partial<Omit<Task, 'id' | 'createdAt'>> = { ...patch }
-  const prevStatus = existing[idx].status
+  const prevTaskStatus = existing[idx].status
   if (stamped.status !== undefined) {
-    if (stamped.status === 'done' && prevStatus !== 'done') {
+    // completedAt invariant (D-09)
+    if (stamped.status === 'done' && prevTaskStatus !== 'done') {
       stamped.completedAt = new Date().toISOString()
-    } else if (stamped.status !== 'done' && prevStatus === 'done') {
+    } else if (stamped.status !== 'done' && prevTaskStatus === 'done') {
       stamped.completedAt = null
+    }
+    // prevStatus invariant (symmetric to D-09): capture prior non-done status at
+    // the →done edge; clear it at the off-done edge.
+    if (stamped.status === 'done' && prevTaskStatus !== 'done') {
+      stamped.prevStatus = prevTaskStatus  // capture prior status
+    } else if (stamped.status !== 'done' && prevTaskStatus === 'done') {
+      stamped.prevStatus = null            // clear at off-done edge
     }
   }
 
