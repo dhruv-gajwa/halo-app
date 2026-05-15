@@ -63,18 +63,18 @@
 - [ ] **LIST-01**: User can view a list of tasks at `/app/lists` (or `/app/tasks`) in a List view
 - [ ] **LIST-02**: User can create a new task via a modal form with at minimum: title, description, status, priority, due date, assignee
 - [ ] **LIST-03**: User can edit an existing task via the same modal form
-- [ ] **LIST-04**: User can mark a task complete / incomplete with a single click on the row
+- [x] **LIST-04**: User can mark a task complete / incomplete with a single click on the row
 - [ ] **LIST-05**: User can delete a task with a confirmation modal
 - [ ] **LIST-06**: User can sort the list by any visible column
 - [ ] **LIST-07**: User can filter the list by status, priority, and assignee
 - [ ] **LIST-08**: List has a friendly empty state when no tasks exist (good guide-anchor surface)
-- [ ] **LIST-09**: All task mutations persist to localStorage and survive refresh
+- [x] **LIST-09**: All task mutations persist to localStorage and survive refresh
 
 ### Settings
 
 - [ ] **SET-01**: Settings page at `/app/settings` has tabs for Profile, Workspace, and Preferences
-- [ ] **SET-02**: Profile tab lets the user edit name, username, job title, role, location; saves persist to localStorage
-- [ ] **SET-03**: Workspace tab lets the user edit company name, size, industry, plan tier; saves persist to localStorage
+- [x] **SET-02**: Profile tab lets the user edit name, username, job title, role, location; saves persist to localStorage
+- [x] **SET-03**: Workspace tab lets the user edit company name, size, industry, plan tier; saves persist to localStorage
 - [x] **SET-04**: Preferences tab includes at least a theme toggle (light/dark via Mantine color scheme)
 - [ ] **SET-05**: Any save action in Settings triggers `pendo.identify` (or equivalent metadata sync) so Pendo sees updated visitor/account fields
 - [ ] **SET-06**: Settings includes a "Reset demo data" button that clears `halo:v1:*` keys (with confirmation) and reloads the app to the public landing
@@ -201,15 +201,15 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 | LIST-01 | Phase 4 | Pending |
 | LIST-02 | Phase 4 | Pending |
 | LIST-03 | Phase 4 | Pending |
-| LIST-04 | Phase 4 | Pending |
+| LIST-04 | Phase 4 | Complete |
 | LIST-05 | Phase 4 | Pending |
 | LIST-06 | Phase 4 | Pending |
 | LIST-07 | Phase 4 | Pending |
 | LIST-08 | Phase 4 | Pending |
-| LIST-09 | Phase 4 | Pending |
+| LIST-09 | Phase 4 | Complete |
 | SET-01 | Phase 4 | Pending |
-| SET-02 | Phase 4 | Pending |
-| SET-03 | Phase 4 | Pending |
+| SET-02 | Phase 4 | Complete |
+| SET-03 | Phase 4 | Complete |
 | SET-04 | Phase 4 | Complete |
 | SET-05 | Phase 4 | Pending |
 | SET-06 | Phase 4 | Pending |

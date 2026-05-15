@@ -108,7 +108,7 @@ Plans:
 Plans:
 **Wave 1**
 - [x] 04-01-PLAN.md — Install runtime deps + dark-mode wiring + Notifications mount + PENDO_IDS registry extension (lists/settings/reports namespaces)
-- [ ] 04-02-PLAN.md — Repo extensions (tasksRepo completedAt invariant + authRepo updateVisitor/Workspace) + TaskFormSchema + badge color maps + now-ref/assigneeOptions helpers + new primitive wrappers (Checkbox/Textarea/DatePickerInput)
+- [x] 04-02-PLAN.md — Repo extensions (tasksRepo completedAt invariant + authRepo updateVisitor/Workspace) + TaskFormSchema + badge color maps + now-ref/assigneeOptions helpers + new primitive wrappers (Checkbox/Textarea/DatePickerInput)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 - [ ] 04-03-PLAN.md — Lists page: TanStack Table + filter bar + task form modal + delete confirm + two empty states (LIST-01..09)

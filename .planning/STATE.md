@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 4 UI-SPEC approved
-last_updated: "2026-05-15T14:46:43.031Z"
+last_updated: "2026-05-15T14:55:46.221Z"
 last_activity: 2026-05-15
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 27
-  completed_plans: 23
-  percent: 85
+  completed_plans: 24
+  percent: 89
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 ## Current Position
 
 Phase: 04 (core-pages-lists-settings-reports) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 Status: Ready to execute
 Last activity: 2026-05-15
 
-Progress: [█████████░] 85%
+Progress: [█████████░] 89%
 
 ## Performance Metrics
 
@@ -75,6 +75,7 @@ Progress: [█████████░] 85%
 | Phase 03 P06 | 20min | 2 tasks | 2 files |
 | Phase 03-authenticated-shell-dashboard P05 | 3 | 2 tasks | 3 files |
 | Phase 04 P01 | 3min 2sec | 2 tasks | 6 files |
+| Phase 04 P02 | 4min 49sec | 2 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -135,6 +136,11 @@ Recent decisions affecting current work:
 - [Phase ?]: Phase 04-01: Pinned @mantine/dates 9.2.1 + @mantine/notifications 9.2.1 (matching @mantine/core@9.2.0 major), @tanstack/react-table 8.21.3 (D-01 single-table-primitive), dayjs 1.11.20 (peer + D-21/D-23 consumer); zero peer warnings against React 19, zero npm audit findings
 - [Phase ?]: Phase 04-01: <Notifications /> mounted as FIRST child of MantineProvider (before StorageProvider) — sibling renderer per Mantine v9 docs, NOT a Halo provider; FND-07 Storage->Auth->Workspace->PendoBridge chain preserved verbatim
 - [Phase ?]: Phase 04-01: PENDO_IDS lists/settings/reports namespaces appended verbatim from 04-UI-SPEC lines 886-972; 57 new leaves; Leaves<T> derivation picks them up automatically; existing namespaces (layout, sandbox, signup, signin, nav, topbar, dashboard, comingSoon) untouched
+- [Phase ?]: Phase 04-02: tasksRepo.updateTask owns the completedAt invariant (D-09) — status→done stamps now-ISO, off-done clears null; UI code never touches completedAt. createTask gains symmetric stamping when input.status==='done' and completedAt is null.
+- [Phase ?]: Phase 04-02: authRepo.updateVisitor / updateWorkspace use structural Omit<> on patch types (passwordHash, ownerVisitorId, id, createdAt excluded) — T-04-02-01 mitigation lives in the type system per Phase 2 T-02-42 precedent. Neither stamps updatedAt because VisitorSchema / WorkspaceSchema have no updatedAt field.
+- [Phase ?]: Phase 04-02: TaskFormSchema uses raw z.enum([...], { message: '...' }) at the form level instead of reusing persistence enums TaskStatusEnum/TaskPriorityEnum — persistence enums stay message-less so corrupt-storage Zod errors don't surface user-facing copy. Form schema co-located with TaskSchema in src/tasks/schemas.ts (mirrors auth/schemas.ts step1..step4 co-location with VisitorSchema).
+- [Phase ?]: Phase 04-02: computeNowRef extracted from Dashboard.tsx into src/tasks/now-ref.ts (D-22) — shared between Dashboard (Phase 3) and ReportsPage (Phase 4). Dashboard imports directly from '../tasks/now-ref' mirroring its existing direct-module-import precedent for formatRelative.
+- [Phase ?]: Phase 04-02: Checkbox primitive wrapper forwards BOTH pendoId (required → data-pendo-id) and optional taskId (→ data-pendo-task-id) — implements CLAUDE.md dynamic-list parameterization rule for the Lists row complete-toggle. Multi-prop forwarding shape modeled on PasswordInput.tsx.
 
 ### Pending Todos
 
@@ -155,6 +161,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-05-15T14:46:04.825Z
+Last session: 2026-05-15T14:55:33.765Z
 Stopped at: Phase 4 UI-SPEC approved
 Resume file: None
