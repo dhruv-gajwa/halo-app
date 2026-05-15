@@ -9,7 +9,9 @@
  *
  * Markup verbatim from 04-UI-SPEC §"Delete confirmation modal" lines 399-419:
  *   - Modal size="sm", centered.
- *   - Title <Title order={3}>Delete this task?</Title>
+ *   - Title: plain string "Delete this task?" passed via Modal's `title` prop
+ *     (no nested <Title> JSX — avoids the heading-nesting defect closed by
+ *     plan 04-07 UAT 1a).
  *   - Body `Delete "{taskTitle}"? This cannot be undone.` (double-quotes,
  *     no italics).
  *   - Footer: Cancel (variant="default") + Delete task (color="red"
