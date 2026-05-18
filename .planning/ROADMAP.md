@@ -2,14 +2,13 @@
 
 ## Overview
 
-Halo is built in six phases. Phases 1–5 build the app shell, auth flows, and feature surface — all of them **Pendo-ready** (markup, selector registry, SVG-only charting convention, masked-input primitive), but with no live Pendo runtime. Phase 6 then wires the Pendo agent into the prepared surface: install the snippet, initialize anonymously, fire identify on registration/sign-in, clear on sign-out, sync metadata on workspace/profile changes, and emit setUrl on route changes. This sequencing matches "build the app first, then install Pendo," and keeps Phases 1–5 free of any Pendo runtime dependency.
+Halo is built in five phases. All phases ship **Pendo-ready** markup (selector registry, SVG-only charting convention, masked-input primitive) so a future Pendo install can plug in cleanly — but the live Pendo runtime (snippet load, `initialize`, `identify`, `setUrl`) is out of scope for v1.0.
 
 - Phase 1 lands the versioned localStorage envelope, the provider stack, the `data-pendo-id` selector registry + UI primitive wrappers, the masked-input primitive, and the public/`/app` route split — all the markup/storage contracts a future Pendo install will plug into.
 - Phase 2 builds the multi-step registration funnel and sign-in/sign-out flows.
 - Phase 3 ships the authenticated AppShell and Dashboard, giving every subsequent page a chrome to live in.
 - Phase 4 delivers the three core interactive pages (Lists, Settings, Reports).
 - Phase 5 closes coverage with Team and Help (Resource Center anchor), cross-page polish, idempotent seeding, and a final "Looks Done But Isn't" audit.
-- Phase 6 wires the Pendo agent end-to-end on top of the prepared surface.
 
 ## Phases
 
@@ -19,22 +18,21 @@ Halo is built in six phases. Phases 1–5 build the app shell, auth flows, and f
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation & Cross-Cutting Contracts** - Scaffold + provider stack + versioned localStorage + `PENDO_IDS` selector registry + UI primitive wrappers + masked-input primitive + public/`/app` route split (Pendo-ready markup, no Pendo runtime)
+- [x] **Phase 1: Foundation & Cross-Cutting Contracts** - Scaffold + provider stack + versioned localStorage + `PENDO_IDS` selector registry + UI primitive wrappers + masked-input primitive + public/`/app` route split (Pendo-ready markup, no Pendo runtime) (completed 2026-05-14)
 - [x] **Phase 2: Registration & Sign-In** - Four-URL signup wizard + sign-in/sign-out + RequireAuth/RequireAnon guards (completed 2026-05-14)
 - [x] **Phase 3: Authenticated Shell & Dashboard** - AppShell (side nav + top bar + user menu) + post-sign-in Dashboard with stat cards, SVG charts, time range, and activity feed (completed 2026-05-14)
 - [x] **Phase 4: Core Pages (Lists, Settings, Reports)** - Task CRUD, settings tabs, reports with CSV export (completed 2026-05-15)
 - [x] **Phase 5: Team, Help & Polish** - Team invite/role flows, searchable Help with Resource Center anchor, cross-page polish, idempotent seeding, demo-ready audit (completed 2026-05-15)
-- [ ] **Phase 6: Pendo Install & Wiring** - Install Pendo snippet + initialize anonymously at boot + identify on registration/sign-in + clear on sign-out + sync metadata on workspace/profile changes + setUrl on route changes
 
 ## Phase Details
 
 ### Phase 1: Foundation & Cross-Cutting Contracts
-**Goal**: A runnable Halo skeleton has every cross-cutting storage, routing, and Pendo-markup contract installed *before* any page is built — retrofitting these later is far more expensive than installing them upfront. The Pendo *runtime* (snippet, initialize, setUrl) is intentionally deferred to Phase 6; Phase 1 only installs the *markup affordances* Pendo will plug into.
+**Goal**: A runnable Halo skeleton has every cross-cutting storage, routing, and Pendo-markup contract installed *before* any page is built — retrofitting these later is far more expensive than installing them upfront. Phase 1 installs the *markup affordances* a future Pendo install can plug into; the live Pendo runtime is out of scope for v1.0.
 **Depends on**: Nothing (first phase)
 **Requirements**: FND-01, FND-02, FND-03, FND-04, FND-05, FND-06, FND-07, PEN-07, PEN-08, PEN-09
 **Success Criteria** (what must be TRUE):
   1. `npm run dev` boots a Halo-branded Mantine-themed app at a History-API URL with no console errors, a visible public layout, and a "Demo data only — never enter real credentials" banner
-  2. The provider stack mounts in the order `Storage → Auth → Workspace → PendoBridge → Router` (PendoBridge is a no-op pass-through stub in this phase — the slot is reserved for Phase 6)
+  2. The provider stack mounts in the order `Storage → Auth → Workspace → PendoBridge → Router` (PendoBridge ships as a no-op pass-through stub in v1.0 — the slot is reserved for a future Pendo-runtime integration)
   3. The `PENDO_IDS` TypeScript registry exists and is the only source of `data-pendo-id` values; the UI primitive wrappers (`Button`, `Anchor`, `TextInput`, `PasswordInput`, etc.) forward `data-pendo-id` to the DOM without baking values in
   4. The `PasswordInput` primitive applies the `.pendo-sr-ignore` class (Session Replay masking affordance — inert without Pendo)
   5. The `halo:v1:meta` key is created on first boot with `{ schemaVersion, seededAt, appVersion }`, every storage read is Zod-validated with a safe fallback, and the boot-time migration runner can register migrations for future schema bumps
@@ -57,7 +55,7 @@ Plans:
 - [x] 01-06-PLAN.md — PENDO_IDS registry + UI primitive wrappers + masked PasswordInput + conventions doc + sandbox smoke-render (PEN-07, PEN-08, PEN-09)
 
 ### Phase 2: Registration & Sign-In
-**Goal**: A four-step registration wizard (each step at its own URL), plus sign-in/sign-out, plus route guards — all functionally complete without any live Pendo wiring. Phase 6 will retrofit identify/clearSession calls onto the same flows.
+**Goal**: A four-step registration wizard (each step at its own URL), plus sign-in/sign-out, plus route guards — all functionally complete without any live Pendo wiring.
 **Depends on**: Phase 1
 **Requirements**: AUTH-01, AUTH-02, AUTH-03, AUTH-04, AUTH-05, AUTH-06, AUTH-07, AUTH-08, AUTH-09, AUTH-10, AUTH-11, AUTH-12
 **Success Criteria** (what must be TRUE):
@@ -95,7 +93,7 @@ Plans:
 **UI hint**: yes
 
 ### Phase 4: Core Pages (Lists, Settings, Reports)
-**Goal**: The three highest-leverage interactive pages ship — Lists (task CRUD), Settings (profile/workspace/preferences), and Reports (filtered task data with SVG chart + CSV export). Settings save handlers persist to localStorage; Pendo metadata sync (PEN-04) is added in Phase 6.
+**Goal**: The three highest-leverage interactive pages ship — Lists (task CRUD), Settings (profile/workspace/preferences), and Reports (filtered task data with SVG chart + CSV export). Settings save handlers persist to localStorage; no Pendo runtime wiring in v1.0.
 **Depends on**: Phase 3
 **Requirements**: LIST-01, LIST-02, LIST-03, LIST-04, LIST-05, LIST-06, LIST-07, LIST-08, LIST-09, SET-01, SET-02, SET-03, SET-04, SET-05, SET-06, REP-01, REP-02, REP-03, REP-04
 **Success Criteria** (what must be TRUE):
@@ -145,28 +143,15 @@ Plans:
 - [x] 05-06-PLAN.md — Cross-page polish + Pendo-readiness audit + manual "Looks Done But Isn't" checkpoint (UI-01, UI-02, UI-03, UI-04)
 **UI hint**: yes
 
-### Phase 6: Pendo Install & Wiring
-**Goal**: Install the Pendo agent into the prepared markup surface and wire the identity lifecycle end-to-end. The snippet loads in `<head>`, `pendo.initialize` fires anonymously at boot, `pendo.identify` fires on registration/sign-in, `clearSession` fires on sign-out, metadata syncs on workspace/profile changes, and `setUrl` fires on every SPA route change.
-**Depends on**: Phase 5
-**Requirements**: PEN-01, PEN-02, PEN-03, PEN-04, PEN-05, PEN-06
-**Success Criteria** (what must be TRUE):
-  1. The Pendo Snippet is loaded synchronously in `<head>` of `index.html` before the React bundle; the API key is read from `import.meta.env.VITE_PENDO_API_KEY` (with `.env.example` checked into git, `.env` gitignored); the app boots cleanly when the key is absent (warn in console, skip init — never crash)
-  2. On first load, `pendo.initialize` is called exactly once with an anonymous visitor ID; the anonymous ID is persisted to `halo:v1:pendo:anonId` and reused on subsequent reloads so `window.pendo.getVisitorId()` returns a stable anonymous ID across reloads (anonymous-to-known continuity for the registration funnel)
-  3. On successful registration (end of signup wizard) and on sign-in, `pendo.identify` fires exactly once with visitor metadata (id, email, name, role, etc.) and account metadata (workspace id, company name, size, industry, plan tier); on workspace switch or profile/workspace settings save, `pendo.identify` (or `updateOptions`) re-fires with the updated metadata
-  4. On sign-out, `pendo.clearSession()` (or a hard reload) resets Pendo identity so a fresh sign-in never inherits stale identity from the prior session
-  5. Every SPA route change emits `pendo.location.setUrl(window.location.href)` via a `PendoRouteBridge` component mounted inside both `PublicLayout` and `AppLayout`; verifiable in the Network tab
-**Plans**: TBD
-
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Cross-Cutting Contracts | 3/6 | In Progress|  |
-| 2. Registration & Sign-In | 10/10 | Complete    | 2026-05-14 |
-| 3. Authenticated Shell & Dashboard | 6/6 | Complete   | 2026-05-14 |
-| 4. Core Pages (Lists, Settings, Reports) | 7/7 | Complete   | 2026-05-15 |
-| 5. Team, Help & Polish | 0/TBD | Not started | - |
-| 6. Pendo Install & Wiring | 0/TBD | Not started | - |
+| 1. Foundation & Cross-Cutting Contracts | 6/6 | Complete | 2026-05-14 |
+| 2. Registration & Sign-In | 10/10 | Complete | 2026-05-14 |
+| 3. Authenticated Shell & Dashboard | 6/6 | Complete | 2026-05-14 |
+| 4. Core Pages (Lists, Settings, Reports) | 7/7 | Complete | 2026-05-15 |
+| 5. Team, Help & Polish | 6/6 | Complete | 2026-05-15 |

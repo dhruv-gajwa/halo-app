@@ -17,12 +17,14 @@
 
 ### Pendo Integration (cross-cutting)
 
-- [ ] **PEN-01**: The Pendo Snippet is loaded synchronously in `<head>` of `index.html` before the React bundle; the API key is read from `import.meta.env.VITE_PENDO_API_KEY` (with a `.env.example` checked into git)
-- [ ] **PEN-02**: `pendo.initialize` is called exactly once at app boot with an anonymous visitor ID, so the registration funnel is measurable end-to-end
-- [ ] **PEN-03**: `pendo.identify` is called on successful registration and on sign-in, with visitor metadata (id, email, name, role, etc.) and account metadata (workspace id, company name, size, industry, plan tier)
-- [ ] **PEN-04**: `pendo.identify` is re-called whenever workspace switches or profile/workspace settings change, so metadata stays in sync
-- [ ] **PEN-05**: Sign-out resets Pendo identity (via `pendo.clearSession()` or a hard reload) and never leaves stale identity attached to the next session
-- [ ] **PEN-06**: Every SPA route change emits `pendo.location.setUrl(window.location.href)` so Pendo sees same-shell navigations
+**Pendo runtime requirements PEN-01..06 dropped on 2026-05-18** — Phase 6 (Pendo Install & Wiring) was removed from v1.0 scope. The app ships Pendo-*ready* (markup, registry, masking, SVG charts) but not Pendo-*wired*. PEN-07..09 (markup affordances) still ship as v1.0 requirements.
+
+- [ ] **PEN-01** *(dropped)*: ~~The Pendo Snippet is loaded synchronously in `<head>` of `index.html` before the React bundle; the API key is read from `import.meta.env.VITE_PENDO_API_KEY` (with a `.env.example` checked into git)~~
+- [ ] **PEN-02** *(dropped)*: ~~`pendo.initialize` is called exactly once at app boot with an anonymous visitor ID, so the registration funnel is measurable end-to-end~~
+- [ ] **PEN-03** *(dropped)*: ~~`pendo.identify` is called on successful registration and on sign-in, with visitor metadata (id, email, name, role, etc.) and account metadata (workspace id, company name, size, industry, plan tier)~~
+- [ ] **PEN-04** *(dropped)*: ~~`pendo.identify` is re-called whenever workspace switches or profile/workspace settings change, so metadata stays in sync~~
+- [ ] **PEN-05** *(dropped)*: ~~Sign-out resets Pendo identity (via `pendo.clearSession()` or a hard reload) and never leaves stale identity attached to the next session~~
+- [ ] **PEN-06** *(dropped)*: ~~Every SPA route change emits `pendo.location.setUrl(window.location.href)` so Pendo sees same-shell navigations~~
 - [x] **PEN-07**: A centralized `PENDO_IDS` TypeScript registry is the *only* source of `data-pendo-id` values; every interactive element on every page carries one
 - [x] **PEN-08**: Every chart is rendered as SVG (Recharts) — no canvas-backed charts anywhere — so Pendo guides and Session Replay can target chart elements
 - [x] **PEN-09**: Sensitive fields (password inputs) carry a Session-Replay mask attribute so they never appear in replays
@@ -76,7 +78,7 @@
 - [x] **SET-02**: Profile tab lets the user edit name, username, job title, role, location; saves persist to localStorage
 - [x] **SET-03**: Workspace tab lets the user edit company name, size, industry, plan tier; saves persist to localStorage
 - [x] **SET-04**: Preferences tab includes at least a theme toggle (light/dark via Mantine color scheme)
-- [ ] **SET-05**: Any save action in Settings triggers `pendo.identify` (or equivalent metadata sync) so Pendo sees updated visitor/account fields
+- [ ] **SET-05** *(dropped)*: ~~Any save action in Settings triggers `pendo.identify` (or equivalent metadata sync) so Pendo sees updated visitor/account fields~~ — dropped 2026-05-18 alongside PEN-01..06; Settings save handlers still persist to localStorage as specified by SET-02 and SET-03.
 - [x] **SET-06**: Settings includes a "Reset demo data" button that clears `halo:v1:*` keys (with confirmation) and reloads the app to the public landing
 
 ### Reports
@@ -88,24 +90,24 @@
 
 ### Team / Users
 
-- [ ] **TEAM-01**: Team page at `/app/team` lists seeded team members for the current workspace with name, email, role, and last-active
-- [ ] **TEAM-02**: User can open an "Invite teammate" modal, fill in email + role, and click Invite; the modal closes and a toast confirms "Invite sent" (no real email)
-- [ ] **TEAM-03**: User can change a teammate's role via an inline role dropdown; the change persists to localStorage
+- [x] **TEAM-01**: Team page at `/app/team` lists seeded team members for the current workspace with name, email, role, and last-active
+- [x] **TEAM-02**: User can open an "Invite teammate" modal, fill in email + role, and click Invite; the modal closes and a toast confirms "Invite sent" (no real email)
+- [x] **TEAM-03**: User can change a teammate's role via an inline role dropdown; the change persists to localStorage
 
 ### Help / Docs
 
-- [ ] **HELP-01**: Help page at `/app/help` lists at least 6 seeded articles grouped by topic
-- [ ] **HELP-02**: User can search articles by title/keyword via an input on the help page
-- [ ] **HELP-03**: Clicking an article opens a detail view with body content
-- [ ] **HELP-04**: The help page includes a stable anchor (e.g., a "?" floating button or a help icon in the top bar) suitable for the Pendo Resource Center to attach to
+- [x] **HELP-01**: Help page at `/app/help` lists at least 6 seeded articles grouped by topic
+- [x] **HELP-02**: User can search articles by title/keyword via an input on the help page
+- [x] **HELP-03**: Clicking an article opens a detail view with body content
+- [x] **HELP-04**: The help page includes a stable anchor (e.g., a "?" floating button or a help icon in the top bar) suitable for the Pendo Resource Center to attach to
 
 ### Seed Data & Polish
 
-- [ ] **DATA-01**: On first sign-in for a workspace, fake data is seeded via `@faker-js/faker` for tasks, team members, activity, and help articles; seeding is idempotent (gated by `meta.seededAt`) so user mutations are not clobbered on reload
-- [ ] **UI-01**: Every page that can be empty has a polished empty state with a primary CTA (good guide-anchor surface)
-- [ ] **UI-02**: Toast notifications confirm meaningful actions (create / save / delete / invite)
-- [ ] **UI-03**: Destructive actions (delete task, reset demo data) show a confirmation modal
-- [ ] **UI-04**: Visual polish pass: consistent spacing, typography, color usage; passes a manual "could this pass for a real B2B SaaS in a screenshot?" check
+- [x] **DATA-01**: On first sign-in for a workspace, fake data is seeded via `@faker-js/faker` for tasks, team members, activity, and help articles; seeding is idempotent (gated by `meta.seededAt`) so user mutations are not clobbered on reload
+- [x] **UI-01**: Every page that can be empty has a polished empty state with a primary CTA (good guide-anchor surface)
+- [x] **UI-02**: Toast notifications confirm meaningful actions (create / save / delete / invite)
+- [x] **UI-03**: Destructive actions (delete task, reset demo data) show a confirmation modal
+- [x] **UI-04**: Visual polish pass: consistent spacing, typography, color usage; passes a manual "could this pass for a real B2B SaaS in a screenshot?" check
 
 ## v2 Requirements
 
@@ -169,9 +171,9 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 | FND-05 | Phase 1 | Complete |
 | FND-06 | Phase 1 | Complete |
 | FND-07 | Phase 1 | Complete |
-| PEN-01 | Phase 6 | Pending |
-| PEN-02 | Phase 6 | Pending |
-| PEN-06 | Phase 6 | Pending |
+| PEN-01 | — | Dropped (2026-05-18) |
+| PEN-02 | — | Dropped (2026-05-18) |
+| PEN-06 | — | Dropped (2026-05-18) |
 | PEN-07 | Phase 1 | Complete |
 | PEN-08 | Phase 1 | Complete |
 | PEN-09 | Phase 1 | Complete |
@@ -187,7 +189,7 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 | AUTH-10 | Phase 2 | Complete |
 | AUTH-11 | Phase 2 | Complete |
 | AUTH-12 | Phase 2 | Complete |
-| PEN-03 | Phase 6 | Pending |
+| PEN-03 | — | Dropped (2026-05-18) |
 | SHELL-01 | Phase 3 | Complete |
 | SHELL-02 | Phase 3 | Complete |
 | SHELL-03 | Phase 3 | Complete |
@@ -211,41 +213,40 @@ Per-requirement mapping to phases. Every v1 requirement is mapped to exactly one
 | SET-02 | Phase 4 | Complete |
 | SET-03 | Phase 4 | Complete |
 | SET-04 | Phase 4 | Complete |
-| SET-05 | Phase 4 | Pending |
+| SET-05 | — | Dropped (2026-05-18) |
 | SET-06 | Phase 4 | Complete |
 | REP-01 | Phase 4 | Complete |
 | REP-02 | Phase 4 | Complete |
 | REP-03 | Phase 4 | Complete |
 | REP-04 | Phase 4 | Complete |
-| PEN-04 | Phase 6 | Pending |
-| PEN-05 | Phase 6 | Pending |
-| TEAM-01 | Phase 5 | Pending |
-| TEAM-02 | Phase 5 | Pending |
-| TEAM-03 | Phase 5 | Pending |
-| HELP-01 | Phase 5 | Pending |
-| HELP-02 | Phase 5 | Pending |
-| HELP-03 | Phase 5 | Pending |
-| HELP-04 | Phase 5 | Pending |
-| DATA-01 | Phase 5 | Pending |
-| UI-01 | Phase 5 | Pending |
-| UI-02 | Phase 5 | Pending |
-| UI-03 | Phase 5 | Pending |
-| UI-04 | Phase 5 | Pending |
+| PEN-04 | — | Dropped (2026-05-18) |
+| PEN-05 | — | Dropped (2026-05-18) |
+| TEAM-01 | Phase 5 | Complete |
+| TEAM-02 | Phase 5 | Complete |
+| TEAM-03 | Phase 5 | Complete |
+| HELP-01 | Phase 5 | Complete |
+| HELP-02 | Phase 5 | Complete |
+| HELP-03 | Phase 5 | Complete |
+| HELP-04 | Phase 5 | Complete |
+| DATA-01 | Phase 5 | Complete |
+| UI-01 | Phase 5 | Complete |
+| UI-02 | Phase 5 | Complete |
+| UI-03 | Phase 5 | Complete |
+| UI-04 | Phase 5 | Complete |
 
 **Coverage:**
-- v1 requirements: 69 total (FND 7 + PEN 9 + AUTH 12 + SHELL 4 + DASH 6 + LIST 9 + SET 6 + REP 4 + TEAM 3 + HELP 4 + DATA 1 + UI 4)
-- Mapped to phases: 69
-- Unmapped: 0 ✓
-- Duplicates: 0 ✓
+- v1.0 shipped: 62 requirements (FND 7 + PEN 3 + AUTH 12 + SHELL 4 + DASH 6 + LIST 9 + SET 5 + REP 4 + TEAM 3 + HELP 4 + DATA 1 + UI 4)
+- Dropped: 7 (PEN-01..06, SET-05) — Phase 6 removed from scope 2026-05-18
+- Original v1 plan: 69 requirements
 
-**Per-phase totals:**
+**Per-phase totals (v1.0 final):**
 - Phase 1 (Foundation & Cross-Cutting Contracts): 10 (FND-01..07, PEN-07, PEN-08, PEN-09)
 - Phase 2 (Registration & Sign-In): 12 (AUTH-01..12)
 - Phase 3 (Authenticated Shell & Dashboard): 10 (SHELL-01..04, DASH-01..06)
-- Phase 4 (Core Pages — Lists, Settings, Reports): 19 (LIST-01..09, SET-01..06, REP-01..04)
+- Phase 4 (Core Pages — Lists, Settings, Reports): 18 (LIST-01..09, SET-01..04, SET-06, REP-01..04)
 - Phase 5 (Team, Help & Polish): 12 (TEAM-01..03, HELP-01..04, DATA-01, UI-01..04)
-- Phase 6 (Pendo Install & Wiring): 6 (PEN-01..06)
+- Dropped: PEN-01..06, SET-05
 
 ---
 *Requirements defined: 2026-05-13*
-*Last updated: 2026-05-13 after roadmap creation*
+*Last updated: 2026-05-18 — Phase 6 (Pendo Install & Wiring) removed from scope; PEN-01..06 and SET-05 dropped*
