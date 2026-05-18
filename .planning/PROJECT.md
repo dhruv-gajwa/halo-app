@@ -16,23 +16,30 @@ A convincing, multi-page SaaS surface that a Pendo customer or pre-sales enginee
 
 <!-- Shipped and confirmed valuable. -->
 
-- [x] Multi-step registration flow capturing basic identity, personal details, company info, and onboarding preferences (becomes Pendo visitor + account metadata) — *Validated in Phase 2: registration-sign-in*
-- [x] Fake email/password sign-in backed by local storage (no real auth, no backend) — *Validated in Phase 2: registration-sign-in*
-- [x] Multi-tenant model: every visitor belongs to a workspace/company; Pendo init receives both visitor and account IDs — *Validated in Phase 2: registration-sign-in (visitor + workspace records wired; Pendo init wiring carries into Phase 3 shell)*
-- [x] Authenticated SaaS shell with persistent side navigation across all pages — *Validated in Phase 3: authenticated-shell-dashboard (Mantine AppShell, 6 NavLinks, top bar with user menu + sign-out)*
-- [x] Dashboard with charts/graphs over fabricated project/task data — *Validated in Phase 3: authenticated-shell-dashboard (Recharts SVG AreaChart + PieChart, 5 KPIs, 8-item activity timeline, empty state)*
+- ✓ Multi-step registration flow capturing basic identity, personal details, company info, and onboarding preferences — *v1.0 (Phase 2)*
+- ✓ Fake email/password sign-in backed by local storage (no real auth, no backend) — *v1.0 (Phase 2)*
+- ✓ Multi-tenant model: every visitor belongs to a workspace/company — *v1.0 (Phase 2)*
+- ✓ Authenticated SaaS shell with persistent side navigation across all pages — *v1.0 (Phase 3)*
+- ✓ Dashboard with charts/graphs over fabricated project/task data — *v1.0 (Phase 3: Recharts SVG AreaChart + PieChart, 5 KPIs, time-range selector, activity timeline)*
+- ✓ Lists page (create, edit, complete/incomplete, delete, sort, filter, empty state) — *v1.0 (Phase 4)*
+- ✓ Settings page (Profile / Workspace / Preferences tabs + theme toggle + Reset demo data) — *v1.0 (Phase 4)*
+- ✓ Reports page (date/assignee/status filters + Recharts stacked bar + TanStack table + CSV export) — *v1.0 (Phase 4)*
+- ✓ Team page (seeded members + invite modal + inline role select) — *v1.0 (Phase 5)*
+- ✓ Help page (searchable articles + detail view + persistent "?" anchor for Pendo Resource Center) — *v1.0 (Phase 5)*
+- ✓ SaaS-grade visual polish (Mantine 9 + Halo theme + light/dark mode + branded logo) — *v1.0 (Phase 5 polish pass + branding follow-ups)*
+- ✓ Stable DOM identifiers / data attributes on every interactive element — *v1.0 (PENDO_IDS registry, PEN-07..09)*
 
 ### Active
 
 <!-- Current scope. Building toward these. -->
-- [ ] Lists page where users can create, edit, reorder, and delete items (interactive surface)
-- [ ] Settings / profile page (edit identity, company info, preferences)
-- [ ] Reports / analytics page (tabular data, filters, export buttons)
-- [ ] Team / users page (invite teammates, role management — all fake)
-- [ ] Help / docs page (searchable articles — good Resource Center anchor)
-- [ ] SaaS-grade visual polish (clean UI library, branded, convincing demos)
-- [ ] Stable DOM identifiers / data attributes on key interactive elements so Pendo guides can reliably target them
-- [ ] Pendo Snippet wired in, initialized with visitor + account from the registration data
+
+(None — v1.0 shipped. Run `/gsd-new-milestone` to define the next milestone scope.)
+
+### Dropped
+
+<!-- Originally planned, then dropped with reason. -->
+
+- Pendo Snippet wired in (load + initialize + identify + clearSession + setUrl) — *Dropped 2026-05-18 with Phase 6 removal. The app ships Pendo-*ready* (markup, registry, masking, SVG charts) but not Pendo-*wired*. A future milestone can add the runtime if needed.*
 
 ### Out of Scope
 
@@ -54,7 +61,20 @@ A convincing, multi-page SaaS surface that a Pendo customer or pre-sales enginee
 - **Why a fake SaaS:** Real customer apps can't always be safely re-instrumented or shared in demos. A fake but convincing SaaS lets the user demonstrate Pendo against a familiar-looking surface.
 - **Why project/task management:** Familiar vertical to most viewers, gives natural shape to lists (tasks), charts (velocity / status), reports (project performance), and team (collaborators).
 - **Pendo-conscious construction:** Pages, forms, and interactions should be built with Pendo instrumentation in mind from day one — stable selectors, meaningful event names, multi-step flows that make good funnels, and varied interaction patterns that exercise replay.
-- **Framework choice:** Open to React or Svelte — whichever has the strongest SaaS-UI + charting ecosystem in 2026. Will be settled in research/roadmap.
+- **Framework chosen:** React 19 + Mantine 9 + Vite 8 + TypeScript 6 (settled in Phase 1 research).
+
+## Current State (v1.0 shipped)
+
+- **Codebase:** ~10,800 lines of TypeScript/CSS across ~105 files in `src/`.
+- **Stack:** React 19.2 + Mantine 9.2 + Vite 8 + TypeScript 6 + Zustand 5 + RHF 7 + Zod 4 + Recharts 3 + TanStack Table 8 + Mantine notifications/dates + nanoid + faker.
+- **Persistence:** Versioned namespaced localStorage envelope (`halo:v1:*`) with Zod-validated reads, `meta` key, idempotent demo seeding gated by `meta.seededAt`.
+- **Routing:** React Router 7 (createBrowserRouter), History API, deep-link-safe.
+- **Theming:** Mantine v9 dark mode via `defaultColorScheme="auto"` + Settings toggle; logo swaps on color scheme via `useComputedColorScheme`.
+- **Pendo readiness:** `PENDO_IDS` typed registry is the only source of `data-pendo-id` values; `.pendo-sr-ignore` on password inputs; SVG-only charts; per-row `data-pendo-*-id` parameterization on dynamic lists.
+
+## Next Milestone Goals
+
+(None defined yet. Possible v1.1 directions if a future version is planned: live Pendo runtime wiring (snippet load, identify, setUrl), accessibility pass, additional demo flows like Kanban or Calendar views on Lists.)
 
 ## Constraints
 
@@ -71,13 +91,14 @@ A convincing, multi-page SaaS surface that a Pendo customer or pre-sales enginee
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Build a fake SaaS instead of instrumenting an existing app | Avoids contamination of real customer/internal apps; lets Pendo features be exercised in a controlled surface | — Pending |
-| Project/task management as the fake vertical | Familiar to most viewers; naturally yields lists, charts, reports, teams | — Pending |
-| Multi-tenant (workspace) model | Lets Pendo init demonstrate both visitor and account IDs, which mirrors real customer setups | — Pending |
-| Persist everything in local storage; no backend | Keeps the app fully client-side and trivially deployable; sufficient for a demo | — Pending |
-| Brand the app as "Halo" | Matches the directory name; generic-enough fake SaaS brand | — Pending |
-| SaaS-grade visual polish via a real UI library | Convincing demos require a real-looking surface | — Pending |
-| Defer framework choice (React vs Svelte) to research | Decision driven by SaaS-UI + charting ecosystem fit in 2026 | — Pending |
+| Build a fake SaaS instead of instrumenting an existing app | Avoids contamination of real customer/internal apps; lets Pendo features be exercised in a controlled surface | ✓ Good — v1.0 ships a believable, controlled demo surface |
+| Project/task management as the fake vertical | Familiar to most viewers; naturally yields lists, charts, reports, teams | ✓ Good — every Pendo capability has natural anchors in this vertical |
+| Multi-tenant (workspace) model | Lets Pendo init demonstrate both visitor and account IDs, which mirrors real customer setups | ✓ Good — visitor + workspace pair shipped end-to-end (auth, signup, settings) |
+| Persist everything in local storage; no backend | Keeps the app fully client-side and trivially deployable; sufficient for a demo | ✓ Good — versioned envelope + Zod-validated reads + migration runner shipped, zero backend |
+| Brand the app as "Halo" | Matches the directory name; generic-enough fake SaaS brand | ✓ Good — branding extended with Mantine theme + favicon + light/dark logo |
+| SaaS-grade visual polish via a real UI library | Convincing demos require a real-looking surface | ✓ Good — Mantine 9 chosen, dark mode wired, all pages pass the "screenshot test" |
+| React over Svelte (settled in Phase 1 research) | Deepest SaaS + charting ecosystem; matches Pendo's customer base | ✓ Good — React 19 + Mantine 9 + Recharts shipped without ecosystem friction |
+| Phase 6 (Pendo Install & Wiring) removed from v1.0 scope (2026-05-18) | Pendo runtime wiring not needed for v1.0 demo target; markup affordances are enough | — Pending — revisit if a future milestone wants live Pendo |
 
 ## Evolution
 
@@ -97,4 +118,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-15 after Phase 4 (core-pages-lists-settings-reports) completion — Lists CRUD, Settings (Profile/Workspace/Preferences), Reports (filters + Recharts SVG + CSV export), and Reset demo data all ship. Phase 5 (Team, Help & Polish) is next.*
+*Last updated: 2026-05-18 after v1.0 milestone shipped — 5 phases, 37 plans, all v1.0 requirements complete or explicitly dropped. Phase 6 (Pendo runtime wiring) removed from scope; Pendo-ready markup ships throughout.*

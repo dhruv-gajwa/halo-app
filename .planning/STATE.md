@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: ready_to_plan
+status: Awaiting next milestone
 stopped_at: Phase 5 context gathered
-last_updated: "2026-05-16T01:30:32.520Z"
-last_activity: 2026-05-18 -- Completed quick task 260518-f3f: Add dark-mode header logo variant
+last_updated: "2026-05-18T15:07:33.464Z"
+last_activity: 2026-05-18 — Milestone v1.0 completed and archived
 progress:
-  total_phases: 6
+  total_phases: 5
   completed_phases: 5
   total_plans: 37
-  completed_plans: 35
-  percent: 83
+  completed_plans: 37
+  percent: 100
 ---
 
 # Project State
@@ -25,12 +25,10 @@ See: .planning/PROJECT.md (updated 2026-05-13)
 
 ## Current Position
 
-Phase: 6
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-05-16
-
-Progress: [██████████] 100%
+Phase: Milestone v1.0 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-05-18 — Milestone v1.0 completed and archived
 
 ## Performance Metrics
 
@@ -186,14 +184,29 @@ None yet.
 
 ## Deferred Items
 
-Items acknowledged and carried forward from previous milestone close:
+Items acknowledged at v1.0 milestone close (2026-05-18):
 
 | Category | Item | Status | Deferred At |
 |----------|------|--------|-------------|
-| *(none)* | | | |
+| uat_gap | Phase 02 HUMAN-UAT.md (6 pending scenarios) | partial | 2026-05-18 |
+| uat_gap | Phase 03 HUMAN-UAT.md (4 pending scenarios) | partial | 2026-05-18 |
+| uat_gap | Phase 04 HUMAN-UAT.md (5 pending scenarios) | partial | 2026-05-18 |
+| uat_gap | Phase 05 HUMAN-UAT.md (13 pending scenarios) | partial | 2026-05-18 |
+| verification_gap | Phase 02 VERIFICATION.md | human_needed | 2026-05-18 |
+| verification_gap | Phase 03 VERIFICATION.md | human_needed | 2026-05-18 |
+| verification_gap | Phase 04 VERIFICATION.md | human_needed | 2026-05-18 |
+| verification_gap | Phase 05 VERIFICATION.md | human_needed | 2026-05-18 |
+| dropped_req | PEN-01..06 (Pendo runtime wiring) | dropped | 2026-05-18 |
+| dropped_req | SET-05 (Pendo identify on Settings save) | dropped | 2026-05-18 |
+
+UAT/verification items are manual click-through scenarios for a human walker — not blocking for the v1.0 demo ship. They can be picked up in a v1.1 polish pass if needed.
 
 ## Session Continuity
 
 Last session: 2026-05-15T19:25:20.557Z
 Stopped at: Phase 5 context gathered
 Resume file: .planning/phases/05-team-help-polish/05-CONTEXT.md
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd-new-milestone
