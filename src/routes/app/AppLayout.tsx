@@ -10,6 +10,7 @@ import {
   Avatar,
   Menu,
   UnstyledButton,
+  useComputedColorScheme,
 } from '@mantine/core'
 import {
   IconLayoutDashboard,
@@ -69,6 +70,7 @@ export function AppLayout(): React.JSX.Element {
   const navigate = useNavigate()
   const visitor = useAuthStore((s) => s.currentVisitor)
   const workspace = useAuthStore((s) => s.currentWorkspace)
+  const colorScheme = useComputedColorScheme('light')
 
   /**
    * Phase 3 D-04: seeding is gated on meta.seededAt; subsequent mounts are
@@ -107,7 +109,7 @@ export function AppLayout(): React.JSX.Element {
           {/* Left: wordmark aligned to navbar column width */}
           <Box w={208}>
             <Image
-              src="/halo-logo.png"
+              src={colorScheme === 'dark' ? '/halo-logo-dark.png' : '/halo-logo.png'}
               alt="Halo"
               h={32}
               w="auto"

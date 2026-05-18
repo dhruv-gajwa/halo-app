@@ -1,5 +1,5 @@
 import React from 'react'
-import { Anchor, Image, Stack, Text } from '@mantine/core'
+import { Anchor, Image, Stack, Text, useComputedColorScheme } from '@mantine/core'
 
 /**
  * Phase 1 landing page — placeholder for the public index route `/`.
@@ -12,10 +12,11 @@ import { Anchor, Image, Stack, Text } from '@mantine/core'
  *     run yet in the wave order, so the wrapped primitive is not available here.
  */
 export function Landing(): React.JSX.Element {
+  const colorScheme = useComputedColorScheme('light')
   return (
     <Stack gap="lg" pt="xl">
       <Image
-        src="/halo-logo.png"
+        src={colorScheme === 'dark' ? '/halo-logo-dark.png' : '/halo-logo.png'}
         alt="Halo"
         h={56}
         w="auto"
