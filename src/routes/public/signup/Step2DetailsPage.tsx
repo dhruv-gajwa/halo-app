@@ -75,6 +75,14 @@ export function Step2DetailsPage(): React.JSX.Element {
 
   const onSubmit = form.handleSubmit((values) => {
     writeWizardDraftStep('step2', values)
+    if (typeof pendo !== 'undefined') {
+      pendo.track('signup_step2_completed', {
+        jobTitle: values.jobTitle,
+        role: values.role,
+        yearsExperience: values.yearsExperience,
+        hasLocation: values.location.length > 0,
+      })
+    }
     navigate('/signup/company')
   })
 
