@@ -93,6 +93,14 @@ export function Step3CompanyPage(): React.JSX.Element {
 
   const onSubmit = form.handleSubmit((values) => {
     writeWizardDraftStep('step3', values)
+    if (typeof pendo !== 'undefined') {
+      pendo.track('signup_step3_completed', {
+        companyName: values.companyName,
+        companySize: values.companySize,
+        industry: values.industry,
+        planTier: values.planTier,
+      })
+    }
     navigate('/signup/preferences')
   })
 
