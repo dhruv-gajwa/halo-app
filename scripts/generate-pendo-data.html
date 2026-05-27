@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Halo · Pendo Data Generator</title>
+
+  <!-- ── Pendo snippet ──────────────────────────────────────────────────────
+       Uses the same API key as the Halo app (index.html).
+       Change this key if your app's key is different.
+  ──────────────────────────────────────────────────────────────────────── -->
+  <script>
+    (function(apiKey){
+      (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+      v=['initialize','identify','updateOptions','pageLoad','track','trackAgent'];for(w=0,x=v.length;w<x;++w)(function(m){
+      o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+      y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo-dev.pendo-dev.com/agent/static/'+apiKey+'/pendo.js';
+      z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+    })('03a98922-4dbd-487e-b660-8d7923037fb7');
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 32px;
+    }
+    h1 { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .subtitle { font-size: 13px; color: #64748b; margin-bottom: 24px; }
+
+    .card {
+      background: #1e2130;
+      border: 1px solid #2d3250;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+
+    /* Stats row */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+    .stat { background: #161825; border: 1px solid #2d3250; border-radius: 8px; padding: 12px 16px; }
+    .stat-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+    .stat-value { font-size: 24px; font-weight: 700; color: #a78bfa; margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+    /* Progress bar */
+    .progress-wrap { background: #161825; border-radius: 99px; height: 6px; margin-bottom: 20px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #6366f1, #a78bfa); border-radius: 99px; transition: width 0.4s ease; width: 0%; }
+
+    /* Buttons */
+    .btn {
+      padding: 9px 20px; border-radius: 7px; border: none; font-size: 13px;
+      font-weight: 600; cursor: pointer; transition: opacity 0.15s;
+    }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-primary { background: #6366f1; color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: #4f46e5; }
+    .btn-secondary { background: #2d3250; color: #cbd5e1; margin-left: 8px; }
+    .btn-secondary:hover:not(:disabled) { background: #374162; }
+    .btn-danger { background: #7f1d1d; color: #fca5a5; margin-left: 8px; }
+
+    /* Log */
+    .log-wrap {
+      height: 380px; overflow-y: auto; background: #0d0f18;
+      border: 1px solid #1e2130; border-radius: 8px; padding: 12px;
+      font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px;
+    }
+    .log-line { padding: 2px 0; border-bottom: 1px solid #111827; line-height: 1.6; }
+    .log-line:last-child { border-bottom: none; }
+    .log-visitor { color: #38bdf8; font-weight: 600; }
+    .log-event { color: #86efac; }
+    .log-page { color: #fbbf24; }
+    .log-done { color: #a78bfa; font-weight: 600; }
+    .log-error { color: #f87171; }
+    .log-dim { color: #475569; }
+
+    /* Status badge */
+    .status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #64748b; margin-left: 12px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #64748b; }
+    .dot.running { background: #4ade80; animation: pulse 1.2s infinite; }
+    .dot.done { background: #a78bfa; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    .controls { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .eta { font-size: 12px; color: #64748b; margin-left: auto; }
+  </style>
+</head>
+<body>
+
+<h1>🔵 Halo · Pendo Data Generator</h1>
+<p class="subtitle">
+  100 synthetic visitors · 20 accounts · track events · page visits · funnels · rage-click signals
+</p>
+
+<!-- Stats -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-label">Visitors processed</div>
+    <div class="stat-value" id="statVisitors">0</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Events fired</div>
+    <div class="stat-value" id="statEvents">0</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Page visits</div>
+    <div class="stat-value" id="statPages">0</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Accounts</div>
+    <div class="stat-value" id="statAccounts">20</div>
+  </div>
+</div>
+
+<!-- Progress + controls -->
+<div class="card">
+  <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="controls">
+    <button class="btn btn-primary" id="startBtn" onclick="startGeneration()">▶ Start Generation</button>
+    <button class="btn btn-secondary" id="pauseBtn" onclick="togglePause()" disabled>⏸ Pause</button>
+    <button class="btn btn-danger" id="resetBtn" onclick="resetAll()" style="display:none">↺ Reset</button>
+    <span class="status"><span class="dot" id="statusDot"></span><span id="statusText">Ready</span></span>
+    <span class="eta" id="etaText"></span>
+  </div>
+</div>
+
+<!-- Log -->
+<div class="card" style="padding: 16px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <span style="font-size:12px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.05em">Event Log</span>
+    <button class="btn btn-secondary" onclick="clearLog()" style="padding:4px 10px;font-size:11px;">Clear</button>
+  </div>
+  <div class="log-wrap" id="logWrap"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+//  SYNTHETIC DATA DEFINITIONS
+// ═══════════════════════════════════════════════════════════════════════════
+
+const FIRST_NAMES = [
+  'Alex','Jordan','Morgan','Taylor','Casey','Riley','Avery','Quinn','Blake','Drew',
+  'Sam','Charlie','Robin','Jamie','Sage','Hayden','Logan','Reese','Parker','Dana',
+  'Marcus','Priya','David','Emily','Carlos','Anna','Lisa','Tom','Nina','Chris',
+]
+
+const LAST_NAMES = [
+  'Chen','Kim','Patel','Wilson','Ross','Frost','Lee','Rao','Mendez','White',
+  'Zhang','Okonkwo','Santos','Nakamura','Petrov','Johansson','O\'Brien','Reyes',
+  'Ibrahim','Nguyen','Park','Williams','Johnson','Garcia','Martinez','Anderson',
+  'Brown','Davis','Taylor','Moore',
+]
+
+const CITIES = [
+  'San Francisco, CA','New York, NY','Austin, TX','Boston, MA','Chicago, IL',
+  'Seattle, WA','Denver, CO','Los Angeles, CA','Miami, FL','Portland, OR',
+  'Atlanta, GA','Dallas, TX','Washington, DC','Nashville, TN','Phoenix, AZ',
+  'Minneapolis, MN','Philadelphia, PA','San Diego, CA','Charlotte, NC','Detroit, MI',
+]
+
+const JOB_TITLES_BY_ROLE = {
+  Product:     ['Product Manager','Senior PM','Product Lead','VP of Product','Group PM'],
+  Engineering: ['Software Engineer','Senior Engineer','Staff Engineer','Engineering Lead','Tech Lead'],
+  Design:      ['UX Designer','Product Designer','Senior Designer','Design Lead','Creative Director'],
+  Marketing:   ['Marketing Manager','Growth Lead','Content Strategist','Marketing Analyst','CMO'],
+  Sales:       ['Account Executive','Sales Manager','VP of Sales','Enterprise AE','Sales Director'],
+  Operations:  ['Operations Manager','Program Manager','Head of Operations','COO','Ops Lead'],
+  Other:       ['Founder','CEO','Chief of Staff','Business Analyst','Project Manager'],
+}
+
+const USE_CASE_BY_ROLE = {
+  Product:     'Project management',
+  Engineering: 'Task tracking',
+  Design:      'Team coordination',
+  Marketing:   'Project management',
+  Sales:       'Personal productivity',
+  Operations:  'Team coordination',
+  Other:       'Just exploring',
+}
+
+const GOALS_BY_ROLE = {
+  Product:     ['Ship faster','Better visibility','Cleaner reporting'],
+  Engineering: ['Ship faster','Less context switching','Better visibility'],
+  Design:      ['Better visibility','Less context switching','Onboard the team'],
+  Marketing:   ['Cleaner reporting','Better visibility','Replace another tool'],
+  Sales:       ['Better visibility','Onboard the team','Cleaner reporting'],
+  Operations:  ['Better visibility','Less context switching','Onboard the team'],
+  Other:       ['Better visibility','Replace another tool','Ship faster'],
+}
+
+const ROLES = ['Product','Engineering','Design','Marketing','Sales','Operations','Other']
+
+// ── 20 accounts, totalling exactly 100 visitors ──────────────────────────
+const ACCOUNT_DEFS = [
+  { id:'acme-corp',       name:'Acme Corp',        size:'1,000+',        industry:'Software',            tier:'Enterprise', n:8  },
+  { id:'bloom-health',    name:'Bloom Health',     size:'51\u201350',    industry:'Healthcare',          tier:'Pro',        n:6  },
+  { id:'tradepath',       name:'TradePath Inc',    size:'51\u201350',    industry:'Financial services',  tier:'Pro',        n:6  },
+  { id:'pixel-studio',    name:'Pixel Studio',     size:'11\u201350',    industry:'Retail / e-commerce', tier:'Free',       n:4  },
+  { id:'learnbridge',     name:'LearnBridge',      size:'1,000+',        industry:'Education',           tier:'Enterprise', n:7  },
+  { id:'nova-systems',    name:'Nova Systems',     size:'201\u20131,000', industry:'Software',           tier:'Enterprise', n:7  },
+  { id:'medicore',        name:'MediCore Health',  size:'51\u201350',    industry:'Healthcare',          tier:'Pro',        n:6  },
+  { id:'shopgenius',      name:'ShopGenius',       size:'1\u201310',     industry:'Retail / e-commerce', tier:'Free',       n:3  },
+  { id:'finedge',         name:'FinEdge Capital',  size:'201\u20131,000', industry:'Financial services', tier:'Pro',        n:6  },
+  { id:'buildright',      name:'BuildRight Co',    size:'11\u201350',    industry:'Manufacturing',       tier:'Free',       n:4  },
+  { id:'edupath',         name:'EduPath Online',   size:'201\u20131,000', industry:'Education',          tier:'Enterprise', n:6  },
+  { id:'codehive',        name:'CodeHive Dev',     size:'51\u201350',    industry:'Software',            tier:'Pro',        n:6  },
+  { id:'healthfirst',     name:'HealthFirst',      size:'51\u201350',    industry:'Healthcare',          tier:'Pro',        n:4  },
+  { id:'techlaunch',      name:'TechLaunch',       size:'1\u201310',     industry:'Software',            tier:'Free',       n:3  },
+  { id:'datastream',      name:'DataStream',       size:'51\u201350',    industry:'Financial services',  tier:'Pro',        n:4  },
+  { id:'greenmade',       name:'GreenMade',        size:'11\u201350',    industry:'Manufacturing',       tier:'Free',       n:3  },
+  { id:'campuskey',       name:'CampusKey',        size:'51\u201350',    industry:'Education',           tier:'Pro',        n:4  },
+  { id:'cloudbridge',     name:'CloudBridge',      size:'201\u20131,000', industry:'Software',           tier:'Enterprise', n:6  },
+  { id:'waveshop',        name:'Waveshop',         size:'51\u201350',    industry:'Retail / e-commerce', tier:'Pro',        n:4  },
+  { id:'ironpeak',        name:'IronPeak Mfg',     size:'11\u201350',    industry:'Manufacturing',       tier:'Free',       n:3  },
+]
+// Verify: ACCOUNT_DEFS.reduce((s,a)=>s+a.n, 0) === 100 ✓
+
+// ── Build the 100-visitor roster ──────────────────────────────────────────
+function buildVisitors() {
+  const visitors = []
+  let globalIndex = 0
+
+  for (const acct of ACCOUNT_DEFS) {
+    for (let i = 0; i < acct.n; i++) {
+      const firstName = FIRST_NAMES[(globalIndex * 7 + i * 3) % FIRST_NAMES.length]
+      const lastName  = LAST_NAMES[(globalIndex * 11 + i * 5 + acct.id.length) % LAST_NAMES.length]
+      const role      = i === 0 ? 'Product' : ROLES[(i + acct.id.length) % ROLES.length]
+      const titleList = JOB_TITLES_BY_ROLE[role]
+      const jobTitle  = titleList[(globalIndex + i) % titleList.length]
+      const yoe       = 1 + ((globalIndex * 3 + i * 7) % 12)
+      const location  = CITIES[(globalIndex + i * 4) % CITIES.length]
+      const goals     = GOALS_BY_ROLE[role].slice(0, 2 + (i % 2))  // 2-3 goals
+
+      const persona = i < 2 ? 'power' : i < 4 ? 'moderate' : 'light'
+
+      visitors.push({
+        id:           `${firstName.toLowerCase()}.${lastName.toLowerCase()}@${acct.id}.halo-demo`,
+        email:        `${firstName.toLowerCase()}.${lastName.toLowerCase()}@${acct.id}.halo-demo`,
+        firstName,
+        lastName,
+        fullName:     `${firstName} ${lastName}`,
+        username:     `${firstName.toLowerCase()}${lastName.toLowerCase()}`,
+        jobTitle,
+        role,
+        yearsExperience: yoe,
+        location,
+        primaryUseCase:  USE_CASE_BY_ROLE[role],
+        teamSize:        [5,12,30,80,250][['1\u201310','11\u201350','51\u201350','201\u20131,000','1,000+'].indexOf(acct.size)] || 20,
+        topGoals:        goals,
+        createdAt:       isoDateOffset(-Math.floor(Math.random() * 90)),
+        account: {
+          id:          acct.id,
+          name:        acct.name,
+          companyName: acct.name,
+          companySize: acct.size,
+          industry:    acct.industry,
+          planTier:    acct.tier,
+          createdAt:   isoDateOffset(-Math.floor(Math.random() * 180)),
+        },
+        persona,
+      })
+
+      globalIndex++
+    }
+  }
+  return visitors
+}
+
+// ── Task content pool ────────────────────────────────────────────────────
+const TASK_TITLES = [
+  'Redesign onboarding flow','Fix authentication timeout bug','Add dark mode support',
+  'Write API documentation','Performance audit Q2','User interview synthesis',
+  'Update privacy policy','Set up error monitoring','Migrate to new design system',
+  'Q3 roadmap planning','Security vulnerability patch','Add CSV export to reports',
+  'Build team invitation flow','Improve search relevance','Mobile responsive audit',
+  'Implement SSO integration','Data retention policy review','Design system token update',
+  'Load testing production env','Automate weekly digest email','Feature flag cleanup sprint',
+  'Archive stale projects','Accessibility audit (WCAG 2.1)','Analytics pipeline review',
+  'Refactor authentication module','Vendor contract renewal','New hire onboarding checklist',
+  'Update billing integration','API rate limiting strategy','Customer feedback triage',
+]
+
+const STATUSES   = ['todo','todo','todo','in_progress','in_progress']  // weighted
+const PRIORITIES = ['low','medium','medium','high','high','urgent']    // weighted
+const SEARCH_QUERIES = [
+  'task management','getting started','export','invite team','how to delete',
+  'reports','settings','keyboard shortcuts','dark mode','integrations',
+  'notifications','billing','permissions','archive','bulk edit',
+]
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  RUNTIME STATE
+// ═══════════════════════════════════════════════════════════════════════════
+
+let paused = false
+let aborted = false
+let running = false
+let totalEvents = 0
+let totalPages = 0
+const VISITORS = buildVisitors()
+
+// ── Timing config (ms) ───────────────────────────────────────────────────
+const T = {
+  event:   350,   // between track events for the same visitor
+  page:    200,   // simulate reading a page before acting
+  visitor: 1200,  // between visitors (lets Pendo flush its queue)
+  session: 600,   // gap between sessions of the same visitor
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════════════════════════
+
+const delay = ms => new Promise(r => setTimeout(r, ms))
+const pick  = arr => arr[Math.floor(Math.random() * arr.length)]
+const rand  = () => Math.random()
+const randInt = (lo, hi) => lo + Math.floor(Math.random() * (hi - lo + 1))
+const isoDateOffset = days => new Date(Date.now() + days * 86400000).toISOString()
+
+// Wait while paused; abort throws
+async function tick(ms) {
+  const step = 100
+  let elapsed = 0
+  while (elapsed < ms) {
+    if (aborted) throw new Error('aborted')
+    if (!paused) elapsed += step
+    await delay(step)
+  }
+}
+
+// ── Log helpers ───────────────────────────────────────────────────────────
+function log(html) {
+  const wrap = document.getElementById('logWrap')
+  const div = document.createElement('div')
+  div.className = 'log-line'
+  div.innerHTML = html
+  wrap.appendChild(div)
+  wrap.scrollTop = wrap.scrollHeight
+}
+
+function clearLog() {
+  document.getElementById('logWrap').innerHTML = ''
+}
+
+// ── Stats update ──────────────────────────────────────────────────────────
+function updateStats(visitorsProcessed) {
+  document.getElementById('statVisitors').textContent = visitorsProcessed
+  document.getElementById('statEvents').textContent   = totalEvents
+  document.getElementById('statPages').textContent    = totalPages
+  document.getElementById('progressFill').style.width = `${(visitorsProcessed / VISITORS.length) * 100}%`
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  PENDO WRAPPERS
+// ═══════════════════════════════════════════════════════════════════════════
+
+function identifyVisitor(v) {
+  if (typeof pendo === 'undefined') return
+  pendo.identify({
+    visitor: {
+      id:              v.email,
+      email:           v.email,
+      full_name:       v.fullName,
+      firstName:       v.firstName,
+      lastName:        v.lastName,
+      username:        v.username,
+      jobTitle:        v.jobTitle,
+      role:            v.role,
+      yearsExperience: v.yearsExperience,
+      location:        v.location,
+      primaryUseCase:  v.primaryUseCase,
+      teamSize:        v.teamSize,
+      topGoals:        v.topGoals,
+      createdAt:       v.createdAt,
+    },
+    account: {
+      id:          v.account.id,
+      name:        v.account.companyName,
+      companyName: v.account.companyName,
+      companySize: v.account.companySize,
+      industry:    v.account.industry,
+      planTier:    v.account.planTier,
+      createdAt:   v.account.createdAt,
+    },
+  })
+}
+
+function fireTrack(eventName, props) {
+  if (typeof pendo === 'undefined') return
+  pendo.track(eventName, props)
+  totalEvents++
+}
+
+function visitPage(path) {
+  try {
+    window.history.pushState({}, '', path)
+    if (typeof pendo !== 'undefined') pendo.pageLoad()
+    totalPages++
+  } catch (_) {
+    // pushState blocked (e.g. cross-origin file://) — harmless
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  RAGE CLICK SIMULATION
+//  If the script runs on localhost:5173 (inside the actual app), we dispatch
+//  real DOM click events on tagged elements to generate Pendo click analytics
+//  and Session Replay rage-click signals.
+// ═══════════════════════════════════════════════════════════════════════════
+
+function simulateRageClick(pendoId, times = 8) {
+  const el = document.querySelector(`[data-pendo-id="${pendoId}"]`)
+  if (!el) return false
+  for (let i = 0; i < times; i++) {
+    el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }))
+  }
+  return true
+}
+
+function simulateFeatureClick(pendoId) {
+  const el = document.querySelector(`[data-pendo-id="${pendoId}"]`)
+  if (!el) return false
+  el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }))
+  return true
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  USER JOURNEY FUNCTIONS
+// ═══════════════════════════════════════════════════════════════════════════
+
+async function journeySignup(v) {
+  // All users completed signup
+  fireTrack('signup_completed', {
+    primaryUseCase: v.primaryUseCase,
+    teamSize:       v.teamSize,
+    topGoals:       v.topGoals.join(','),
+  })
+  log(`  <span class="log-event">✦ signup_completed</span> <span class="log-dim">(${v.primaryUseCase})</span>`)
+}
+
+async function journeyFirstLogin(v) {
+  await tick(T.event)
+  visitPage('/app')
+  fireTrack('signin_completed', { visitorId: v.email, workspaceId: v.account.id })
+  log(`  <span class="log-event">✦ signin_completed</span> <span class="log-page">→ /app</span>`)
+  await tick(T.page)
+  simulateFeatureClick('nav.dashboard')
+}
+
+async function journeyTasks(v, taskCount) {
+  await tick(T.event)
+  visitPage('/app/lists')
+  simulateFeatureClick('nav.lists')
+  log(`  <span class="log-page">⟶ /app/lists</span>`)
+
+  for (let i = 0; i < taskCount; i++) {
+    await tick(T.event)
+    const status   = pick(STATUSES)
+    const priority = pick(PRIORITIES)
+    const title    = TASK_TITLES[(v.email.length + i * 7) % TASK_TITLES.length]
+    fireTrack('task_created', {
+      status,
+      priority,
+      hasAssignee:    rand() < 0.6,
+      hasDueDate:     rand() < 0.7,
+      hasDescription: rand() < 0.55,
+    })
+    log(`  <span class="log-event">✦ task_created</span> <span class="log-dim">"${title.slice(0,32)}…" [${priority}/${status}]</span>`)
+    simulateFeatureClick('lists.new-task-button')
+  }
+
+  // Complete some tasks
+  const completeCount = Math.floor(taskCount * (0.3 + rand() * 0.4))
+  for (let i = 0; i < completeCount; i++) {
+    await tick(T.event)
+    fireTrack('task_completed', {
+      taskId:              `synth-${v.account.id}-${Date.now()}-${i}`,
+      previousStatus:      pick(['todo','in_progress','todo']),
+      priority:            pick(PRIORITIES),
+      wasPreviouslyOverdue: rand() < 0.18,
+      wasOverdue:           rand() < 0.12,
+    })
+    log(`  <span class="log-event">✦ task_completed</span>`)
+    simulateFeatureClick('lists.row.complete-toggle')
+  }
+
+  // Delete a task occasionally
+  if (rand() < 0.18) {
+    await tick(T.event)
+    fireTrack('task_deleted', {
+      taskId:       `synth-del-${v.account.id}-${Date.now()}`,
+      taskStatus:   pick(STATUSES),
+      taskPriority: pick(PRIORITIES),
+    })
+    log(`  <span class="log-event">✦ task_deleted</span>`)
+  }
+}
+
+async function journeyReports(v) {
+  await tick(T.event)
+  visitPage('/app/reports')
+  simulateFeatureClick('nav.reports')
+  log(`  <span class="log-page">⟶ /app/reports</span>`)
+  await tick(T.page)
+  fireTrack('report_exported_csv', {
+    taskCount:      randInt(8, 60),
+    dateRangeStart: isoDateOffset(-30),
+    dateRangeEnd:   isoDateOffset(0),
+  })
+  log(`  <span class="log-event">✦ report_exported_csv</span>`)
+  simulateFeatureClick('reports.csv-export')
+}
+
+async function journeyTeam(v, inviteCount) {
+  await tick(T.event)
+  visitPage('/app/team')
+  simulateFeatureClick('nav.team')
+  log(`  <span class="log-page">⟶ /app/team</span>`)
+
+  for (let i = 0; i < inviteCount; i++) {
+    await tick(T.event)
+    fireTrack('teammate_invited', {
+      teammateEmail: `member${i + 1}@${v.account.id}.halo-demo`,
+      workspaceRole: pick(['Member','Admin','Viewer','Member']),
+      workspaceId:   v.account.id,
+    })
+    log(`  <span class="log-event">✦ teammate_invited</span>`)
+    simulateFeatureClick('team.header.invite-button')
+  }
+
+  if (rand() < 0.35) {
+    await tick(T.event)
+    fireTrack('teammate_role_changed', {
+      teammateId:   `synth-mate-${Date.now()}`,
+      previousRole: 'Viewer',
+      newRole:      pick(['Member','Admin']),
+    })
+    log(`  <span class="log-event">✦ teammate_role_changed</span>`)
+  }
+}
+
+async function journeyHelp(v) {
+  await tick(T.event)
+  visitPage('/app/help')
+  simulateFeatureClick('nav.help')
+  log(`  <span class="log-page">⟶ /app/help</span>`)
+  const searchCount = v.persona === 'power' ? randInt(1, 3) : 1
+  for (let s = 0; s < searchCount; s++) {
+    await tick(T.event)
+    const q = SEARCH_QUERIES[(v.email.length + s * 13) % SEARCH_QUERIES.length]
+    const results = randInt(0, 8)
+    fireTrack('help_searched', { query: q, resultsCount: results, hasResults: results > 0 })
+    log(`  <span class="log-event">✦ help_searched</span> <span class="log-dim">"${q}"</span>`)
+    simulateFeatureClick('help.search')
+  }
+}
+
+async function journeySettings(v) {
+  await tick(T.event)
+  visitPage('/app/settings')
+  simulateFeatureClick('nav.settings')
+  log(`  <span class="log-page">⟶ /app/settings</span>`)
+
+  if (rand() < 0.55) {
+    await tick(T.event)
+    fireTrack('profile_updated', {
+      fieldsChanged: pick(['jobTitle','jobTitle,role','location','username,jobTitle']),
+      hasJobTitle: true,
+      hasRole: true,
+    })
+    log(`  <span class="log-event">✦ profile_updated</span>`)
+    simulateFeatureClick('settings.tabs.profile')
+  }
+
+  if (rand() < 0.2) {
+    await tick(T.event)
+    fireTrack('workspace_updated', {
+      fieldsChanged:   'companyName',
+      companyName:     v.account.companyName,
+      companySize:     v.account.companySize,
+      industry:        v.account.industry,
+    })
+    log(`  <span class="log-event">✦ workspace_updated</span>`)
+  }
+
+  if (rand() < 0.12) {
+    await tick(T.event)
+    const theme = pick(['dark','light'])
+    fireTrack('theme_changed', { newTheme: theme, previousTheme: theme === 'dark' ? 'light' : 'dark' })
+    log(`  <span class="log-event">✦ theme_changed → ${theme}</span>`)
+    simulateFeatureClick('settings.preferences.theme-toggle')
+  }
+}
+
+async function journeyAbout(v) {
+  await tick(T.event)
+  visitPage('/app/about')
+  simulateFeatureClick('nav.about')
+  log(`  <span class="log-page">⟶ /app/about</span>`)
+  await tick(T.event)
+  fireTrack('feedback_submitted', {
+    category:      pick(['general','feature_request','bug','other']),
+    subjectLength: randInt(10, 55),
+    messageLength: randInt(50, 240),
+  })
+  log(`  <span class="log-event">✦ feedback_submitted</span>`)
+  simulateFeatureClick('about.feedback.submit')
+}
+
+async function journeySignout(v) {
+  await tick(T.event)
+  fireTrack('signout_completed', { visitorId: v.email, workspaceId: v.account.id })
+  log(`  <span class="log-event">✦ signout_completed</span>`)
+}
+
+async function journeyRageClick(v) {
+  // Simulate rage-clicking the filter bar / new-task button (frustration pattern)
+  const targets = ['lists.new-task-button','lists.filter.status','reports.csv-export']
+  const target = pick(targets)
+  const clicks = randInt(6, 12)
+  const hit = simulateRageClick(target, clicks)
+  log(`  <span class="log-event">✦ rage_click ×${clicks}</span> <span class="log-dim">[${target}]${hit ? '' : ' (DOM not present – run on app page for this)'}</span>`)
+}
+
+// ── Second return-visit session ───────────────────────────────────────────
+async function journeyReturnSession(v) {
+  await tick(T.session)
+  log(`  <span class="log-dim">── return session ──</span>`)
+  visitPage('/app')
+  fireTrack('signin_completed', { visitorId: v.email, workspaceId: v.account.id })
+  log(`  <span class="log-event">✦ signin_completed</span> <span class="log-dim">(return)</span>`)
+  await tick(T.event)
+
+  const taskCount = randInt(1, 3)
+  await journeyTasks(v, taskCount)
+
+  if (rand() < 0.5) await journeyReports(v)
+  if (rand() < 0.3) await journeyHelp(v)
+
+  if (rand() < 0.15) await journeySignout(v)
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  PER-PERSONA MAIN JOURNEY
+// ═══════════════════════════════════════════════════════════════════════════
+
+async function runVisitor(v, idx) {
+  if (aborted) throw new Error('aborted')
+
+  // Switch Pendo identity to this visitor
+  identifyVisitor(v)
+  log(`<span class="log-visitor">▸ [${String(idx+1).padStart(3,' ')}/100] ${v.fullName}</span> <span class="log-dim">${v.jobTitle} · ${v.account.name} (${v.account.planTier}) · ${v.persona}</span>`)
+
+  // ── All visitors: signup ─────────────────────────────────────────────
+  await journeySignup(v)
+
+  // ── 84% of users: sign in and use the app ────────────────────────────
+  if (rand() > 0.16) {
+    await journeyFirstLogin(v)
+
+    // Task creation (probability and count by persona)
+    const taskProb   = { power: 0.92, moderate: 0.78, light: 0.55 }[v.persona]
+    const taskCounts = { power: [4,8], moderate: [2,4], light: [1,2] }[v.persona]
+    if (rand() < taskProb) {
+      await journeyTasks(v, randInt(...taskCounts))
+    }
+
+    // Reports
+    const reportProb = { power: 0.72, moderate: 0.28, light: 0.08 }[v.persona]
+    if (rand() < reportProb) await journeyReports(v)
+
+    // Team management
+    const teamProb   = { power: 0.65, moderate: 0.22, light: 0.05 }[v.persona]
+    if (rand() < teamProb) {
+      const invites = v.persona === 'power' ? randInt(1, 3) : 1
+      await journeyTeam(v, invites)
+    }
+
+    // Help search
+    const helpProb   = { power: 0.55, moderate: 0.68, light: 0.75 }[v.persona]
+    if (rand() < helpProb) await journeyHelp(v)
+
+    // Settings
+    const settingsProb = { power: 0.48, moderate: 0.30, light: 0.12 }[v.persona]
+    if (rand() < settingsProb) await journeySettings(v)
+
+    // About / feedback
+    const aboutProb = { power: 0.22, moderate: 0.10, light: 0.05 }[v.persona]
+    if (rand() < aboutProb) await journeyAbout(v)
+
+    // Rage click (frustration) — mostly new/light users struggling
+    const rageProb  = { power: 0.08, moderate: 0.14, light: 0.22 }[v.persona]
+    if (rand() < rageProb) await journeyRageClick(v)
+
+    // Explicit signout
+    if (rand() < 0.14) await journeySignout(v)
+
+    // Return session (power/moderate users come back)
+    const returnProb = { power: 0.60, moderate: 0.35, light: 0.10 }[v.persona]
+    if (rand() < returnProb) await journeyReturnSession(v)
+  } else {
+    log(`  <span class="log-dim">↳ churned during onboarding (no login)</span>`)
+  }
+
+  log(`  <span class="log-dim">─────────────────────────────────────</span>`)
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  ORCHESTRATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+async function startGeneration() {
+  if (running) return
+  running = true
+  paused = false
+  aborted = false
+  totalEvents = 0
+  totalPages = 0
+
+  document.getElementById('startBtn').disabled = true
+  document.getElementById('pauseBtn').disabled = false
+  document.getElementById('resetBtn').style.display = 'none'
+  document.getElementById('statusDot').className = 'dot running'
+  document.getElementById('statusText').textContent = 'Initializing Pendo…'
+
+  // Wait for Pendo agent to load from CDN
+  let waited = 0
+  while ((typeof pendo === 'undefined' || !pendo.isReady || !pendo.isReady()) && waited < 8000) {
+    await delay(200)
+    waited += 200
+  }
+
+  if (typeof pendo === 'undefined') {
+    log('<span class="log-error">✖ Pendo failed to load — check network / API key</span>')
+    resetUI()
+    return
+  }
+
+  // Initialize Pendo anonymously once
+  pendo.initialize({ visitor: { id: '' } })
+  await delay(800)
+
+  document.getElementById('statusText').textContent = 'Running…'
+  log('<span class="log-done">✔ Pendo ready · starting 100-visitor generation run</span>')
+  log('<span class="log-dim">──────────────────────────────────────────────────</span>')
+
+  const startTime = Date.now()
+
+  for (let i = 0; i < VISITORS.length; i++) {
+    try {
+      await runVisitor(VISITORS[i], i)
+      updateStats(i + 1)
+
+      // ETA estimate
+      const elapsed = (Date.now() - startTime) / 1000
+      const rate = (i + 1) / elapsed
+      const remaining = Math.ceil((VISITORS.length - i - 1) / rate)
+      document.getElementById('etaText').textContent =
+        remaining > 0 ? `~${Math.floor(remaining / 60)}m ${remaining % 60}s remaining` : ''
+
+      await tick(T.visitor)  // breathing room between visitors
+    } catch (e) {
+      if (e.message === 'aborted') break
+      log(`<span class="log-error">✖ error on visitor ${i}: ${e.message}</span>`)
+    }
+  }
+
+  if (!aborted) {
+    updateStats(VISITORS.length)
+    document.getElementById('statusDot').className = 'dot done'
+    document.getElementById('statusText').textContent = 'Complete'
+    document.getElementById('etaText').textContent = ''
+    log(`<span class="log-done">✔ Done · ${totalEvents} track events · ${totalPages} page visits · 100 visitors</span>`)
+    log('<span class="log-dim">Allow 5–10 min for Pendo to process events before checking analytics.</span>')
+  }
+
+  resetUI()
+}
+
+function togglePause() {
+  paused = !paused
+  document.getElementById('pauseBtn').textContent = paused ? '▶ Resume' : '⏸ Pause'
+  document.getElementById('statusDot').className   = paused ? 'dot' : 'dot running'
+  document.getElementById('statusText').textContent = paused ? 'Paused' : 'Running…'
+}
+
+function resetAll() {
+  aborted = true
+  running = false
+  paused = false
+  totalEvents = 0
+  totalPages = 0
+  updateStats(0)
+  document.getElementById('progressFill').style.width = '0%'
+  document.getElementById('etaText').textContent = ''
+  resetUI()
+}
+
+function resetUI() {
+  running = false
+  document.getElementById('startBtn').disabled = false
+  document.getElementById('pauseBtn').disabled = true
+  document.getElementById('pauseBtn').textContent = '⏸ Pause'
+  document.getElementById('resetBtn').style.display = ''
+  if (!aborted) {
+    document.getElementById('statusDot').className = 'dot done'
+  } else {
+    document.getElementById('statusDot').className = 'dot'
+    document.getElementById('statusText').textContent = 'Aborted'
+  }
+}
+</script>
+
+<!--
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │  HOW TO USE                                                              │
+  │                                                                          │
+  │  Option A — Best (full page-visit + click analytics):                   │
+  │    1. npm run dev  (app must be on localhost:5173)                       │
+  │    2. Navigate to http://localhost:5173 and sign in                      │
+  │    3. Open DevTools console, paste the contents of this <script> block  │
+  │       and call:  startGeneration()                                       │
+  │    → Pendo is already loaded, DOM elements exist for feature clicks      │
+  │                                                                          │
+  │  Option B — Standalone (track events + page visits, no DOM clicks):     │
+  │    1. Open this HTML file directly in a browser                         │
+  │    2. Click "▶ Start Generation"                                         │
+  │    → Pendo loads from CDN; page visits use pushState                     │
+  │                                                                          │
+  │  After running: allow 5–10 min for Pendo to process events.             │
+  │  Check Pendo analytics under:  Analytics > Visitors, Track Events,      │
+  │  Funnels, and the Accounts tab.                                          │
+  └──────────────────────────────────────────────────────────────────────────┘
+-->
+
+</body>
+</html>
