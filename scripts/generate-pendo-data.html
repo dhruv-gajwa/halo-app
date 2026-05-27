@@ -310,14 +310,14 @@ const T = {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-//  HELPERS
+//  HELPERS  (function declarations — hoisted, so order-independent)
 // ═══════════════════════════════════════════════════════════════════════════
 
-const delay = ms => new Promise(r => setTimeout(r, ms))
-const pick  = arr => arr[Math.floor(Math.random() * arr.length)]
-const rand  = () => Math.random()
-const randInt = (lo, hi) => lo + Math.floor(Math.random() * (hi - lo + 1))
-const isoDateOffset = days => new Date(Date.now() + days * 86400000).toISOString()
+function delay(ms)           { return new Promise(r => setTimeout(r, ms)) }
+function pick(arr)           { return arr[Math.floor(Math.random() * arr.length)] }
+function rand()              { return Math.random() }
+function randInt(lo, hi)     { return lo + Math.floor(Math.random() * (hi - lo + 1)) }
+function isoDateOffset(days) { return new Date(Date.now() + days * 86400000).toISOString() }
 
 // Wait while paused; abort throws
 async function tick(ms) {
@@ -395,12 +395,15 @@ function fireTrack(eventName, props) {
 
 function visitPage(path) {
   try {
-    window.history.pushState({}, '', path)
-    if (typeof pendo !== 'undefined') pendo.pageLoad()
-    totalPages++
+    window.history.replaceState({}, '', path)
   } catch (_) {
-    // pushState blocked (e.g. cross-origin file://) — harmless
+    // replaceState blocked on file:// — skip silently, track event still fires
   }
+  if (typeof pendo !== 'undefined') {
+    try { pendo.pageLoad() } catch (_) {}
+  }
+  totalPages++
+}
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
