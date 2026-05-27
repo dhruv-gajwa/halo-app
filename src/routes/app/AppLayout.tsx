@@ -22,6 +22,7 @@ import {
   IconChevronDown,
   IconUser,
   IconLogout,
+  IconBriefcase,
 } from '@tabler/icons-react'
 import { NavLink } from '../../ui/primitives'
 import { PENDO_IDS } from '../../pendo/PENDO_IDS'
@@ -49,7 +50,8 @@ function isNavActive(
     | '/app/reports'
     | '/app/team'
     | '/app/settings'
-    | '/app/help',
+    | '/app/help'
+    | '/app/career',
 ): boolean {
   if (target === '/app') return pathname === '/app'
   return pathname.startsWith(target)
@@ -214,6 +216,14 @@ export function AppLayout(): React.JSX.Element {
             active={isNavActive(pathname, '/app/help')}
             variant="light"
             onClick={() => navigate('/app/help')}
+          />
+          <NavLink
+            pendoId={PENDO_IDS.nav.career}
+            label="Careers"
+            leftSection={<IconBriefcase size={18} stroke={1.6} />}
+            active={isNavActive(pathname, '/app/career')}
+            variant="light"
+            onClick={() => navigate('/app/career')}
           />
         </Stack>
       </AppShell.Navbar>

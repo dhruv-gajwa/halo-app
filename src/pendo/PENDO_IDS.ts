@@ -115,6 +115,7 @@ export const PENDO_IDS = {
     team:      'nav.team',
     settings:  'nav.settings',
     help:      'nav.help',
+    career:    'nav.career',
   },
 
   /** Phase 3 top-bar + user-menu targets. */
@@ -292,6 +293,16 @@ export const PENDO_IDS = {
     noResults: {
       container: 'help.no-results.container',
       clearLink: 'help.no-results.clear-link',
+    },
+  },
+  /** Career page targets — application form. */
+  career: {
+    container: 'career.container',
+    form: {
+      name:      'career.form.name',
+      email:     'career.form.email',
+      githubUrl: 'career.form.github-url',
+      submit:    'career.form.submit',
     },
   },
 } as const
