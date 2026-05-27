@@ -126,6 +126,19 @@
   </div>
 </div>
 
+<!-- Diagnostics -->
+<div class="card" style="padding: 16px; margin-bottom: 16px;">
+  <div style="font-size:12px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Pendo Diagnostics</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:12px;">
+    <div><span style="color:#475569">App ID: </span><span id="diagAppId" style="color:#a78bfa;font-family:monospace">—</span></div>
+    <div><span style="color:#475569">Agent: </span><span id="diagAgent" style="color:#a78bfa">—</span></div>
+    <div><span style="color:#475569">Ready: </span><span id="diagReady" style="color:#a78bfa">—</span></div>
+    <div><span style="color:#475569">Current visitor: </span><span id="diagVisitor" style="color:#38bdf8">—</span></div>
+    <div><span style="color:#475569">Current account: </span><span id="diagAccount" style="color:#38bdf8">—</span></div>
+    <div><span style="color:#475569">Last event: </span><span id="diagLastEvent" style="color:#86efac">—</span></div>
+  </div>
+</div>
+
 <!-- Log -->
 <div class="card" style="padding: 16px;">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
@@ -352,45 +365,82 @@ function updateStats(visitorsProcessed) {
   document.getElementById('progressFill').style.width = `${(visitorsProcessed / VISITORS.length) * 100}%`
 }
 
+// ── Diagnostics panel ────────────────────────────────────────────────────
+function initDiag() {
+  if (typeof pendo === 'undefined') return
+  try {
+    document.getElementById('diagAppId').textContent  = (pendo.getApiKey && pendo.getApiKey()) || '—'
+    document.getElementById('diagAgent').textContent  = pendo.VERSION || pendo.version || '—'
+    document.getElementById('diagReady').textContent  = (pendo.isReady && pendo.isReady()) ? '✔ yes' : '✖ no'
+  } catch (_) {}
+}
+
+function updateDiag(v) {
+  try {
+    document.getElementById('diagVisitor').textContent = v.email
+    document.getElementById('diagAccount').textContent = `${v.account.name} (${v.account.planTier})`
+  } catch (_) {}
+}
+
+function diagLastEvent(name) {
+  try { document.getElementById('diagLastEvent').textContent = name } catch (_) {}
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 //  PENDO WRAPPERS
 // ═══════════════════════════════════════════════════════════════════════════
 
 function identifyVisitor(v) {
-  if (typeof pendo === 'undefined') return
-  pendo.identify({
-    visitor: {
-      id:              v.email,
-      email:           v.email,
-      full_name:       v.fullName,
-      firstName:       v.firstName,
-      lastName:        v.lastName,
-      username:        v.username,
-      jobTitle:        v.jobTitle,
-      role:            v.role,
-      yearsExperience: v.yearsExperience,
-      location:        v.location,
-      primaryUseCase:  v.primaryUseCase,
-      teamSize:        v.teamSize,
-      topGoals:        v.topGoals,
-      createdAt:       v.createdAt,
-    },
-    account: {
-      id:          v.account.id,
-      name:        v.account.companyName,
-      companyName: v.account.companyName,
-      companySize: v.account.companySize,
-      industry:    v.account.industry,
-      planTier:    v.account.planTier,
-      createdAt:   v.account.createdAt,
-    },
-  })
+  if (typeof pendo === 'undefined') {
+    log('<span class="log-error">✖ pendo not defined — identify skipped</span>')
+    return
+  }
+  try {
+    pendo.identify({
+      visitor: {
+        id:              v.email,
+        email:           v.email,
+        full_name:       v.fullName,
+        firstName:       v.firstName,
+        lastName:        v.lastName,
+        username:        v.username,
+        jobTitle:        v.jobTitle,
+        role:            v.role,
+        yearsExperience: v.yearsExperience,
+        location:        v.location,
+        primaryUseCase:  v.primaryUseCase,
+        teamSize:        v.teamSize,
+        topGoals:        v.topGoals,
+        createdAt:       v.createdAt,
+      },
+      account: {
+        id:          v.account.id,
+        name:        v.account.companyName,
+        companyName: v.account.companyName,
+        companySize: v.account.companySize,
+        industry:    v.account.industry,
+        planTier:    v.account.planTier,
+        createdAt:   v.account.createdAt,
+      },
+    })
+    updateDiag(v)
+  } catch (e) {
+    log(`<span class="log-error">✖ pendo.identify error: ${e.message}</span>`)
+  }
 }
 
 function fireTrack(eventName, props) {
-  if (typeof pendo === 'undefined') return
-  pendo.track(eventName, props)
-  totalEvents++
+  if (typeof pendo === 'undefined') {
+    log(`<span class="log-error">✖ pendo not defined — ${eventName} dropped</span>`)
+    return
+  }
+  try {
+    pendo.track(eventName, props)
+    totalEvents++
+    diagLastEvent(eventName)
+  } catch (e) {
+    log(`<span class="log-error">✖ pendo.track [${eventName}] error: ${e.message}</span>`)
+  }
 }
 
 function visitPage(path) {
@@ -653,6 +703,7 @@ async function runVisitor(v, idx) {
 
   // Switch Pendo identity to this visitor
   identifyVisitor(v)
+  await delay(400)  // let identify settle before firing events
   log(`<span class="log-visitor">▸ [${String(idx+1).padStart(3,' ')}/100] ${v.fullName}</span> <span class="log-dim">${v.jobTitle} · ${v.account.name} (${v.account.planTier}) · ${v.persona}</span>`)
 
   // ── All visitors: signup ─────────────────────────────────────────────
@@ -741,11 +792,16 @@ async function startGeneration() {
   }
 
   // Initialize Pendo anonymously once
-  pendo.initialize({ visitor: { id: '' } })
+  try {
+    pendo.initialize({ visitor: { id: '' } })
+  } catch (e) {
+    log(`<span class="log-error">✖ pendo.initialize error: ${e.message}</span>`)
+  }
   await delay(800)
+  initDiag()
 
   document.getElementById('statusText').textContent = 'Running…'
-  log('<span class="log-done">✔ Pendo ready · starting 100-visitor generation run</span>')
+  log(`<span class="log-done">✔ Pendo ready · agent v${typeof pendo !== 'undefined' ? (pendo.VERSION || pendo.version || '?') : '?'} · starting 100-visitor run</span>`)
   log('<span class="log-dim">──────────────────────────────────────────────────</span>')
 
   const startTime = Date.now()
