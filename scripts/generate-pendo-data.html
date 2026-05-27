@@ -126,6 +126,16 @@
   </div>
 </div>
 
+<!-- CORS / file:// warning — injected by JS if needed -->
+<div id="corsWarning" style="display:none; background:#7f1d1d; border:1px solid #dc2626; border-radius:10px; padding:16px 20px; margin-bottom:16px; font-size:13px; line-height:1.6;">
+  <strong style="color:#fca5a5;">⚠ Running from file:// — Pendo events will be CORS-blocked and never reach the server.</strong><br>
+  <span style="color:#fecaca;">Serve this file over HTTP instead:</span><br>
+  <code style="background:#450a0a; padding:6px 10px; border-radius:5px; display:inline-block; margin-top:6px; color:#f87171;">
+    cd /Users/dhruv.gajwa/halo-app/scripts &amp;&amp; npx serve .
+  </code><br>
+  <span style="color:#fecaca; margin-top:6px; display:block;">Then open <strong>http://localhost:3000/generate-pendo-data.html</strong></span>
+</div>
+
 <!-- Diagnostics -->
 <div class="card" style="padding: 16px; margin-bottom: 16px;">
   <div style="font-size:12px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Pendo Diagnostics</div>
@@ -302,6 +312,19 @@ const SEARCH_QUERIES = [
   'reports','settings','keyboard shortcuts','dark mode','integrations',
   'notifications','billing','permissions','archive','bulk edit',
 ]
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  ORIGIN CHECK — detect file:// and warn immediately
+// ═══════════════════════════════════════════════════════════════════════════
+
+;(function checkOrigin() {
+  if (window.location.protocol === 'file:') {
+    document.getElementById('corsWarning').style.display = 'block'
+    document.getElementById('startBtn').disabled = true
+    document.getElementById('statusText').textContent = 'Blocked — serve via HTTP'
+    document.getElementById('statusDot').className = 'dot'
+  }
+})()
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  RUNTIME STATE
