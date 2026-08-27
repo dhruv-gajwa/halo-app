@@ -37,6 +37,7 @@ import {
 } from './authRepo'
 import { verifyPassword } from './passwordHash'
 import { clearWizardDraft } from './wizardSession'
+import { getOrCreateDemoCredentials } from './demoSession'
 
 // TODO Phase 4+: subscribe to window.storage events for cross-tab session sync.
 // Phase 2 UI-SPEC does not require multi-tab session revocation; Plan 01-03's
@@ -139,6 +140,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 }))
 
+export function ensureDemoSession(): void {
+  if (useAuthStore.getState().isAuthenticated) return
+  const { visitor, workspace } = getOrCreateDemoCredentials()
+  useAuthStore.getState().setSession(visitor, workspace)
+}
+
 /**
  * Module-init hydration. Reads `halo:v1:session` through `readWithSchema`
  * (so a tampered or schema-invalid value falls through to `null`), then
@@ -180,3 +187,4 @@ export function hydrateAuthFromStorage(): void {
 // body. This executes when the module is first imported, which (via the
 // AuthProvider → App.tsx import chain) happens before `createRoot().render()`.
 hydrateAuthFromStorage()
+ensureDemoSession()

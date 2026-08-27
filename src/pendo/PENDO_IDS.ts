@@ -115,6 +115,7 @@ export const PENDO_IDS = {
     team:      'nav.team',
     settings:  'nav.settings',
     help:      'nav.help',
+    feedback:  'nav.feedback',
   },
 
   /** Phase 3 top-bar + user-menu targets. */
@@ -197,6 +198,7 @@ export const PENDO_IDS = {
       container: 'lists.filtered-empty.container',
       clearLink: 'lists.filtered-empty.clear-link',
     },
+    exportCsv: 'lists.export-csv',
   },
 
   /** Phase 4 Settings page targets (three tabs + profile/workspace forms + theme toggle + danger zone). */
@@ -309,6 +311,11 @@ export const PENDO_IDS = {
       container: 'help.no-results.container',
       clearLink: 'help.no-results.clear-link',
     },
+  },
+
+  /** Pendo portal embed on /app/feedback. */
+  feedback: {
+    portalFrame: 'feedback.portal-frame',
   },
 } as const
 

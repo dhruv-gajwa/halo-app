@@ -23,7 +23,8 @@ export function PendoBridge({ children }: { children: ReactNode }) {
     initializedRef.current = true
 
     pendo.initialize({
-      visitor: { id: '' },
+      visitor: { id: crypto.randomUUID() },
+      account: { id: crypto.randomUUID() },
     })
   }, [])
 

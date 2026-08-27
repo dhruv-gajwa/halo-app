@@ -22,7 +22,7 @@ export type { AuthContextValue } from './AuthProvider'
 export { useAuth } from './useAuth'
 
 // Zustand store + module-init hydration
-export { useAuthStore, hydrateAuthFromStorage } from './authStore'
+export { useAuthStore, hydrateAuthFromStorage, ensureDemoSession } from './authStore'
 export type { SignInResult } from './authStore'
 
 // Route guards

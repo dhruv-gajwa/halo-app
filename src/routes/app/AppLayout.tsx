@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Outlet, useLocation, useNavigate, Navigate } from 'react-router'
+import { Outlet, useLocation, useNavigate } from 'react-router'
 import {
   AppShell,
   Group,
@@ -8,6 +8,7 @@ import {
   Image,
   Text,
   Avatar,
+  Button,
   Menu,
   UnstyledButton,
   useComputedColorScheme,
@@ -19,13 +20,14 @@ import {
   IconUsers,
   IconSettings,
   IconHelpCircle,
+  IconMessageCircle,
   IconChevronDown,
   IconUser,
   IconLogout,
 } from '@tabler/icons-react'
 import { NavLink } from '../../ui/primitives'
 import { PENDO_IDS } from '../../pendo/PENDO_IDS'
-import { useAuthStore } from '../../auth'
+import { useAuthStore, ensureDemoSession } from '../../auth'
 import { seedDemoData } from '../../seed/seedAll'
 import { ChatLauncher } from '../../chat'
 
@@ -50,7 +52,8 @@ function isNavActive(
     | '/app/reports'
     | '/app/team'
     | '/app/settings'
-    | '/app/help',
+    | '/app/help'
+    | '/app/feedback',
 ): boolean {
   if (target === '/app') return pathname === '/app'
   return pathname.startsWith(target)
@@ -81,20 +84,18 @@ export function AppLayout(): React.JSX.Element {
    * §"Pattern S2").
    */
   useEffect(() => {
+    ensureDemoSession()
+  }, [])
+
+  useEffect(() => {
     if (workspace) seedDemoData(workspace.id)
   }, [workspace?.id])
 
-  // Defensive narrowing — RequireAuth (Phase 2 lock) already redirects
-  // unauthenticated users before AppLayout mounts. This Navigate is
-  // belt-and-suspenders for TypeScript narrowing: it ensures visitor and
-  // workspace are non-null for all subsequent JSX references.
-  if (!visitor || !workspace) return <Navigate to="/signin" replace />
+  if (!visitor || !workspace) return <></>
 
   const initials = `${visitor.firstName[0] ?? ''}${visitor.lastName[0] ?? ''}`.toUpperCase()
 
   const handleSignOut = async () => {
-    // Navigate first so RequireAuth doesn't intercept the synchronous
-    // isAuthenticated:false flush from signOut() and bounce through /signin.
     navigate('/', { replace: true })
     await useAuthStore.getState().signOut()
   }
@@ -122,6 +123,13 @@ export function AppLayout(): React.JSX.Element {
               data-pendo-id={PENDO_IDS.topbar.logo}
             />
           </Box>
+          <Group gap="xs">
+            <Button variant="light" size="compact-sm" className="button-a">Button A</Button>
+            <Button variant="light" size="compact-sm" className="button-b">Button B</Button>
+            <Button variant="light" size="compact-sm" className="button-c">Button C</Button>
+            <Button variant="light" size="compact-sm" className="button-d">Button D</Button>
+            <Button variant="light" size="compact-sm" className="button-e">Button E</Button>
+          </Group>
           {/* Right: workspace name + user menu trigger */}
           <Group gap="md">
             <Text size="sm" c="dimmed" data-pendo-id={PENDO_IDS.topbar.workspaceName}>
@@ -219,6 +227,14 @@ export function AppLayout(): React.JSX.Element {
             active={isNavActive(pathname, '/app/help')}
             variant="light"
             onClick={() => navigate('/app/help')}
+          />
+          <NavLink
+            pendoId={PENDO_IDS.nav.feedback}
+            label="Feedback"
+            leftSection={<IconMessageCircle size={18} stroke={1.6} />}
+            active={isNavActive(pathname, '/app/feedback')}
+            variant="light"
+            onClick={() => navigate('/app/feedback')}
           />
         </Stack>
       </AppShell.Navbar>

@@ -56,7 +56,7 @@ import { TeamPage } from './routes/app/team/TeamPage'
 import { SettingsPage } from './routes/app/settings/SettingsPage'
 import { HelpPage } from './routes/app/help/HelpPage'
 import { HelpArticlePage } from './routes/app/help/HelpArticlePage'
-import { RequireAuth, RequireAnon } from './auth'
+import { FeedbackPage } from './routes/app/feedback/FeedbackPage'
 import { SignupShell } from './routes/public/signup/SignupShell'
 import { Step1AccountPage } from './routes/public/signup/Step1AccountPage'
 import { Step2DetailsPage } from './routes/public/signup/Step2DetailsPage'
@@ -78,56 +78,33 @@ export const router = createBrowserRouter([
         Component: PrimitivesSandbox,
       },
       {
-        // RequireAnon wrapper-route — renders <Outlet /> when signed-out,
-        // <Navigate to="/app" replace /> when signed-in. All five Phase 2
-        // public routes (signup wizard + sign-in) live as children of this
-        // wrapper so the guard is applied once.
-        Component: RequireAnon,
+        path: 'signup',
+        Component: SignupShell,
         children: [
-          {
-            path: 'signup',
-            Component: SignupShell,
-            children: [
-              { index: true, Component: Step1AccountPage },
-              { path: 'details', Component: Step2DetailsPage },
-              { path: 'company', Component: Step3CompanyPage },
-              { path: 'preferences', Component: Step4PreferencesPage },
-            ],
-          },
-          {
-            path: 'signin',
-            Component: SignInPage,
-          },
+          { index: true, Component: Step1AccountPage },
+          { path: 'details', Component: Step2DetailsPage },
+          { path: 'company', Component: Step3CompanyPage },
+          { path: 'preferences', Component: Step4PreferencesPage },
         ],
+      },
+      {
+        path: 'signin',
+        Component: SignInPage,
       },
     ],
   },
   {
     path: '/app',
-    // RequireAuth wraps the entire /app/* segment. When signed-out,
-    // <Navigate to="/signin" replace /> fires before AppLayout mounts.
-    Component: RequireAuth,
+    Component: AppLayout,
     children: [
-      {
-        // Pathless layout route — AppLayout is the visual shell (Mantine
-        // AppShell + side nav + top bar), but contributes no path segment.
-        // Its <Outlet /> renders the matching child: Dashboard for the index,
-        // or the appropriate placeholder page for named children.
-        Component: AppLayout,
-        children: [
-          { index: true,           Component: Dashboard },
-          { path: 'lists',         Component: ListsPage },
-          { path: 'reports',       Component: ReportsPage },
-          { path: 'team',          Component: TeamPage },
-          { path: 'settings',      Component: SettingsPage },
-          { path: 'help',          Component: HelpPage },
-          // D-07: First router.tsx edit since Phase 3 D-01 lock — flat sibling
-          // shape used (not nested child) because HelpPage has no <Outlet />;
-          // nesting would render the list above the detail simultaneously.
-          // UI-SPEC line 840 explicitly accepts either nested or flat sibling shape.
-          { path: 'help/:slug',   Component: HelpArticlePage },
-        ],
-      },
+      { index: true,           Component: Dashboard },
+      { path: 'lists',         Component: ListsPage },
+      { path: 'reports',       Component: ReportsPage },
+      { path: 'team',          Component: TeamPage },
+      { path: 'settings',      Component: SettingsPage },
+      { path: 'help',          Component: HelpPage },
+      { path: 'help/:slug',   Component: HelpArticlePage },
+      { path: 'feedback',     Component: FeedbackPage },
     ],
   },
 ], { basename: import.meta.env.BASE_URL })

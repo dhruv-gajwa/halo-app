@@ -38,7 +38,8 @@
 import { useState, useMemo } from 'react'
 import { Stack, Group, Title } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
-import { IconPlus, IconTrash } from '@tabler/icons-react'
+import { Tooltip } from '@mantine/core'
+import { IconPlus, IconTrash, IconDownload } from '@tabler/icons-react'
 import { Button } from '../../../ui/primitives'
 import { PENDO_IDS } from '../../../pendo/PENDO_IDS'
 import { useAuthStore } from '../../../auth/authStore'
@@ -104,16 +105,85 @@ export function ListsPage(): React.JSX.Element {
       {/* Page header */}
       <Group justify="space-between" align="center">
         <Title order={3}>Tasks</Title>
-        {allTasks.length > 0 && (
-          <Button
-            variant="filled"
-            leftSection={<IconPlus size={16} />}
-            pendoId={PENDO_IDS.lists.newTaskButton}
-            onClick={() => setCreateOpen(true)}
-          >
-            New task
-          </Button>
-        )}
+        <Group gap="sm">
+          {allTasks.length > 0 && (
+            <>
+              <Tooltip label="Export tasks as CSV">
+                <Button
+                  variant="light"
+                  leftSection={<IconDownload size={16} />}
+                  pendoId={PENDO_IDS.lists.exportCsv}
+                  onClick={() => {
+                    if (typeof pendo !== 'undefined') {
+                      pendo.track('tasks_exported', {
+                        format: 'csv',
+                        totalTasks: allTasks.length,
+                        filteredTasks: filteredTasks.length,
+                        filtersActive,
+                        statusFilter,
+                        priorityFilter,
+                        assigneeFilter,
+                        visitor: {
+                          id: 'random-id',
+                          name: 'random-name',
+                          email: 'random-email@example.com',
+                        },
+                        account: {
+                          id: 'random-id',
+                          name: 'random-name',
+                          email: 'random-email@example.com',
+                          companyName: 'random-company-name',
+                          companySize: 'random-company-size',
+                          industry: 'random-industry',
+                          planTier: 'random-plan-tier',
+                          createdAt: new Date().toISOString(),
+                        }
+                      })
+                    }
+                    return;
+                    const header = 'Title,Status,Priority,Assignee,Due Date'
+                    const rows = filteredTasks.map((t) =>
+                      [
+                        `"${t.title.replace(/"/g, '""')}"`,
+                        t.status,
+                        t.priority,
+                        t.assignee?.name ?? '',
+                        t.dueDate ?? '',
+                      ].join(','),
+                    )
+                    const blob = new Blob([header + '\n' + rows.join('\n')], { type: 'text/csv' })
+                    const url = URL.createObjectURL(blob)
+                    const a = document.createElement('a')
+                    a.href = url
+                    a.download = 'halo-tasks.csv'
+                    a.click()
+                    URL.revokeObjectURL(url)
+
+                    notifications.show({
+                      title: 'Export complete',
+                      message: `${filteredTasks.length} task(s) exported to CSV`,
+                      color: 'teal',
+                      icon: <IconDownload size={18} />,
+                      autoClose: 3000,
+                    })
+                  }}
+                >
+                  Export
+                </Button>
+              </Tooltip>
+              <Button
+                id='new-task-button'
+                variant="filled"
+                leftSection={<IconPlus size={16} />}
+                pendoId={PENDO_IDS.lists.newTaskButton}
+                onClick={() => setCreateOpen(true)}
+                className='new-task-button'
+              >
+                New task
+              </Button>
+            </>
+          )}
+        </Group>
       </Group>
 
       {allTasks.length === 0 ? (
