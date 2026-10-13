@@ -25,7 +25,7 @@
  * for every step — DO NOT re-render it here.
  */
 
-import { useForm } from 'react-hook-form'
+import { useForm, type FieldErrors } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router'
 import { Stack, Group, Title, Text } from '@mantine/core'
@@ -40,6 +40,7 @@ import {
   writeWizardDraftStep,
   setWizardPassword,
 } from '../../../auth'
+import { trackSignupValidationFailed } from './signupTracking'
 
 const EMAIL_DUPLICATE_MESSAGE = 'An account with this email already exists.'
 
@@ -61,6 +62,10 @@ export function Step1AccountPage(): React.JSX.Element {
     },
   })
 
+  // Zod schema rejected the step → Pendo signup_validation_failed (field names only).
+  const onInvalid = (errors: FieldErrors<Step1Values>) =>
+    trackSignupValidationFailed('step1', 'schema', Object.keys(errors))
+
   const onSubmit = form.handleSubmit((values) => {
     // Uniqueness checks run AFTER Zod schema validation has passed — these are
     // page-handler concerns, not schema refinements (cf. Plan 02-02 notes).
@@ -71,6 +76,7 @@ export function Step1AccountPage(): React.JSX.Element {
       // render the anchor conditionally on the field below via an isDuplicate
       // boolean check against the locked copy.
       form.setError('email', { type: 'manual', message: EMAIL_DUPLICATE_MESSAGE })
+      trackSignupValidationFailed('step1', 'duplicate_email', ['email'])
       return
     }
     const usernameDup = findVisitorByUsername(values.username)
@@ -79,6 +85,7 @@ export function Step1AccountPage(): React.JSX.Element {
         type: 'manual',
         message: 'That username is taken — try another.',
       })
+      trackSignupValidationFailed('step1', 'duplicate_username', ['username'])
       return
     }
     // CR-02 mitigation: keep the plaintext password OUT of sessionStorage.
@@ -92,10 +99,12 @@ export function Step1AccountPage(): React.JSX.Element {
       pendo.track('signup_step1_completed', {
         hasEmail: Boolean(values.email),
         hasUsername: Boolean(values.username),
+        // Domain only (business vs. personal sign-ups) — never the full address.
+        emailDomain: values.email.split('@')[1]?.toLowerCase() ?? '',
       })
     }
     navigate('/signup/details')
-  })
+  }, onInvalid)
 
   const emailErr = form.formState.errors.email?.message
   const isEmailDuplicate = emailErr === EMAIL_DUPLICATE_MESSAGE

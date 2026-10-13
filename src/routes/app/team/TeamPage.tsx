@@ -65,6 +65,8 @@ export function TeamPage(): React.JSX.Element {
         previousRole,
         newRole: nextRole,
         workspaceId,
+        // 'active' | 'invited' — separates pending-invite role edits from member ones.
+        teammateStatus: teammate?.status ?? '',
       })
     }
     refresh()

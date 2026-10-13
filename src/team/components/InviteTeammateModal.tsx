@@ -99,7 +99,7 @@ export function InviteTeammateModal({
       .map((seg) => seg.charAt(0).toUpperCase() + seg.slice(1).toLowerCase())
       .join(' ')
 
-    createTeammate(workspaceId, {
+    const teammate = createTeammate(workspaceId, {
       firstName,
       lastName: '',
       email: values.email.toLowerCase(),
@@ -120,9 +120,12 @@ export function InviteTeammateModal({
 
     if (typeof pendo !== 'undefined') {
       pendo.track('teammate_invited', {
-        teammateEmail: values.email.toLowerCase(),
+        // The invitee's address is third-party PII — send the new teammate's
+        // id and the email domain only, never the full address.
+        teammateId: teammate.id,
         workspaceRole: values.workspaceRole,
         workspaceId,
+        emailDomain: values.email.split('@')[1]?.toLowerCase() ?? '',
       })
     }
 

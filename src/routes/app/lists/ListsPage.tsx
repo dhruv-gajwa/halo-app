@@ -35,7 +35,7 @@
  * boundaries.
  */
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { Stack, Group, Title } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 import { IconPlus, IconTrash } from '@tabler/icons-react'
@@ -69,6 +69,8 @@ export function ListsPage(): React.JSX.Element {
   const [createOpen, setCreateOpen] = useState(false)
   const [editTask, setEditTask] = useState<Task | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Task | null>(null)
+  // Which entry point opened the delete confirm — reported as task_deleted's deleteSource.
+  const [deleteSource, setDeleteSource] = useState<'row_menu' | 'edit_modal'>('row_menu')
 
   const allTasks = useMemo(
     () => (workspaceId ? listTasks(workspaceId) : []),
@@ -89,11 +91,56 @@ export function ListsPage(): React.JSX.Element {
 
   const filtersActive =
     statusFilter !== 'all' || priorityFilter !== 'all' || assigneeFilter !== 'all'
+
+  // Pendo task_list_filtered bookkeeping. `filterChangeSource` names the
+  // control behind the pending change (set by the filter handlers).
+  // `lastTrackedFilters` is the combination last reported; it is seeded with
+  // the mount-time filters (component state that resets on remount), so
+  // nothing fires on mount and CRUD refreshes (filters unchanged) are ignored.
+  const filterChangeSource = useRef('')
+  const lastTrackedFilters = useRef({ statusFilter, priorityFilter, assigneeFilter })
+
   const resetFilters = () => {
+    filterChangeSource.current = 'clear_filters'
     setStatusFilter('all')
     setPriorityFilter('all')
     setAssigneeFilter('all')
   }
+
+  // Fires once per filter change, after filteredTasks has been recomputed for
+  // the new combination so resultsCount (incl. zero-result hits) is accurate.
+  useEffect(() => {
+    const last = lastTrackedFilters.current
+    if (
+      last.statusFilter === statusFilter &&
+      last.priorityFilter === priorityFilter &&
+      last.assigneeFilter === assigneeFilter
+    ) {
+      return
+    }
+    lastTrackedFilters.current = { statusFilter, priorityFilter, assigneeFilter }
+    if (typeof pendo !== 'undefined') {
+      pendo.track('task_list_filtered', {
+        changedFilter: filterChangeSource.current,
+        statusFilter,
+        priorityFilter,
+        assigneeFilter,
+        assigneeIsSelf: assigneeFilter === visitor?.id,
+        activeFilterCount: [statusFilter, priorityFilter, assigneeFilter].filter(
+          (f) => f !== 'all',
+        ).length,
+        resultsCount: filteredTasks.length,
+        totalTaskCount: allTasks.length,
+      })
+    }
+  }, [
+    statusFilter,
+    priorityFilter,
+    assigneeFilter,
+    visitor?.id,
+    filteredTasks.length,
+    allTasks.length,
+  ])
 
   // Defensive narrowing — RequireAuth + AppLayout already gate this, but
   // mirror Dashboard.tsx line 288's belt-and-suspenders pattern.
@@ -130,6 +177,8 @@ export function ListsPage(): React.JSX.Element {
             priorityValue={priorityFilter}
             assigneeValue={assigneeFilter}
             onChange={(next) => {
+              // TaskFiltersBar reports one control per change: 'status' | 'priority' | 'assignee'.
+              filterChangeSource.current = Object.keys(next).join(', ')
               if (next.status !== undefined) setStatusFilter(next.status)
               if (next.priority !== undefined) setPriorityFilter(next.priority)
               if (next.assignee !== undefined) setAssigneeFilter(next.assignee)
@@ -142,7 +191,10 @@ export function ListsPage(): React.JSX.Element {
               tasks={filteredTasks}
               workspaceId={workspaceId}
               onEdit={(task) => setEditTask(task)}
-              onDelete={(task) => setDeleteTarget(task)}
+              onDelete={(task) => {
+                setDeleteSource('row_menu')
+                setDeleteTarget(task)
+              }}
               onToggleComplete={(task, nextDone) => {
                 updateTask(workspaceId, task.id, {
                   // Off-toggle: restore prior non-done status if recorded;
@@ -158,6 +210,7 @@ export function ListsPage(): React.JSX.Element {
                       assigneeId: task.assignee?.id ?? '',
                       hadDueDate: task.dueDate !== null,
                       wasOverdue: task.dueDate !== null && new Date(task.dueDate) < new Date(),
+                      source: 'checkbox',
                     })
                   } else {
                     pendo.track('task_uncompleted', {
@@ -165,6 +218,7 @@ export function ListsPage(): React.JSX.Element {
                       restoredStatus: task.prevStatus ?? 'todo',
                       priority: task.priority,
                       assigneeId: task.assignee?.id ?? '',
+                      source: 'checkbox',
                     })
                   }
                 }
@@ -193,7 +247,10 @@ export function ListsPage(): React.JSX.Element {
         opened={editTask !== null}
         onClose={() => setEditTask(null)}
         onSuccess={refresh}
-        onRequestDelete={(task) => setDeleteTarget(task)}
+        onRequestDelete={(task) => {
+          setDeleteSource('edit_modal')
+          setDeleteTarget(task)
+        }}
         workspaceId={workspaceId}
         visitor={visitor}
         mode="edit"
@@ -212,6 +269,7 @@ export function ListsPage(): React.JSX.Element {
                 taskStatus: deleteTarget.status,
                 taskPriority: deleteTarget.priority,
                 hadAssignee: Boolean(deleteTarget.assignee?.id),
+                deleteSource,
               })
             }
             deleteTask(workspaceId, deleteTarget.id)

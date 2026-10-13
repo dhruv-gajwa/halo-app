@@ -22,7 +22,7 @@
  */
 
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, type FieldErrors } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Navigate, useNavigate } from 'react-router'
 import { Stack, Group, Title, Alert } from '@mantine/core'
@@ -46,6 +46,7 @@ import {
   hasStep,
   getWizardPassword,
 } from '../../../auth'
+import { trackSignupValidationFailed } from './signupTracking'
 
 const USE_CASE_OPTIONS = [
   'Project management',
@@ -99,6 +100,10 @@ export function Step4PreferencesPage(): React.JSX.Element {
     },
   })
 
+  // Zod schema rejected the step → Pendo signup_validation_failed (field names only).
+  const onInvalid = (errors: FieldErrors<Step4Values>) =>
+    trackSignupValidationFailed('step4', 'schema', Object.keys(errors))
+
   const onSubmit = form.handleSubmit(async (step4Values) => {
     setSubmitError(null)
     try {
@@ -135,10 +140,26 @@ export function Step4PreferencesPage(): React.JSX.Element {
       // silently shadows. Surface as a form-level Alert and abort.
       if (findVisitorByEmail(s1.email)) {
         setSubmitError('duplicate_email')
+        if (typeof pendo !== 'undefined') {
+          pendo.track('signup_failed', {
+            failureReason: 'duplicate_email',
+            planTier: s3.planTier,
+            primaryUseCase: step4Values.primaryUseCase,
+            teamSize: step4Values.teamSize,
+          })
+        }
         return
       }
       if (findVisitorByUsername(s1.username)) {
         setSubmitError('duplicate_username')
+        if (typeof pendo !== 'undefined') {
+          pendo.track('signup_failed', {
+            failureReason: 'duplicate_username',
+            planTier: s3.planTier,
+            primaryUseCase: step4Values.primaryUseCase,
+            teamSize: step4Values.teamSize,
+          })
+        }
         return
       }
 
@@ -201,8 +222,23 @@ export function Step4PreferencesPage(): React.JSX.Element {
       // cleared on failure — user can retry by clicking Create account again.
       console.error('[signup] completion failed:', err)
       setSubmitError('generic_failure')
+      // Pendo signup_failed — error name + message only, never field values
+      // (ZodError messages carry field paths + locked copy, not the inputs).
+      // A refresh mid-wizard lands here as 'wizard password not in memory'.
+      // `s3` is scoped to the try block, so planTier is re-read from the
+      // draft, which is intentionally kept on failure.
+      if (typeof pendo !== 'undefined') {
+        pendo.track('signup_failed', {
+          failureReason: 'generic_failure',
+          errorName: err instanceof Error ? err.name : 'unknown',
+          errorMessage: err instanceof Error ? err.message.slice(0, 200) : '',
+          planTier: readWizardDraft().step3?.planTier ?? '',
+          primaryUseCase: step4Values.primaryUseCase,
+          teamSize: step4Values.teamSize,
+        })
+      }
     }
-  })
+  }, onInvalid)
 
   const onBack = () => {
     // Per UI-SPEC: Back persists current values (even invalid) into the draft,

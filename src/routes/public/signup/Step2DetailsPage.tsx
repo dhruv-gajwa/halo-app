@@ -22,7 +22,7 @@
  * Phase 6 retrofits the agent.
  */
 
-import { useForm } from 'react-hook-form'
+import { useForm, type FieldErrors } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Navigate, useNavigate } from 'react-router'
 import { Stack, Group, Title } from '@mantine/core'
@@ -35,6 +35,7 @@ import {
   writeWizardDraftStep,
   hasStep,
 } from '../../../auth'
+import { trackSignupValidationFailed } from './signupTracking'
 
 const ROLE_OPTIONS = [
   'Product',
@@ -73,6 +74,10 @@ export function Step2DetailsPage(): React.JSX.Element {
     },
   })
 
+  // Zod schema rejected the step → Pendo signup_validation_failed (field names only).
+  const onInvalid = (errors: FieldErrors<Step2Values>) =>
+    trackSignupValidationFailed('step2', 'schema', Object.keys(errors))
+
   const onSubmit = form.handleSubmit((values) => {
     writeWizardDraftStep('step2', values)
     if (typeof pendo !== 'undefined') {
@@ -84,7 +89,7 @@ export function Step2DetailsPage(): React.JSX.Element {
       })
     }
     navigate('/signup/company')
-  })
+  }, onInvalid)
 
   const onBack = () => {
     // Per UI-SPEC: Back persists current values (even invalid) into the draft,

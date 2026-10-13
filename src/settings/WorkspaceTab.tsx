@@ -113,6 +113,23 @@ export function WorkspaceTab(): React.JSX.Element | null {
           planTier: values.planTier,
           previousPlanTier: workspace.planTier,
         })
+        // The upgrade / downgrade conversion moment — only when this save
+        // actually moved the plan. Direction follows PLAN_OPTIONS order
+        // (Free < Pro < Enterprise). workspaceId is the stable internal record
+        // id; the Pendo account id is companyName, which this form can rename.
+        if (values.planTier !== workspace.planTier) {
+          pendo.track('plan_tier_changed', {
+            previousPlanTier: workspace.planTier,
+            newPlanTier: values.planTier,
+            changeDirection:
+              PLAN_OPTIONS.indexOf(values.planTier) > PLAN_OPTIONS.indexOf(workspace.planTier)
+                ? 'upgrade'
+                : 'downgrade',
+            workspaceId: workspace.id,
+            companySize: values.companySize,
+            industry: values.industry,
+          })
+        }
       }
       form.reset(values)
     } else {

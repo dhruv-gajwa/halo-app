@@ -37,7 +37,7 @@
  * Phase 3 D-01 placeholder convention forbids router edits at phase boundaries.
  */
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect, useRef } from 'react'
 import { Stack, Group, Title } from '@mantine/core'
 import { IconDownload } from '@tabler/icons-react'
 import dayjs from 'dayjs'
@@ -53,6 +53,17 @@ import { ReportsTable } from '../../../reports/ReportsTable'
 import { exportTasksToCsv } from '../../../reports/csvExport'
 
 const DEFAULT_STATUS_FILTER: TaskStatus[] = ['todo', 'in_progress', 'done']
+
+/**
+ * Inclusive UTC calendar-day count of a complete date range — the same day
+ * semantics as the filter predicate below. `null` when either end is open
+ * (cleared range, or only the start date picked). Sent to Pendo as
+ * `dateRangeDays` on the report events.
+ */
+function countRangeDays([start, end]: [Date | null, Date | null]): number | null {
+  if (!start || !end) return null
+  return dayjs.utc(end).startOf('day').diff(dayjs.utc(start).startOf('day'), 'day') + 1
+}
 
 export function ReportsPage(): React.JSX.Element {
   const visitor = useAuthStore((s) => s.currentVisitor)
@@ -106,6 +117,52 @@ export function ReportsPage(): React.JSX.Element {
       .sort((a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf())
   }, [allTasks, dateRange, assignee, statusFilter])
 
+  // Pendo report_filtered bookkeeping: the report parameters last reported,
+  // seeded with the mount-time defaults so nothing fires on first render.
+  const lastTrackedReportFilters = useRef({
+    dateRangeStart: dateRange[0]?.toISOString() ?? '',
+    dateRangeEnd: dateRange[1]?.toISOString() ?? '',
+    assignee,
+    statusFilters: statusFilter.join(', '),
+  })
+
+  // Fires once per report-parameter change, after filteredTasks has been
+  // recomputed (so taskCount reflects the regenerated chart + table).
+  useEffect(() => {
+    // Range picker mid-selection ([start, null]) — wait for the end date.
+    if (dateRange[0] !== null && dateRange[1] === null) return
+    const current = {
+      dateRangeStart: dateRange[0]?.toISOString() ?? '',
+      dateRangeEnd: dateRange[1]?.toISOString() ?? '',
+      assignee,
+      statusFilters: statusFilter.join(', '),
+    }
+    const last = lastTrackedReportFilters.current
+    const changed: string[] = []
+    if (
+      last.dateRangeStart !== current.dateRangeStart ||
+      last.dateRangeEnd !== current.dateRangeEnd
+    ) {
+      changed.push('date_range')
+    }
+    if (last.assignee !== current.assignee) changed.push('assignee')
+    if (last.statusFilters !== current.statusFilters) changed.push('status')
+    if (changed.length === 0) return
+    lastTrackedReportFilters.current = current
+    if (typeof pendo !== 'undefined') {
+      pendo.track('report_filtered', {
+        changedFilter: changed.join(', '),
+        dateRangeStart: current.dateRangeStart,
+        dateRangeEnd: current.dateRangeEnd,
+        dateRangeDays: countRangeDays(dateRange),
+        assigneeFilter: assignee,
+        statusFilters: current.statusFilters,
+        taskCount: filteredTasks.length,
+        totalTaskCount: allTasks.length,
+      })
+    }
+  }, [dateRange, assignee, statusFilter, filteredTasks.length, allTasks.length])
+
   // Defensive narrowing — RequireAuth already gates this path.
   if (!workspaceId || !visitor) return <></>
 
@@ -124,6 +181,7 @@ export function ReportsPage(): React.JSX.Element {
                 taskCount: filteredTasks.length,
                 dateRangeStart: dateRange[0]?.toISOString() ?? '',
                 dateRangeEnd: dateRange[1]?.toISOString() ?? '',
+                dateRangeDays: countRangeDays(dateRange),
                 assigneeFilter: assignee,
                 statusFilters: statusFilter.join(', '),
               })

@@ -82,15 +82,6 @@ export type ResetDemoDataModalProps = {
 
 export function ResetDemoDataModal({ opened, onClose }: ResetDemoDataModalProps): React.JSX.Element {
   const handleReset = () => {
-    // Track the reset event before wiping data.
-    if (typeof pendo !== 'undefined') {
-      const auth = useAuthStore.getState()
-      pendo.track('demo_data_reset', {
-        workspaceId: auth.currentWorkspace?.id ?? '',
-        visitorId: auth.currentVisitor?.id ?? '',
-      })
-    }
-
     // 1. Bulk-wipe halo:v* prefix keys from localStorage.
     //
     // Deliberate exception to FND-04 codec rule (S6): bulk wipe by prefix needs
@@ -104,6 +95,18 @@ export function ResetDemoDataModal({ opened, onClose }: ResetDemoDataModalProps)
       const key = localStorage.key(i)
       if (key && key.startsWith('halo:v')) keysToRemove.push(key)
     }
+
+    // Track the reset event before wiping data — the keys are collected but
+    // not yet removed, and the visitor / workspace are still readable.
+    if (typeof pendo !== 'undefined') {
+      const auth = useAuthStore.getState()
+      pendo.track('demo_data_reset', {
+        workspaceId: auth.currentWorkspace?.id ?? '',
+        visitorId: auth.currentVisitor?.id ?? '',
+        keysRemovedCount: keysToRemove.length,
+      })
+    }
+
     keysToRemove.forEach((k) => localStorage.removeItem(k))
     // At this exact moment: zero halo:v1:* keys remain in localStorage.
     // After the hard reload below, runMigrations() writes a fresh halo:v1:meta

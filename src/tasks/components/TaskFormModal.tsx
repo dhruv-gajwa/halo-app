@@ -187,7 +187,7 @@ export function TaskFormModal({
 
   const onSubmit = form.handleSubmit((values) => {
     if (mode === 'create') {
-      createTask(workspaceId, { ...values, completedAt: null })
+      const created = createTask(workspaceId, { ...values, completedAt: null })
       notifications.show({
         title: 'Task created',
         message: '',
@@ -197,12 +197,26 @@ export function TaskFormModal({
       })
       if (typeof pendo !== 'undefined') {
         pendo.track('task_created', {
+          taskId: created.id,
           status: values.status,
           priority: values.priority,
           hasAssignee: Boolean(values.assignee?.id),
+          assignedToSelf: values.assignee?.id === visitor.id,
           hasDueDate: values.dueDate !== null,
           hasDescription: values.description.length > 0,
         })
+        // Creating a task straight into 'Done' is also a completion (the repo
+        // stamps completedAt) — keeps task_completed in line with the Dashboard.
+        if (values.status === 'done') {
+          pendo.track('task_completed', {
+            taskId: created.id,
+            priority: values.priority,
+            assigneeId: values.assignee?.id ?? '',
+            hadDueDate: values.dueDate !== null,
+            wasOverdue: values.dueDate !== null && new Date(values.dueDate) < new Date(),
+            source: 'create_modal',
+          })
+        }
       }
     } else if (initialTask) {
       const changedFields = (Object.keys(values) as (keyof typeof values)[])
@@ -219,11 +233,33 @@ export function TaskFormModal({
         pendo.track('task_updated', {
           taskId: initialTask.id,
           fieldsChanged: changedFields.join(', '),
+          previousStatus: initialTask.status,
           newStatus: values.status,
           newPriority: values.priority,
           hasAssignee: Boolean(values.assignee?.id),
           hasDueDate: values.dueDate !== null,
         })
+        // Status moved onto / off 'Done' in the modal — mirror the row
+        // checkbox's task_completed / task_uncompleted events (ListsPage).
+        if (initialTask.status !== 'done' && values.status === 'done') {
+          pendo.track('task_completed', {
+            taskId: initialTask.id,
+            previousStatus: initialTask.status,
+            priority: values.priority,
+            assigneeId: values.assignee?.id ?? '',
+            hadDueDate: values.dueDate !== null,
+            wasOverdue: values.dueDate !== null && new Date(values.dueDate) < new Date(),
+            source: 'edit_modal',
+          })
+        } else if (initialTask.status === 'done' && values.status !== 'done') {
+          pendo.track('task_uncompleted', {
+            taskId: initialTask.id,
+            restoredStatus: values.status,
+            priority: values.priority,
+            assigneeId: values.assignee?.id ?? '',
+            source: 'edit_modal',
+          })
+        }
       }
     }
     onSuccess()

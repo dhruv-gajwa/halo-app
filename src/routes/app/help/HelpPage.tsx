@@ -26,6 +26,11 @@ import { HelpSearchInput } from '../../../help/components/HelpSearchInput'
 import { HelpList } from '../../../help/components/HelpList'
 import { HelpNoResultsState } from '../../../help/components/HelpNoResultsState'
 
+// Tracking-only debounce: help_searched is sent once the (150ms-debounced)
+// query has stayed unchanged this long, so partial queries typed mid-word
+// ('pro', 'proj', ...) are not each reported. The UI filter is unaffected.
+const HELP_SEARCH_TRACK_DELAY_MS = 1000
+
 export function HelpPage(): React.JSX.Element {
   const [query, setQuery] = useState('')
   // D-08: 150ms debounce — second element (cancel fn) is intentionally unused.
@@ -44,16 +49,20 @@ export function HelpPage(): React.JSX.Element {
     })
   }, [allArticles, debouncedQuery])
 
-  // Track meaningful help searches (non-empty, after debounce settles).
+  // Track meaningful help searches (non-empty, after debounce settles). A newer
+  // query — or leaving the page — before the delay elapses cancels the event.
   useEffect(() => {
     if (debouncedQuery.trim() === '') return
-    if (typeof pendo !== 'undefined') {
-      pendo.track('help_searched', {
-        query: debouncedQuery.trim(),
-        resultsCount: filtered.length,
-        hasResults: filtered.length > 0,
-      })
-    }
+    const timer = window.setTimeout(() => {
+      if (typeof pendo !== 'undefined') {
+        pendo.track('help_searched', {
+          query: debouncedQuery.trim(),
+          resultsCount: filtered.length,
+          hasResults: filtered.length > 0,
+        })
+      }
+    }, HELP_SEARCH_TRACK_DELAY_MS)
+    return () => window.clearTimeout(timer)
   }, [debouncedQuery, filtered.length])
 
   return (
