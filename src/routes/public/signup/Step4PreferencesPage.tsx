@@ -134,10 +134,28 @@ export function Step4PreferencesPage(): React.JSX.Element {
       // duplicate would write a second visitor that findVisitorByEmail
       // silently shadows. Surface as a form-level Alert and abort.
       if (findVisitorByEmail(s1.email)) {
+        if (typeof pendo !== 'undefined') {
+          pendo.track('signup_failed', {
+            failureReason: 'duplicate_email',
+            planTier: s3.planTier,
+            industry: s3.industry,
+            companySize: s3.companySize,
+            role: s2.role,
+          })
+        }
         setSubmitError('duplicate_email')
         return
       }
       if (findVisitorByUsername(s1.username)) {
+        if (typeof pendo !== 'undefined') {
+          pendo.track('signup_failed', {
+            failureReason: 'duplicate_username',
+            planTier: s3.planTier,
+            industry: s3.industry,
+            companySize: s3.companySize,
+            role: s2.role,
+          })
+        }
         setSubmitError('duplicate_username')
         return
       }
@@ -200,6 +218,16 @@ export function Step4PreferencesPage(): React.JSX.Element {
       // and stay on /signup/preferences. The wizard draft is intentionally NOT
       // cleared on failure — user can retry by clicking Create account again.
       console.error('[signup] completion failed:', err)
+      if (typeof pendo !== 'undefined') {
+        const failDraft = readWizardDraft()
+        pendo.track('signup_failed', {
+          failureReason: 'generic_failure',
+          planTier: failDraft.step3?.planTier ?? '',
+          industry: failDraft.step3?.industry ?? '',
+          companySize: failDraft.step3?.companySize ?? '',
+          role: failDraft.step2?.role ?? '',
+        })
+      }
       setSubmitError('generic_failure')
     }
   })
