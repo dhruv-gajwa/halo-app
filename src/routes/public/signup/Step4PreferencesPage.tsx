@@ -135,10 +135,26 @@ export function Step4PreferencesPage(): React.JSX.Element {
       // silently shadows. Surface as a form-level Alert and abort.
       if (findVisitorByEmail(s1.email)) {
         setSubmitError('duplicate_email')
+        if (typeof pendo !== 'undefined') {
+          pendo.track('signup_failed', {
+            failureReason: 'duplicate_email',
+            planTier: s3.planTier,
+            companySize: s3.companySize,
+            industry: s3.industry,
+          })
+        }
         return
       }
       if (findVisitorByUsername(s1.username)) {
         setSubmitError('duplicate_username')
+        if (typeof pendo !== 'undefined') {
+          pendo.track('signup_failed', {
+            failureReason: 'duplicate_username',
+            planTier: s3.planTier,
+            companySize: s3.companySize,
+            industry: s3.industry,
+          })
+        }
         return
       }
 
@@ -201,6 +217,15 @@ export function Step4PreferencesPage(): React.JSX.Element {
       // cleared on failure — user can retry by clicking Create account again.
       console.error('[signup] completion failed:', err)
       setSubmitError('generic_failure')
+      if (typeof pendo !== 'undefined') {
+        const draftForTracking = readWizardDraft()
+        pendo.track('signup_failed', {
+          failureReason: 'generic_failure',
+          planTier: draftForTracking.step3?.planTier ?? '',
+          companySize: draftForTracking.step3?.companySize ?? '',
+          industry: draftForTracking.step3?.industry ?? '',
+        })
+      }
     }
   })
 
