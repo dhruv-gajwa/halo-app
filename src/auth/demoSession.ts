@@ -14,11 +14,19 @@ const DEMO_EMAIL = 'dhruv.gajwa@pendo.io'
 const DEMO_PASSWORD_HASH =
   'f52fbd32b2b3b86ff88ef6c490628285f482af15ddcb29541f94bcf526a3f6c7'
 
-export function getOrCreateDemoCredentials(): { visitor: Visitor; workspace: Workspace } {
+export function getOrCreateDemoCredentials(): {
+  visitor: Visitor
+  workspace: Workspace
+  createdNewDemoVisitor: boolean
+  createdNewDemoWorkspace: boolean
+} {
   let visitor = findVisitorByEmail(DEMO_EMAIL)
   let workspace = visitor
     ? listWorkspaces().find((w) => w.ownerVisitorId === visitor!.id)
     : undefined
+
+  const createdNewDemoVisitor = !visitor
+  const createdNewDemoWorkspace = !workspace
 
   if (!visitor) {
     visitor = createDemoVisitor()
@@ -27,7 +35,7 @@ export function getOrCreateDemoCredentials(): { visitor: Visitor; workspace: Wor
     workspace = createDemoWorkspace(visitor.id)
   }
 
-  return { visitor, workspace }
+  return { visitor, workspace, createdNewDemoVisitor, createdNewDemoWorkspace }
 }
 
 function createDemoVisitor(): Visitor {
