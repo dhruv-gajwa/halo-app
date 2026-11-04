@@ -17,6 +17,30 @@ import { listMessages, appendMessage, clearMessages } from './chatRepo'
 import { streamChatReply, describeChatError } from './claudeClient'
 import type { ChatMessage } from './types'
 
+/** Pendo Agent Analytics id for Halo Assistant (used by `pendo.trackAgent`). */
+const HALO_ASSISTANT_AGENT_ID = 'uiUUvKc8n6QryFunwUc-0IKyQCw'
+
+type AgentEventType = 'prompt' | 'agent_response' | 'user_reaction'
+
+interface AgentEventMetadata {
+  conversationId: string
+  messageId: string
+  content: string
+  modelUsed?: string
+  suggestedPrompt?: boolean
+  toolsUsed?: string[]
+  fileUploaded?: boolean
+}
+
+/**
+ * Send a Pendo Agent Analytics event for Halo Assistant. No-ops when the Pendo
+ * agent (or its `trackAgent` API) isn't loaded, so analytics can never break chat.
+ */
+function trackHaloAssistant(eventType: AgentEventType, metadata: AgentEventMetadata): void {
+  if (typeof pendo === 'undefined' || typeof pendo.trackAgent !== 'function') return
+  pendo.trackAgent(eventType, { agentId: HALO_ASSISTANT_AGENT_ID, ...metadata })
+}
+
 interface ChatPanelProps {
   onClose: () => void
 }
@@ -54,22 +78,40 @@ export function ChatPanel({ onClose }: ChatPanelProps): React.JSX.Element {
     const userMessage = appendMessage(workspaceId, { role: 'user', content: text })
     const nextHistory = [...history, userMessage]
     setMessages(nextHistory)
+    // A conversation spans from the first persisted message until "New conversation"
+    // clears history, so the first message's id is a stable conversation id across reloads.
+    const conversationId = nextHistory[0].id
 
     if (typeof pendo !== 'undefined') {
       pendo.track('agent_chat_message_sent', { messageLength: text.length })
     }
+    trackHaloAssistant('prompt', {
+      conversationId,
+      messageId: userMessage.id,
+      content: text,
+      suggestedPrompt: false,
+      fileUploaded: false,
+    })
 
     setIsSending(true)
     setStreamingText('')
     try {
-      const fullReply = await streamChatReply(nextHistory, (chunk) =>
+      const reply = await streamChatReply(nextHistory, (chunk) =>
         setStreamingText((prev) => (prev ?? '') + chunk),
       )
+      const fullReply = reply.text
       const assistantMessage = appendMessage(workspaceId, { role: 'assistant', content: fullReply })
       setMessages((prev) => [...prev, assistantMessage])
       if (typeof pendo !== 'undefined') {
         pendo.track('agent_chat_response_received', { messageLength: fullReply.length })
       }
+      trackHaloAssistant('agent_response', {
+        conversationId,
+        messageId: assistantMessage.id,
+        content: fullReply,
+        modelUsed: reply.model,
+        toolsUsed: [],
+      })
     } catch (err) {
       const description = describeChatError(err)
       setErrorText(description)
