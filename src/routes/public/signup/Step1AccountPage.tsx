@@ -71,6 +71,9 @@ export function Step1AccountPage(): React.JSX.Element {
       // render the anchor conditionally on the field below via an isDuplicate
       // boolean check against the locked copy.
       form.setError('email', { type: 'manual', message: EMAIL_DUPLICATE_MESSAGE })
+      if (typeof pendo !== 'undefined') {
+        pendo.track('signup_failed', { step: 'account', failureReason: 'duplicate_email' })
+      }
       return
     }
     const usernameDup = findVisitorByUsername(values.username)
@@ -79,6 +82,9 @@ export function Step1AccountPage(): React.JSX.Element {
         type: 'manual',
         message: 'That username is taken — try another.',
       })
+      if (typeof pendo !== 'undefined') {
+        pendo.track('signup_failed', { step: 'account', failureReason: 'duplicate_username' })
+      }
       return
     }
     // CR-02 mitigation: keep the plaintext password OUT of sessionStorage.

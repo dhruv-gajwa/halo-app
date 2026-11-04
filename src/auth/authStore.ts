@@ -142,8 +142,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
 export function ensureDemoSession(): void {
   if (useAuthStore.getState().isAuthenticated) return
-  const { visitor, workspace } = getOrCreateDemoCredentials()
+  const { visitor, workspace, createdNewDemoVisitor, createdNewDemoWorkspace } =
+    getOrCreateDemoCredentials()
   useAuthStore.getState().setSession(visitor, workspace)
+  // Fires only on the unauthenticated → demo-session transition (the guard
+  // above returns early once a session exists), so it is once per session.
+  if (typeof pendo !== 'undefined') {
+    pendo.track('demo_session_started', {
+      workspaceId: workspace.id,
+      createdNewDemoVisitor,
+      createdNewDemoWorkspace,
+    })
+  }
 }
 
 /**
